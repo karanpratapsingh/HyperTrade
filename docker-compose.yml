@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  trader:
+    container_name: trader
+    image: trader
+    build:
+      context: .
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+
+  db:
+    image: postgres:14
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=trader
+      - POSTGRES_PASSWORD=trader
+      - POSTGRES_DB=trader
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
