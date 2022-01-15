@@ -1,7 +1,6 @@
 package exchange
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"strconv"
@@ -20,29 +19,33 @@ type Binance struct {
 	test   bool
 }
 
-func NewBinance(key, secret string, e events.Bus, test bool) Binance {
+func NewBinance(key, secret string, bus events.Bus, test bool) Binance {
 	log.Debug().Str("type", "binance").Bool("test", test).Msg("Init Exchange")
 
 	binance.UseTestnet = test
 	client := binance.NewClient(key, secret)
 
-	return Binance{client, e, test}
+	return Binance{client, bus, test}
 }
 
-func (Binance) Buy(ctx context.Context) {
-	var _ float64 = 0.005 // get live quantity data
-
-	panic("todo implement")
+func (Binance) Buy(symbol string) {
+	// TODO: get live quantity data for $1
+	panic("todo impl.")
 }
 
-func (Binance) Sell(ctx context.Context) {
-	panic("todo implement")
+func (Binance) Sell(symbol string) {
+	panic("todo impl.")
 }
 
 func (b Binance) Kline(symbol string, interval string) {
-	// TODO: enable testnet
-	stream := fmt.Sprintf("wss://stream.binance.com:9443/ws/%v@kline_%v", strings.ToLower(symbol), interval)
-	conn, _, err := websocket.DefaultDialer.Dial(stream, nil)
+	var host string = "stream.binance.com:9443"
+
+	if b.test {
+		host = "testnet.binance.vision"
+	}
+
+	url := fmt.Sprintf("wss://%v/ws/%v@kline_%v", host, strings.ToLower(symbol), interval)
+	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
 
 	if err != nil {
 		fmt.Println(err.Error())
