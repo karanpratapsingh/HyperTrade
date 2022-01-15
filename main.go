@@ -43,7 +43,7 @@ func main() {
 		Oversold:   40,
 	}
 
-	rsi := strategy.NewRsi("RSI_60-40", config, t)
+	rsi := strategy.NewRsi("RSI_60-40", config, t, symbols)
 
 	handlers := tasks.NewHandlers(redisAddr)
 
