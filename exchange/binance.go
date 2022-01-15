@@ -2,15 +2,12 @@ package exchange
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"strconv"
-	"strings"
 	"trader/tasks"
 	"trader/types"
 
 	"github.com/adshao/go-binance/v2"
-	"github.com/gorilla/websocket"
 	"github.com/rs/zerolog/log"
 )
 
@@ -69,44 +66,22 @@ func (Binance) Sell(symbol string) error {
 }
 
 func (b Binance) Kline(symbol string, interval string) {
-	var host string = "stream.binance.com:9443"
+	wsKlineHandler := func(event *binance.WsKlineEvent) {
+		close := event.Kline.IsFinal
+		price, err := strconv.ParseFloat(event.Kline.Close, 64)
 
-	if b.test {
-		host = "testnet.binance.vision"
-	}
-
-	url := fmt.Sprintf("wss://%v/ws/%v@kline_%v", host, strings.ToLower(symbol), interval)
-	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
-
-	if err != nil {
-		log.Error().Err(err).Msg("Kline Connection")
-		return
-	}
-
-	defer conn.Close()
-
-	log.Debug().Str("interval", interval).Str("symbol", symbol).Msg("Kline Subscribed")
-
-	for {
-		msgType, message, err := conn.ReadMessage()
-
-		if err != nil {
-			log.Error().Int("type", msgType).Err(err).Msg("Kline ReadMessage")
-			continue
-		}
-
-		data := map[string]map[string]interface{}{}
-		json.Unmarshal(message, &data)
-
-		kline := data["k"]
-		price, err := strconv.ParseFloat(kline["c"].(string), 64)
-		closed := kline["x"].(bool)
+		kline := types.Kline{price, close}
 
 		if err != nil {
 			log.Error().Err(err).Msg("Parse err")
 		}
 
-		k := types.Kline{price, closed}
-		b.task.NewTask(tasks.Kline, tasks.KlinePayload{k, symbol})
+		b.task.NewTask(tasks.Kline, tasks.KlinePayload{kline, symbol})
 	}
+
+	errHandler := func(err error) {
+		log.Error().Err(err).Msg("Kline Error")
+	}
+
+	binance.WsKlineServe(symbol, interval, wsKlineHandler, errHandler)
 }
