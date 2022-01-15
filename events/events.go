@@ -14,9 +14,13 @@ var (
 	Kline      = "event:kline"
 )
 
-type SignalBuyPayload struct{}
+type SignalBuyPayload struct{
+	Symbol string
+}
 
-type SignalSellPayload struct{}
+type SignalSellPayload struct{
+	Symbol string
+}
 
 type KlinePayload struct {
 	Kline  types.Kline
