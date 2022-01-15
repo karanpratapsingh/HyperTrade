@@ -30,7 +30,8 @@ func (t Tasks) NewTask(taskname string, data interface{}) {
 
 	task := asynq.NewTask(taskname, payload)
 
-	t.client.Enqueue(task, asynq.MaxRetry(1))
+	// We don't want to retry here, every task needs to be atomic
+	t.client.Enqueue(task, asynq.MaxRetry(0))
 }
 
 func (t Tasks) Close() error {
