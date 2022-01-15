@@ -1,51 +1,37 @@
 package strategy
 
 import (
-	"fmt"
-	"trader/exchange"
+	"trader/events"
+	"trader/types"
 
 	"github.com/markcheno/go-talib"
+	"github.com/rs/zerolog/log"
 )
 
-var (
-	TRADE_QUANTITY = 0.005 // get live data
-)
+var Period = 14
 
+type RsiConfig struct {
+	Overbought int
+	Oversold   int
+}
 type Rsi struct {
-	id         string
-	ex         exchange.Exchange
-	period     int
-	overbought int
-	oversold   int
-	closes     []float64
-	holding    bool
-	symbol     string
+	id      string
+	config  RsiConfig
+	closes  []float64
+	holding bool
+	bus     events.Bus
 }
 
-func NewRsi(id string, ex exchange.Exchange, overbought, oversold int, symbol string) Rsi {
-	period := 14
+func NewRsi(id string, config RsiConfig, bus events.Bus) Rsi {
+	log.Debug().Str("ID", id).Msg("Init Strategy")
+
 	closes := []float64{}
-	holding := false // TODO: make global event
+	holding := false
 
-	return Rsi{id, ex, period, overbought, oversold, closes, holding, symbol}
+	return Rsi{id, config, closes, holding, bus}
 }
 
-func (r Rsi) Run() {
-	ch := make(chan exchange.Kline)
-
-	go r.ex.Kline(r.symbol, "1m", ch)
-
-	for {
-		select {
-		case k := <-ch:
-			r.predict(k)
-		}
-	}
-}
-
-func (r *Rsi) predict(k exchange.Kline) {
-	fmt.Println(r.id, k)
-
+func (r *Rsi) Predict(k types.Kline, symbol string) {
 	// Return if Kline isn't closed yet
 	if !k.Closed {
 		return
@@ -53,27 +39,30 @@ func (r *Rsi) predict(k exchange.Kline) {
 
 	r.closes = append(r.closes, k.Price)
 
-	fmt.Printf("adding close price: %v\n", k.Price)
+	log.Info().Str("symbol", symbol).Float64("price", k.Price).Bool("closed", k.Closed).Msg(r.id)
 
-	if len(r.closes) > r.period {
-		rsi := talib.Rsi(r.closes, r.period)
+	if len(r.closes) > Period {
+		rsi := talib.Rsi(r.closes, Period)
 		last := rsi[len(rsi)-1]
 
-		fmt.Printf("last rsi: %v\n", last)
+		log.Debug().Float64("last rsi", last).Msg(r.id)
 
-		if last > float64(r.overbought) {
+		if last > float64(r.config.Overbought) {
 			if r.holding {
-				fmt.Println("SELL")
+				log.Info().Msg("Sell")
+				r.bus.Publish(events.SignalSell)
 			} else {
-				fmt.Println("Overbought but not in position")
+				log.Warn().Msg("Overbought but not in position")
 			}
 		}
 
-		if last < float64(r.oversold) {
+		if last < float64(r.config.Oversold) {
 			if r.holding {
-				fmt.Println("Oversold but already in position")
+				log.Warn().Msg("Oversold but already in position")
 			} else {
-				fmt.Println("BUY")
+				log.Info().Msg("BUY")
+				r.bus.Publish(events.SignalBuy)
+				r.holding = true
 			}
 		}
 	}
