@@ -5,5 +5,5 @@ import "context"
 type Exchange interface {
 	Buy(ctx context.Context)
 	Sell(ctx context.Context)
-	Kline(symbol string, interval string, ch chan Kline)
+	Kline(symbol string, interval string)
 }
