@@ -2,9 +2,9 @@ package main
 
 import (
 	"os"
-	"trader/events"
 	"trader/exchange"
 	"trader/strategy"
+	"trader/tasks"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -14,6 +14,11 @@ import (
 
 var key string = os.Getenv("BINANCE_API_KEY")
 var secret string = os.Getenv("BINANCE_SECRET")
+var redisAddr string = os.Getenv("REDIS_ADDR")
+
+func init() {
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+}
 
 var interval string = "1m"
 
@@ -22,47 +27,38 @@ var symbols = []string{
 	"ETHUSDT",
 }
 
-func init() {
-	InitLogger()
-}
-
 func main() {
-	forever := make(chan bool)
+	t := tasks.NewTasks(redisAddr)
+	defer t.Close()
 
-	bus := events.NewEventBus()
-	bex := exchange.NewBinance(key, secret, bus, false)
+	bex := exchange.NewBinance(key, secret, t, false)
+
+	for _, symbol := range symbols {
+		go bex.Kline(symbol, interval)
+	}
 
 	config := strategy.RsiConfig{
 		Overbought: 60,
 		Oversold:   40,
 	}
 
-	rsi := strategy.NewRsi("RSI_60-40", config, bus)
+	rsi := strategy.NewRsi("RSI_60-40", config, t)
 
-	for _, symbol := range symbols {
-		go bex.Kline(symbol, interval)
-	}
+	handlers := tasks.NewHandlers(redisAddr)
 
-	bus.Subscribe(events.Kline, func(p events.KlinePayload) {
+	handlers.SubscribeKline(func(p tasks.KlinePayload) error {
 		rsi.Predict(p.Kline, p.Symbol)
+		return nil
 	})
 
-	bus.Subscribe(events.SignalBuy, func(p events.SignalBuyPayload) {
-		log.Info().Str("symbol", p.Symbol).Msg(events.SignalBuy)
-		// TODO: send notification
-		bex.Buy(p.Symbol)
+	handlers.SubscribeSignalBuy(func(p tasks.SignalBuyPayload) error {
+		return bex.Buy(p.Symbol)
 	})
 
-	bus.Subscribe(events.SignalSell, func(p events.SignalSellPayload) {
-		log.Info().Str("symbol", p.Symbol).Msg(events.SignalSell)
-		// TODO: send notification
-		bex.Sell(p.Symbol)
+	handlers.SubscribeSignalSell(func(p tasks.SignalSellPayload) error {
+		return bex.Sell(p.Symbol)
 	})
 
-	<-forever
-}
-
-func InitLogger() {
-	output := zerolog.ConsoleWriter{Out: os.Stderr}
-	log.Logger = log.Output(output)
+	// TODO: graceful shutdown
+	handlers.Run()
 }
