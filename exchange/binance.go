@@ -6,33 +6,32 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"trader/events"
+	"trader/types"
 
 	"github.com/adshao/go-binance/v2"
 	"github.com/gorilla/websocket"
+	"github.com/rs/zerolog/log"
 )
 
 type Binance struct {
 	client *binance.Client
+	events events.Bus
 	test   bool
 }
 
-type Kline struct {
-	Price  float64
-	Closed bool
-}
+func NewBinance(key, secret string, e events.Bus, test bool) Binance {
+	log.Debug().Str("type", "binance").Bool("test", test).Msg("Init Exchange")
 
-func (k Kline) String() string {
-	return fmt.Sprintf("price: %v, close: %v", k.Price, k.Closed)
-}
-
-func NewBinance(key, secret string, test bool) Binance {
 	binance.UseTestnet = test
 	client := binance.NewClient(key, secret)
 
-	return Binance{client, test}
+	return Binance{client, e, test}
 }
 
 func (Binance) Buy(ctx context.Context) {
+	var _ float64 = 0.005 // get live quantity data
+
 	panic("todo implement")
 }
 
@@ -40,7 +39,7 @@ func (Binance) Sell(ctx context.Context) {
 	panic("todo implement")
 }
 
-func (b Binance) Kline(symbol string, interval string, ch chan Kline) {
+func (b Binance) Kline(symbol string, interval string) {
 	// TODO: enable testnet
 	stream := fmt.Sprintf("wss://stream.binance.com:9443/ws/%v@kline_%v", strings.ToLower(symbol), interval)
 	conn, _, err := websocket.DefaultDialer.Dial(stream, nil)
@@ -50,14 +49,14 @@ func (b Binance) Kline(symbol string, interval string, ch chan Kline) {
 	}
 	defer conn.Close()
 
-	// TODO: info
-	// fmt.Println(response.Status)
+	log.Debug().Str("interval", interval).Str("symbol", symbol).Msg("Kline Subscribed")
 
 	for {
 		_, message, err := conn.ReadMessage()
 
 		if err != nil {
 			fmt.Println(err.Error())
+			log.Error().Err(err).Msg("Kline ReadMessage")
 		}
 
 		data := map[string]map[string]interface{}{}
@@ -68,11 +67,10 @@ func (b Binance) Kline(symbol string, interval string, ch chan Kline) {
 		closed := kline["x"].(bool)
 
 		if err != nil {
-			// TODO: custom err
-			fmt.Printf("parse err: %v\n", err)
+			log.Error().Err(err).Msg("Parse err")
 		}
 
-		k := Kline{price, closed}
-		ch <- k
+		k := types.Kline{price, closed}
+		b.events.Publish(events.Kline, events.KlinePayload{k, symbol})
 	}
 }
