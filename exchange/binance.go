@@ -1,6 +1,7 @@
 package exchange
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"strconv"
@@ -28,6 +29,34 @@ func NewBinance(key, secret string, task tasks.Tasks, test bool) Binance {
 	return Binance{client, task, test}
 }
 
+func (b Binance) PrintUserInfo() {
+	svc := b.client.NewGetAccountService()
+	user, err := svc.Do(context.Background())
+
+	if err != nil {
+		log.Error().Err(err).Msg("UserInfo")
+	}
+
+	fmt.Println("---- User Info ----")
+	fmt.Println("Account Type:", user.AccountType)
+	fmt.Println("Can Trade:", user.CanTrade)
+	fmt.Println("Available Balance")
+
+	for _, balance := range user.Balances {
+		amt, err := strconv.ParseFloat(balance.Free, 64)
+
+		if err != nil {
+			log.Error().Err(err).Msg("Parsing balance")
+		}
+
+		if amt > 0.00000000 {
+			fmt.Println(" -", balance.Asset, balance.Free)
+		}
+	}
+
+	fmt.Println("-------------------")
+}
+
 func (Binance) Buy(symbol string) error {
 	// TODO: get live quantity data for $1
 	log.Info().Str("symbol", symbol).Msg(tasks.SignalBuy)
@@ -51,6 +80,7 @@ func (b Binance) Kline(symbol string, interval string) {
 
 	if err != nil {
 		log.Error().Err(err).Msg("Kline Connection")
+		return
 	}
 
 	defer conn.Close()

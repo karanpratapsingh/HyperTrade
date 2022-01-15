@@ -13,7 +13,7 @@ import (
 // TODO: impl. DCA
 
 var key string = os.Getenv("BINANCE_API_KEY")
-var secret string = os.Getenv("BINANCE_SECRET")
+var secret string = os.Getenv("BINANCE_SECRET_KEY")
 var redisAddr string = os.Getenv("REDIS_ADDR")
 
 func init() {
@@ -32,6 +32,7 @@ func main() {
 	defer t.Close()
 
 	bex := exchange.NewBinance(key, secret, t, false)
+	bex.PrintUserInfo()
 
 	for _, symbol := range symbols {
 		go bex.Kline(symbol, interval)
