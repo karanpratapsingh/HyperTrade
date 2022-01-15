@@ -16,10 +16,10 @@ type RsiConfig struct {
 }
 type Rsi struct {
 	id      string
+	bus     events.Bus
 	config  RsiConfig
 	closes  []float64
 	holding bool
-	bus     events.Bus
 }
 
 func NewRsi(id string, config RsiConfig, bus events.Bus) Rsi {
@@ -28,7 +28,7 @@ func NewRsi(id string, config RsiConfig, bus events.Bus) Rsi {
 	closes := []float64{}
 	holding := false
 
-	return Rsi{id, config, closes, holding, bus}
+	return Rsi{id, bus, config, closes, holding}
 }
 
 func (r *Rsi) Predict(k types.Kline, symbol string) {
@@ -45,12 +45,11 @@ func (r *Rsi) Predict(k types.Kline, symbol string) {
 		rsi := talib.Rsi(r.closes, Period)
 		last := rsi[len(rsi)-1]
 
-		log.Debug().Float64("last rsi", last).Msg(r.id)
+		log.Debug().Str("symbol", symbol).Float64("last_rsi", last).Msg(r.id)
 
 		if last > float64(r.config.Overbought) {
 			if r.holding {
-				log.Info().Msg("Sell")
-				r.bus.Publish(events.SignalSell)
+				r.bus.Publish(events.SignalSell, events.SignalSellPayload{symbol})
 			} else {
 				log.Warn().Msg("Overbought but not in position")
 			}
@@ -60,8 +59,7 @@ func (r *Rsi) Predict(k types.Kline, symbol string) {
 			if r.holding {
 				log.Warn().Msg("Oversold but already in position")
 			} else {
-				log.Info().Msg("BUY")
-				r.bus.Publish(events.SignalBuy)
+				r.bus.Publish(events.SignalBuy, events.SignalBuyPayload{symbol})
 				r.holding = true
 			}
 		}
