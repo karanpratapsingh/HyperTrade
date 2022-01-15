@@ -9,9 +9,9 @@ import (
 type Bus EventBus.Bus
 
 var (
-	SignalBuy  = "event:signal:buy"
-	SignalSell = "event:signal:sell"
-	Kline      = "event:kline"
+	SignalBuy  = "Event:Signal:Buy"
+	SignalSell = "Event:Signal:Sell"
+	Kline      = "Event:Kline"
 )
 
 type SignalBuyPayload struct{
