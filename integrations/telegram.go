@@ -15,7 +15,7 @@ type Telegram struct {
 }
 
 func NewTelegramBot(token string, chatID string, ex exchange.Binance) Telegram {
-	log.Debug().Msg("TelegramBot.Init")
+	log.Trace().Msg("TelegramBot.Init")
 
 	cid, err := strconv.ParseInt(chatID, 10, 64)
 

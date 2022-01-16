@@ -42,7 +42,7 @@ func makeState(symbols []string) map[string]*State {
 }
 
 func NewRsi(id string, config RsiConfig, pubsub events.PubSub, symbols []string) Rsi {
-	log.Debug().
+	log.Trace().
 		Str("ID", id).
 		Float64("overbought", config.Overbought).Float64("oversold", config.Oversold).
 		Msg("Strategy.RSI.Init")
@@ -72,7 +72,7 @@ func (r *Rsi) Predict(k types.Kline, symbol string) {
 		rsi := talib.Rsi(state.closes, Period)
 		last := rsi[len(rsi)-1]
 
-		log.Debug().Str("symbol", symbol).Float64("last_rsi", last).Msg(r.id)
+		log.Trace().Str("symbol", symbol).Float64("last_rsi", last).Msg(r.id)
 
 		if last > r.config.Overbought {
 			if state.holding {

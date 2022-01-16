@@ -22,7 +22,7 @@ type Binance struct {
 }
 
 func NewBinance(key, secret string, pubsub events.PubSub, test bool) Binance {
-	log.Debug().Str("type", "binance").Bool("test", test).Msg("Binance.Init")
+	log.Trace().Str("type", "binance").Bool("test", test).Msg("Binance.Init")
 
 	binance.UseTestnet = test
 	client := binance.NewClient(key, secret)
