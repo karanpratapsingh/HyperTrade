@@ -11,8 +11,8 @@ import (
 var Period = 14
 
 type RsiConfig struct {
-	Overbought int
-	Oversold   int
+	Overbought float64
+	Oversold   float64
 }
 type Rsi struct {
 	id     string
@@ -42,7 +42,10 @@ func makeState(symbols []string) map[string]*State {
 }
 
 func NewRsi(id string, config RsiConfig, pubsub events.PubSub, symbols []string) Rsi {
-	log.Debug().Str("ID", id).Msg("Init Strategy")
+	log.Debug().
+		Str("ID", id).
+		Float64("overbought", config.Overbought).Float64("oversold", config.Oversold).
+		Msg("Strategy.RSI.Init")
 
 	states := makeState(symbols)
 
@@ -71,17 +74,17 @@ func (r *Rsi) Predict(k types.Kline, symbol string) {
 
 		log.Debug().Str("symbol", symbol).Float64("last_rsi", last).Msg(r.id)
 
-		if last > float64(r.config.Overbought) {
+		if last > r.config.Overbought {
 			if state.holding {
 				r.pubsub.Publish(events.SignalSell, events.SignalSellPayload{symbol})
 			} else {
-				log.Warn().Msg("Overbought but not in position")
+				log.Warn().Float64("last_rsi", last).Msg("RSI.Overbought.NoPosition")
 			}
 		}
 
-		if last < float64(r.config.Oversold) {
+		if last < r.config.Oversold {
 			if state.holding {
-				log.Warn().Msg("Oversold but already in position")
+				log.Warn().Float64("last_rsi", last).Msg("RSI.Oversold.InPosition")
 			} else {
 				r.pubsub.Publish(events.SignalBuy, events.SignalBuyPayload{symbol})
 				state.holding = true
