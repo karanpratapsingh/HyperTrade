@@ -46,7 +46,7 @@ func main() {
 		Oversold:   40,
 	}
 
-	rsi := strategy.NewRsi("RSI_60-40", config, pubsub, symbols)
+	rsi := strategy.NewRsi("Rsi_60-40", config, pubsub, symbols)
 
 	pubsub.Subscribe(events.Kline, func(p events.KlinePayload) {
 		rsi.Predict(p.Kline, p.Symbol)

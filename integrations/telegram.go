@@ -83,7 +83,7 @@ func (t Telegram) ListenForCommands() {
 }
 
 func setDefaultCommands(bot *telegram.BotAPI) {
-	log.Debug().Msg("TelegramBot.SetMyCommands")
+	log.Trace().Msg("TelegramBot.SetMyCommands")
 
 	ping := telegram.BotCommand{PingCommand, "Ping"}
 	balance := telegram.BotCommand{BalanceCommand, "Get available balance"}
