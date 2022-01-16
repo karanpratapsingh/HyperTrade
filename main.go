@@ -35,10 +35,10 @@ func main() {
 	pubsub := events.NewPubSub(natsURL)
 	defer pubsub.Close()
 
-	telegram := integrations.NewTelegramBot(telegramApiToken, telegramChatID)
-
 	bex := exchange.NewBinance(key, secret, pubsub, false)
-	bex.PrintUserInfo()
+	bex.PrintAccountInfo()
+
+	telegram := integrations.NewTelegramBot(telegramApiToken, telegramChatID, bex)
 
 	for _, symbol := range symbols {
 		go bex.Kline(symbol, interval)

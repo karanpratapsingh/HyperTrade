@@ -2,6 +2,7 @@ package integrations
 
 import (
 	"strconv"
+	"trader/exchange"
 
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/rs/zerolog/log"
@@ -10,9 +11,10 @@ import (
 type Telegram struct {
 	bot    *telegram.BotAPI
 	chatID int64
+	ex     exchange.Binance
 }
 
-func NewTelegramBot(token string, chatID string) Telegram {
+func NewTelegramBot(token string, chatID string, ex exchange.Binance) Telegram {
 	log.Debug().Msg("TelegramBot.Init")
 
 	cid, err := strconv.ParseInt(chatID, 10, 64)
@@ -27,7 +29,7 @@ func NewTelegramBot(token string, chatID string) Telegram {
 		log.Fatal().Err(err).Msg("TelegramBot.Init")
 	}
 
-	return Telegram{bot, cid}
+	return Telegram{bot, cid, ex}
 }
 
 func (t Telegram) SendMessage(msg string) {
@@ -60,7 +62,8 @@ func (t Telegram) ListenForCommands() {
 
 		switch update.Message.Command() {
 		case "balance":
-			message.Text = "Hi :)"
+			acc := t.ex.GetAccount()
+			message.Text = t.ex.StringifyBalance(acc.Balances)
 		default:
 			message.Text = "Command not defined"
 		}
