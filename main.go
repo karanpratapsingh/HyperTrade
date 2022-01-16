@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"trader/events"
 	"trader/exchange"
+	"trader/integrations"
 	"trader/strategy"
 
 	"github.com/rs/zerolog"
@@ -12,9 +14,11 @@ import (
 
 // TODO: impl. DCA
 
-var key string = os.Getenv("BINANCE_API_KEY")
-var secret string = os.Getenv("BINANCE_SECRET_KEY")
-var natsURL string = os.Getenv("NATS_URL")
+var key = os.Getenv("BINANCE_API_KEY")
+var secret = os.Getenv("BINANCE_SECRET_KEY")
+var natsURL = os.Getenv("NATS_URL")
+var telegramApiToken = os.Getenv("TELEGRAM_API_TOKEN")
+var telegramChatID = os.Getenv("TELEGRAM_CHAT_ID")
 
 func init() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
@@ -28,10 +32,10 @@ var symbols = []string{
 }
 
 func main() {
-	wait := make(chan os.Signal, 1)
-
 	pubsub := events.NewPubSub(natsURL)
 	defer pubsub.Close()
+
+	telegram := integrations.NewTelegramBot(telegramApiToken, telegramChatID)
 
 	bex := exchange.NewBinance(key, secret, pubsub, false)
 	bex.PrintUserInfo()
@@ -59,5 +63,10 @@ func main() {
 		bex.Sell(p.Symbol)
 	})
 
-	<-wait
+	pubsub.Subscribe(events.NotifyTrade, func(p events.NotifyTradePayload) {
+		message := fmt.Sprintf("Executed %v\nToken: %v\nAmount: %v", p.Type, p.Symbol, p.Amount)
+		telegram.SendMessage(message)
+	})
+
+	telegram.ListenForCommands()
 }
