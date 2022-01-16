@@ -4,7 +4,8 @@ import (
 	"context"
 	"fmt"
 	"strconv"
-	"trader/tasks"
+	"trader/events"
+
 	"trader/types"
 
 	"github.com/adshao/go-binance/v2"
@@ -13,17 +14,17 @@ import (
 
 type Binance struct {
 	client *binance.Client
-	task   tasks.Tasks
+	pubsub events.PubSub
 	test   bool
 }
 
-func NewBinance(key, secret string, task tasks.Tasks, test bool) Binance {
+func NewBinance(key, secret string, pubsub events.PubSub, test bool) Binance {
 	log.Debug().Str("type", "binance").Bool("test", test).Msg("Init Exchange")
 
 	binance.UseTestnet = test
 	client := binance.NewClient(key, secret)
 
-	return Binance{client, task, test}
+	return Binance{client, pubsub, test}
 }
 
 func (b Binance) PrintUserInfo() {
@@ -56,12 +57,12 @@ func (b Binance) PrintUserInfo() {
 
 func (Binance) Buy(symbol string) error {
 	// TODO: get live quantity data for $1
-	log.Info().Str("symbol", symbol).Msg(tasks.SignalBuy)
+	log.Info().Str("symbol", symbol).Msg(events.SignalBuy)
 	return nil
 }
 
 func (Binance) Sell(symbol string) error {
-	log.Info().Str("symbol", symbol).Msg(tasks.SignalSell)
+	log.Info().Str("symbol", symbol).Msg(events.SignalSell)
 	return nil
 }
 
@@ -76,7 +77,7 @@ func (b Binance) Kline(symbol string, interval string) {
 			log.Error().Err(err).Msg("Parse err")
 		}
 
-		b.task.NewTask(tasks.Kline, tasks.KlinePayload{kline, symbol})
+		b.pubsub.Publish(events.Kline, events.KlinePayload{kline, symbol})
 	}
 
 	errHandler := func(err error) {

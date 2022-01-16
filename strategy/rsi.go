@@ -1,7 +1,7 @@
 package strategy
 
 import (
-	"trader/tasks"
+	"trader/events"
 	"trader/types"
 
 	"github.com/markcheno/go-talib"
@@ -17,7 +17,7 @@ type RsiConfig struct {
 type Rsi struct {
 	id     string
 	config RsiConfig
-	task   tasks.Tasks
+	pubsub events.PubSub
 	states map[string]*State
 }
 
@@ -41,12 +41,12 @@ func makeState(symbols []string) map[string]*State {
 	return states
 }
 
-func NewRsi(id string, config RsiConfig, task tasks.Tasks, symbols []string) Rsi {
+func NewRsi(id string, config RsiConfig, pubsub events.PubSub, symbols []string) Rsi {
 	log.Debug().Str("ID", id).Msg("Init Strategy")
 
 	states := makeState(symbols)
 
-	return Rsi{id, config, task, states}
+	return Rsi{id, config, pubsub, states}
 }
 
 func (r *Rsi) GetState(symbol string) State {
@@ -73,7 +73,7 @@ func (r *Rsi) Predict(k types.Kline, symbol string) {
 
 		if last > float64(r.config.Overbought) {
 			if state.holding {
-				r.task.NewTask(tasks.SignalSell, tasks.SignalSellPayload{symbol})
+				r.pubsub.Publish(events.SignalSell, events.SignalSellPayload{symbol})
 			} else {
 				log.Warn().Msg("Overbought but not in position")
 			}
@@ -83,7 +83,7 @@ func (r *Rsi) Predict(k types.Kline, symbol string) {
 			if state.holding {
 				log.Warn().Msg("Oversold but already in position")
 			} else {
-				r.task.NewTask(tasks.SignalBuy, tasks.SignalBuyPayload{symbol})
+				r.pubsub.Publish(events.SignalBuy, events.SignalBuyPayload{symbol})
 				state.holding = true
 			}
 		}
