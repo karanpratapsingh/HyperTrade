@@ -63,8 +63,10 @@ func (Binance) StringifyBalance(userBalances []binance.Balance) string {
 			log.Error().Err(err).Msg("Binance.ParsingBalance")
 		}
 
+		var separator rune = '•'
+
 		if amt > ZeroBalance {
-			b := fmt.Sprintf(" - %v %v", balance.Asset, balance.Free)
+			b := fmt.Sprintf("%c %v %v", separator, balance.Asset, balance.Free)
 			balances = append(balances, b)
 		}
 	}
