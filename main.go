@@ -29,7 +29,7 @@ var symbols = []string{
 func main() {
 	env := env.Get()
 
-	pubsub := events.NewPubSub(env.NatsUrl)
+	pubsub := events.NewPubSub(env.NatsUrl, env.NatsUser, env.NatsPass)
 	defer pubsub.Close()
 
 	bex := exchange.NewBinance(env.BinanceApiKey, env.BinanceApiSecretKey, pubsub, false)

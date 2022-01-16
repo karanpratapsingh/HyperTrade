@@ -20,6 +20,9 @@ services:
   nats:
     container_name: nats
     image: nats:2.7.0-alpine
+    command:
+      - "--user=development"
+      - "--pass=development"
     ports:
       - 4222:4222
     networks:

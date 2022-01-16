@@ -9,8 +9,8 @@ type PubSub struct {
 	conn *nats.EncodedConn
 }
 
-func NewPubSub(addr string) PubSub {
-	conn, err := nats.Connect(addr)
+func NewPubSub(addr, user, password string) PubSub {
+	conn, err := nats.Connect(addr, nats.UserInfo(user, password))
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("PubSub.Init")
