@@ -78,13 +78,13 @@ func (r *Rsi) Predict(k types.Kline, symbol string) {
 			if state.holding {
 				r.pubsub.Publish(events.SignalSell, events.SignalSellPayload{symbol})
 			} else {
-				log.Warn().Float64("last_rsi", last).Msg("RSI.Overbought.NoPosition")
+				log.Warn().Str("symbol", symbol).Float64("last_rsi", last).Msg("RSI.Overbought.NoPosition")
 			}
 		}
 
 		if last < r.config.Oversold {
 			if state.holding {
-				log.Warn().Float64("last_rsi", last).Msg("RSI.Oversold.InPosition")
+				log.Warn().Str("symbol", symbol).Float64("last_rsi", last).Msg("RSI.Oversold.InPosition")
 			} else {
 				r.pubsub.Publish(events.SignalBuy, events.SignalBuyPayload{symbol})
 				state.holding = true
