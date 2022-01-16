@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"trader/events"
 	"trader/exchange"
+	"trader/integrations"
 	"trader/strategy"
-	"trader/tasks"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -12,9 +14,11 @@ import (
 
 // TODO: impl. DCA
 
-var key string = os.Getenv("BINANCE_API_KEY")
-var secret string = os.Getenv("BINANCE_SECRET_KEY")
-var redisAddr string = os.Getenv("REDIS_ADDR")
+var key = os.Getenv("BINANCE_API_KEY")
+var secret = os.Getenv("BINANCE_SECRET_KEY")
+var natsURL = os.Getenv("NATS_URL")
+var telegramApiToken = os.Getenv("TELEGRAM_API_TOKEN")
+var telegramChatID = os.Getenv("TELEGRAM_CHAT_ID")
 
 func init() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
@@ -28,11 +32,13 @@ var symbols = []string{
 }
 
 func main() {
-	t := tasks.NewTasks(redisAddr)
-	defer t.Close()
+	pubsub := events.NewPubSub(natsURL)
+	defer pubsub.Close()
 
-	bex := exchange.NewBinance(key, secret, t, false)
-	bex.PrintUserInfo()
+	bex := exchange.NewBinance(key, secret, pubsub, false)
+	bex.PrintAccountInfo()
+
+	telegram := integrations.NewTelegramBot(telegramApiToken, telegramChatID, bex)
 
 	for _, symbol := range symbols {
 		go bex.Kline(symbol, interval)
@@ -43,23 +49,24 @@ func main() {
 		Oversold:   40,
 	}
 
-	rsi := strategy.NewRsi("RSI_60-40", config, t, symbols)
+	rsi := strategy.NewRsi("RSI_60-40", config, pubsub, symbols)
 
-	handlers := tasks.NewHandlers(redisAddr)
-
-	handlers.SubscribeKline(func(p tasks.KlinePayload) error {
+	pubsub.Subscribe(events.Kline, func(p events.KlinePayload) {
 		rsi.Predict(p.Kline, p.Symbol)
-		return nil
 	})
 
-	handlers.SubscribeSignalBuy(func(p tasks.SignalBuyPayload) error {
-		return bex.Buy(p.Symbol)
+	pubsub.Subscribe(events.SignalBuy, func(p events.SignalBuyPayload) {
+		bex.Buy(p.Symbol)
 	})
 
-	handlers.SubscribeSignalSell(func(p tasks.SignalSellPayload) error {
-		return bex.Sell(p.Symbol)
+	pubsub.Subscribe(events.SignalSell, func(p events.SignalSellPayload) {
+		bex.Sell(p.Symbol)
 	})
 
-	// TODO: graceful shutdown
-	handlers.Run()
+	pubsub.Subscribe(events.NotifyTrade, func(p events.NotifyTradePayload) {
+		message := fmt.Sprintf("Executed %v\nToken: %v\nAmount: %v", p.Type, p.Symbol, p.Amount)
+		telegram.SendMessage(message)
+	})
+
+	telegram.ListenForCommands()
 }

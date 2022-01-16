@@ -1,7 +1,7 @@
 package strategy
 
 import (
-	"trader/tasks"
+	"trader/events"
 	"trader/types"
 
 	"github.com/markcheno/go-talib"
@@ -11,13 +11,13 @@ import (
 var Period = 14
 
 type RsiConfig struct {
-	Overbought int
-	Oversold   int
+	Overbought float64
+	Oversold   float64
 }
 type Rsi struct {
 	id     string
 	config RsiConfig
-	task   tasks.Tasks
+	pubsub events.PubSub
 	states map[string]*State
 }
 
@@ -41,12 +41,15 @@ func makeState(symbols []string) map[string]*State {
 	return states
 }
 
-func NewRsi(id string, config RsiConfig, task tasks.Tasks, symbols []string) Rsi {
-	log.Debug().Str("ID", id).Msg("Init Strategy")
+func NewRsi(id string, config RsiConfig, pubsub events.PubSub, symbols []string) Rsi {
+	log.Trace().
+		Str("ID", id).
+		Float64("overbought", config.Overbought).Float64("oversold", config.Oversold).
+		Msg("Strategy.RSI.Init")
 
 	states := makeState(symbols)
 
-	return Rsi{id, config, task, states}
+	return Rsi{id, config, pubsub, states}
 }
 
 func (r *Rsi) GetState(symbol string) State {
@@ -69,21 +72,21 @@ func (r *Rsi) Predict(k types.Kline, symbol string) {
 		rsi := talib.Rsi(state.closes, Period)
 		last := rsi[len(rsi)-1]
 
-		log.Debug().Str("symbol", symbol).Float64("last_rsi", last).Msg(r.id)
+		log.Trace().Str("symbol", symbol).Float64("last_rsi", last).Msg(r.id)
 
-		if last > float64(r.config.Overbought) {
+		if last > r.config.Overbought {
 			if state.holding {
-				r.task.NewTask(tasks.SignalSell, tasks.SignalSellPayload{symbol})
+				r.pubsub.Publish(events.SignalSell, events.SignalSellPayload{symbol})
 			} else {
-				log.Warn().Msg("Overbought but not in position")
+				log.Warn().Str("symbol", symbol).Float64("last_rsi", last).Msg("RSI.Overbought.NoPosition")
 			}
 		}
 
-		if last < float64(r.config.Oversold) {
+		if last < r.config.Oversold {
 			if state.holding {
-				log.Warn().Msg("Oversold but already in position")
+				log.Warn().Str("symbol", symbol).Float64("last_rsi", last).Msg("RSI.Oversold.InPosition")
 			} else {
-				r.task.NewTask(tasks.SignalBuy, tasks.SignalBuyPayload{symbol})
+				r.pubsub.Publish(events.SignalBuy, events.SignalBuyPayload{symbol})
 				state.holding = true
 			}
 		}
