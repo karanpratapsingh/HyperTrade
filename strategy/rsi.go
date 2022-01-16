@@ -45,7 +45,7 @@ func NewRsi(id string, config RsiConfig, pubsub events.PubSub, symbols []string)
 	log.Trace().
 		Str("ID", id).
 		Float64("overbought", config.Overbought).Float64("oversold", config.Oversold).
-		Msg("Strategy.RSI.Init")
+		Msg("Strategy.Rsi.Init")
 
 	states := makeState(symbols)
 
@@ -83,13 +83,13 @@ func (r *Rsi) Predict(k types.Kline, symbol string) {
 			if state.holding {
 				r.pubsub.Publish(events.SignalSell, events.SignalSellPayload{symbol})
 			} else {
-				log.Warn().Str("symbol", symbol).Float64("last_rsi", last).Msg("RSI.Overbought.NoPosition")
+				log.Warn().Str("symbol", symbol).Float64("last_rsi", last).Msg("Rsi.Overbought.NoPosition")
 			}
 		}
 
 		if last < r.config.Oversold {
 			if state.holding {
-				log.Warn().Str("symbol", symbol).Float64("last_rsi", last).Msg("RSI.Oversold.InPosition")
+				log.Warn().Str("symbol", symbol).Float64("last_rsi", last).Msg("Rsi.Oversold.InPosition")
 			} else {
 				r.pubsub.Publish(events.SignalBuy, events.SignalBuyPayload{symbol})
 				state.holding = true

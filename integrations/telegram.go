@@ -13,6 +13,11 @@ type Telegram struct {
 	ex     exchange.Binance
 }
 
+var (
+	PingCommand    = "ping"
+	BalanceCommand = "balance"
+)
+
 func NewTelegramBot(token string, chatId int64, ex exchange.Binance) Telegram {
 	log.Trace().Msg("TelegramBot.Init")
 
@@ -22,10 +27,13 @@ func NewTelegramBot(token string, chatId int64, ex exchange.Binance) Telegram {
 		log.Fatal().Err(err).Msg("TelegramBot.Init")
 	}
 
+	setDefaultCommands(bot)
+
 	return Telegram{bot, chatId, ex}
 }
 
 func (t Telegram) SendMessage(msg string) {
+	log.Info().Msg("TelegramBot.SendMessage")
 	message := telegram.NewMessage(t.chatID, msg)
 	_, err := t.bot.Send(message)
 
@@ -35,7 +43,7 @@ func (t Telegram) SendMessage(msg string) {
 }
 
 func (t Telegram) ListenForCommands() {
-	log.Info().Msg("TelegramBot.ListenForCommands")
+	log.Trace().Msg("TelegramBot.ListenForCommands.Init")
 
 	update := telegram.NewUpdate(0)
 	update.Timeout = 60
@@ -53,8 +61,14 @@ func (t Telegram) ListenForCommands() {
 
 		message := telegram.NewMessage(update.Message.Chat.ID, "")
 
-		switch update.Message.Command() {
-		case "balance":
+		command := update.Message.Command()
+
+		log.Info().Str("command", command).Msg("TelegramBot.ListenForCommands")
+
+		switch command {
+		case PingCommand:
+			message.Text = "Pong"
+		case BalanceCommand:
 			acc := t.ex.GetAccount()
 			message.Text = t.ex.StringifyBalance(acc.Balances)
 		default:
@@ -65,5 +79,20 @@ func (t Telegram) ListenForCommands() {
 		if err != nil {
 			log.Error().Err(err).Msg("TelegramBot.ListenForCommands")
 		}
+	}
+}
+
+func setDefaultCommands(bot *telegram.BotAPI) {
+	log.Debug().Msg("TelegramBot.SetMyCommands")
+
+	ping := telegram.BotCommand{PingCommand, "Ping"}
+	balance := telegram.BotCommand{BalanceCommand, "Get available balance"}
+
+	config := telegram.NewSetMyCommands(ping, balance)
+
+	_, err := bot.Request(config)
+
+	if err != nil {
+		log.Fatal().Err(err).Msg("TelegramBot.SetCommands")
 	}
 }
