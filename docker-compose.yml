@@ -12,25 +12,17 @@ services:
       - .:/app
     ports:
       - 4000:4000
+    depends_on:
+      - nats
     networks:
       - trader
 
-  redis:
-    image: redis:6.2.5
-    container_name: redis
+  nats:
+    container_name: nats
+    image: nats:2.7.0-alpine
     ports:
-      - 6379:6379
+      - 4222:4222
     networks:
       - trader
-  monitor:
-    container_name: monitor
-    image: hibiken/asynqmon
-    command:
-      - "--redis-addr=redis:6379"
-    ports:
-      - 8080:8080
-    networks:
-      - trader
-
 networks:
   trader:
