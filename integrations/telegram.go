@@ -1,7 +1,6 @@
 package integrations
 
 import (
-	"strconv"
 	"trader/exchange"
 
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -14,14 +13,8 @@ type Telegram struct {
 	ex     exchange.Binance
 }
 
-func NewTelegramBot(token string, chatID string, ex exchange.Binance) Telegram {
+func NewTelegramBot(token string, chatId int64, ex exchange.Binance) Telegram {
 	log.Trace().Msg("TelegramBot.Init")
-
-	cid, err := strconv.ParseInt(chatID, 10, 64)
-
-	if err != nil {
-		log.Fatal().Err(err).Msg("TelegramBot.Parse.ChatID")
-	}
 
 	bot, err := telegram.NewBotAPI(token)
 
@@ -29,7 +22,7 @@ func NewTelegramBot(token string, chatID string, ex exchange.Binance) Telegram {
 		log.Fatal().Err(err).Msg("TelegramBot.Init")
 	}
 
-	return Telegram{bot, cid, ex}
+	return Telegram{bot, chatId, ex}
 }
 
 func (t Telegram) SendMessage(msg string) {

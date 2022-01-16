@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"trader/env"
 	"trader/events"
 	"trader/exchange"
 	"trader/integrations"
@@ -13,12 +14,6 @@ import (
 )
 
 // TODO: impl. DCA
-
-var key = os.Getenv("BINANCE_API_KEY")
-var secret = os.Getenv("BINANCE_SECRET_KEY")
-var natsURL = os.Getenv("NATS_URL")
-var telegramApiToken = os.Getenv("TELEGRAM_API_TOKEN")
-var telegramChatID = os.Getenv("TELEGRAM_CHAT_ID")
 
 func init() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
@@ -32,13 +27,15 @@ var symbols = []string{
 }
 
 func main() {
-	pubsub := events.NewPubSub(natsURL)
+	env := env.Get()
+
+	pubsub := events.NewPubSub(env.NatsUrl)
 	defer pubsub.Close()
 
-	bex := exchange.NewBinance(key, secret, pubsub, false)
+	bex := exchange.NewBinance(env.BinanceApiKey, env.BinanceApiSecretKey, pubsub, false)
 	bex.PrintAccountInfo()
 
-	telegram := integrations.NewTelegramBot(telegramApiToken, telegramChatID, bex)
+	telegram := integrations.NewTelegramBot(env.TelegramApiToken, env.TelegramChatId, bex)
 
 	for _, symbol := range symbols {
 		go bex.Kline(symbol, interval)
