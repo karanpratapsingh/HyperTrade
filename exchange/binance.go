@@ -110,7 +110,9 @@ func (b Binance) Kline(symbol string, interval string) {
 
 	errHandler := func(err error) {
 		log.Error().Err(err).Msg("Binance.KLine")
-		// Try to restart
+
+		// Try to restart ws connection
+		log.Warn().Msg("Recover.Binance.KLine")
 		b.Kline(symbol, interval)
 	}
 

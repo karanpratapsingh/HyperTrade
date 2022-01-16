@@ -72,7 +72,12 @@ func (r *Rsi) Predict(k types.Kline, symbol string) {
 		rsi := talib.Rsi(state.closes, Period)
 		last := rsi[len(rsi)-1]
 
-		log.Trace().Str("symbol", symbol).Float64("last_rsi", last).Msg(r.id)
+		log.Debug().
+			Str("symbol", symbol).
+			Float64("price", k.Price).
+			Bool("holding", state.holding).
+			Float64("last_rsi", last).
+			Msg(r.id)
 
 		if last > r.config.Overbought {
 			if state.holding {
