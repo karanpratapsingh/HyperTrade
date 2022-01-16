@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/adshao/go-binance/v2 v2.3.3
+	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/markcheno/go-talib v0.0.0-20190307022042-cd53a9264d70
 	github.com/nats-io/nats.go v1.13.1-0.20211122170419-d7c1d78a50fc
 	github.com/rs/zerolog v1.26.1
