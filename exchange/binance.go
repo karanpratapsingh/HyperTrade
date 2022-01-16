@@ -74,6 +74,7 @@ func (Binance) StringifyBalance(userBalances []binance.Balance) string {
 
 func (b Binance) Buy(symbol string) {
 	// TODO: get live quantity data for $1
+	// GET TOKEN, symbol won't work
 	log.Info().Str("symbol", symbol).Msg(events.SignalBuy)
 
 	amount := 0.001
