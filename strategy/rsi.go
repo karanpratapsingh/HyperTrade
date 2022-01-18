@@ -52,10 +52,6 @@ func NewRsi(id string, config RsiConfig, pubsub events.PubSub, symbols []string)
 	return Rsi{id, config, pubsub, states}
 }
 
-func (r *Rsi) GetState(symbol string) State {
-	return *r.states[symbol]
-}
-
 func (r *Rsi) Predict(k types.Kline, symbol string) {
 	// Return if Kline isn't closed yet
 	if !k.Closed {
