@@ -3,6 +3,7 @@ package exchange
 import (
 	"context"
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 	"trader/events"
@@ -108,7 +109,7 @@ func (b Binance) getMinNotional(symbol string) float64 {
 func (b Binance) GetMinQuantity(symbol string, price float64) float64 {
 	var min float64 = b.getMinNotional(symbol)
 
-	quantity := (1 / price) * min
+	quantity := toFixed((1/price)*min, 3)
 
 	log.Debug().Float64("min", min).Float64("price", price).Float64("quantity", quantity).Msg("Binance.GetMinQuantity")
 	return quantity
@@ -117,7 +118,7 @@ func (b Binance) GetMinQuantity(symbol string, price float64) float64 {
 func (b Binance) Trade(side binance.SideType, symbol string, price float64) {
 	log.Info().Interface("side", side).Str("symbol", symbol).Float64("price", price).Msg(events.SignalTrade)
 
-	quantity := fmt.Sprintf("%.4f", b.GetMinQuantity(symbol, price))
+	quantity := fmt.Sprintf("%f", b.GetMinQuantity(symbol, price))
 
 	order, err := b.client.NewCreateOrderService().
 		Symbol(symbol).
@@ -163,4 +164,13 @@ func (b Binance) Kline(symbol string, interval string) {
 	}
 
 	binance.WsKlineServe(symbol, interval, wsKlineHandler, errHandler)
+}
+
+func round(num float64) int {
+	return int(num + math.Copysign(0.5, num))
+}
+
+func toFixed(num float64, precision int) float64 {
+	output := math.Pow(10, float64(precision))
+	return float64(round(num*output)) / output
 }
