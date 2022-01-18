@@ -32,8 +32,9 @@ func NewTelegramBot(token string, chatId int64, ex exchange.Binance) Telegram {
 	return Telegram{bot, chatId, ex}
 }
 
-func (t Telegram) SendMessage(msg string) {
-	log.Info().Msg("TelegramBot.SendMessage")
+func (t Telegram) SendMessage(event string, msg string) {
+	log.Info().Str("event", event).Msg("TelegramBot.SendMessage")
+
 	message := telegram.NewMessage(t.chatID, msg)
 	_, err := t.bot.Send(message)
 

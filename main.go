@@ -61,8 +61,8 @@ func main() {
 	})
 
 	pubsub.Subscribe(events.NotifyTrade, func(p events.NotifyTradePayload) {
-		message := fmt.Sprintf("Executed %v\nToken: %v\nAmount: %v", p.Type, p.Symbol, p.Amount)
-		telegram.SendMessage(message)
+		message := fmt.Sprintf("Executed Order\n\nID: %v\nType: %v\nSymbol: %v\nClose Price: %v\nAmount: %v", p.ID, p.Type, p.Symbol, p.Price, p.Amount)
+		telegram.SendMessage(events.NotifyTrade, message)
 	})
 
 	telegram.ListenForCommands()
