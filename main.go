@@ -32,7 +32,7 @@ func main() {
 	pubsub := events.NewPubSub(env.NatsUrl, env.NatsUser, env.NatsPass)
 	defer pubsub.Close()
 
-	bex := exchange.NewBinance(env.BinanceApiKey, env.BinanceApiSecretKey, pubsub, false)
+	bex := exchange.NewBinance(env.BinanceApiKey, env.BinanceApiSecretKey, pubsub, env.BinanceTestnet)
 	bex.PrintAccountInfo()
 
 	telegram := integrations.NewTelegramBot(env.TelegramApiToken, env.TelegramChatId, bex)
