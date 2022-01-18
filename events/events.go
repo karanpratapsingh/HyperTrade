@@ -28,7 +28,9 @@ type SignalSellPayload struct {
 var NotifyTrade string = "Event:Notify:Trade"
 
 type NotifyTradePayload struct {
+	ID     int64
 	Type   binance.SideType
 	Symbol string
+	Price  float64
 	Amount float64
 }
