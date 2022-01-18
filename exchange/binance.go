@@ -47,14 +47,19 @@ func (b Binance) PrintAccountInfo() {
 	fmt.Println("-------- Account Info --------")
 	fmt.Println("Type:", acc.AccountType)
 	fmt.Println("Can Trade:", acc.CanTrade)
+	fmt.Println("Test Mode:", b.test)
 	fmt.Println(b.StringifyBalance(acc.Balances))
 	fmt.Println("------------------------------")
 }
 
-func (Binance) StringifyBalance(userBalances []binance.Balance) string {
-	var balances = []string{
-		"Balance:",
+func (b Binance) StringifyBalance(userBalances []binance.Balance) string {
+	header := "Balance:"
+
+	if b.test {
+		header = fmt.Sprintln("Test", header)
 	}
+
+	var balances = []string{header}
 
 	for _, balance := range userBalances {
 		amt, err := strconv.ParseFloat(balance.Free, 64)
