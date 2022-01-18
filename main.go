@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"trader/env"
 	"trader/events"
@@ -13,7 +12,11 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// TODO: impl. DCA
+/* TODO:
+ *	implement more strategies. i.e. SMA, DSMA etc.
+ *  implement DCA
+ *  new coin listing subscribe
+ */
 
 func init() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
@@ -21,10 +24,7 @@ func init() {
 
 var interval string = "1m"
 
-var symbols = []string{
-	"BTCUSDT",
-	"ETHUSDT",
-}
+var symbols = []string{"ETHUSDT"}
 
 func main() {
 	env := env.Get()
@@ -52,16 +52,13 @@ func main() {
 		rsi.Predict(p.Kline, p.Symbol)
 	})
 
-	pubsub.Subscribe(events.SignalBuy, func(p events.SignalBuyPayload) {
-		bex.Buy(p.Symbol)
+	pubsub.Subscribe(events.SignalTrade, func(p events.SignalTradePayload) {
+		bex.Trade(p.Side, p.Symbol, p.Price)
 	})
 
-	pubsub.Subscribe(events.SignalSell, func(p events.SignalSellPayload) {
-		bex.Sell(p.Symbol)
-	})
 
 	pubsub.Subscribe(events.NotifyTrade, func(p events.NotifyTradePayload) {
-		message := fmt.Sprintf("Executed Order\n\nID: %v\nType: %v\nSymbol: %v\nClose Price: %v\nAmount: %v", p.ID, p.Type, p.Symbol, p.Price, p.Amount)
+		message := telegram.FormatTradeMessage(p)
 		telegram.SendMessage(events.NotifyTrade, message)
 	})
 

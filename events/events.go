@@ -13,24 +13,21 @@ type KlinePayload struct {
 	Symbol string
 }
 
-var SignalBuy string = "Event:Signal:Buy"
+var SignalTrade string = "Event:Signal:Trade"
 
-type SignalBuyPayload struct {
+type SignalTradePayload struct {
+	Side   binance.SideType
 	Symbol string
-}
-
-var SignalSell string = "Event:Signal:Sell"
-
-type SignalSellPayload struct {
-	Symbol string
+	Price  float64
 }
 
 var NotifyTrade string = "Event:Notify:Trade"
 
 type NotifyTradePayload struct {
-	ID     int64
-	Type   binance.SideType
-	Symbol string
-	Price  float64
-	Amount float64
+	ID       int64
+	Side     binance.SideType
+	Type     binance.OrderType
+	Symbol   string
+	Price    float64
+	Quantity string
 }

@@ -4,6 +4,7 @@ import (
 	"trader/events"
 	"trader/types"
 
+	"github.com/adshao/go-binance/v2"
 	"github.com/markcheno/go-talib"
 	"github.com/rs/zerolog/log"
 )
@@ -77,7 +78,7 @@ func (r *Rsi) Predict(k types.Kline, symbol string) {
 
 		if last > r.config.Overbought {
 			if state.holding {
-				r.pubsub.Publish(events.SignalSell, events.SignalSellPayload{symbol})
+				r.pubsub.Publish(events.SignalTrade, events.SignalTradePayload{binance.SideTypeSell, symbol, k.Price})
 			} else {
 				log.Warn().Str("symbol", symbol).Float64("last_rsi", last).Msg("Rsi.Overbought.NoPosition")
 			}
@@ -87,7 +88,7 @@ func (r *Rsi) Predict(k types.Kline, symbol string) {
 			if state.holding {
 				log.Warn().Str("symbol", symbol).Float64("last_rsi", last).Msg("Rsi.Oversold.InPosition")
 			} else {
-				r.pubsub.Publish(events.SignalBuy, events.SignalBuyPayload{symbol})
+				r.pubsub.Publish(events.SignalTrade, events.SignalTradePayload{binance.SideTypeBuy, symbol, k.Price})
 				state.holding = true
 			}
 		}
