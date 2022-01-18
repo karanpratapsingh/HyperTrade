@@ -1,6 +1,8 @@
 package integrations
 
 import (
+	"fmt"
+	"trader/events"
 	"trader/exchange"
 
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -81,6 +83,25 @@ func (t Telegram) ListenForCommands() {
 			log.Error().Err(err).Msg("TelegramBot.ListenForCommands")
 		}
 	}
+}
+
+func (t Telegram) FormatTradeMessage(p events.NotifyTradePayload) string {
+	message := fmt.Sprintf(
+		"Executed %v Order\n\n"+
+			"ID: %v\n"+
+			"Type: %v\n"+
+			"Symbol: %v\n"+
+			"Last Price: %v\n"+
+			"Quantity: %v",
+		p.Side, p.ID, p.Type, p.Symbol, p.Price, p.Quantity)
+
+	return message
+}
+
+func (t Telegram) FormatErrorMessage(p events.CriticalErrorPayload) string {
+	message := fmt.Sprintf("Critical Error\n\n%v", p.Error)
+
+	return message
 }
 
 func setDefaultCommands(bot *telegram.BotAPI) {

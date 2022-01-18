@@ -6,6 +6,12 @@ import (
 	"github.com/adshao/go-binance/v2"
 )
 
+var CriticalError string = "Event:CriticalError"
+
+type CriticalErrorPayload struct {
+	Error string
+}
+
 var Kline string = "Event:Kline"
 
 type KlinePayload struct {

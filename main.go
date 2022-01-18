@@ -56,6 +56,10 @@ func main() {
 		bex.Trade(p.Side, p.Symbol, p.Price)
 	})
 
+	pubsub.Subscribe(events.CriticalError, func(p events.CriticalErrorPayload) {
+		message := telegram.FormatErrorMessage(p)
+		telegram.SendMessage(events.CriticalError, message)
+	})
 
 	pubsub.Subscribe(events.NotifyTrade, func(p events.NotifyTradePayload) {
 		message := telegram.FormatTradeMessage(p)
