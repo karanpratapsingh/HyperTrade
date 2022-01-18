@@ -79,23 +79,62 @@ func (b Binance) StringifyBalance(userBalances []binance.Balance) string {
 	return strings.Join(balances, "\n")
 }
 
-func (b Binance) Buy(symbol string) {
-	// TODO: get live quantity data for $1
-	// GET TOKEN, symbol won't work
-	log.Info().Str("symbol", symbol).Msg(events.SignalBuy)
+func (b Binance) getMinNotional(symbol string) float64 {
+	var minNotional string
 
-	amount := 0.001
+	info, err := b.client.NewExchangeInfoService().Symbol(symbol).Do(context.TODO())
 
-	payload := events.NotifyTradePayload{binance.SideTypeBuy, symbol, amount}
-	b.pubsub.Publish(events.NotifyTrade, payload)
+	if err != nil {
+		log.Error().Err(err).Msg("Binance.getMinNotional")
+	}
+
+	filters := info.Symbols[0].Filters
+
+	for _, filter := range filters {
+		if filter["filterType"] == "MIN_NOTIONAL" {
+			minNotional = filter["minNotional"].(string)
+		}
+	}
+
+	min, err := strconv.ParseFloat(minNotional, 64)
+
+	if err != nil {
+		log.Error().Err(err).Msg("Binance.getMinNotional.ParseFloat")
+	}
+
+	return min
 }
 
-func (b Binance) Sell(symbol string) {
-	log.Info().Str("symbol", symbol).Msg(events.SignalSell)
+func (b Binance) GetMinQuantity(symbol string, price float64) float64 {
+	var min float64 = b.getMinNotional(symbol)
 
-	amount := 0.001
+	quantity := (1 / price) * min
 
-	payload := events.NotifyTradePayload{binance.SideTypeSell, symbol, amount}
+	log.Debug().Float64("min", min).Float64("price", price).Float64("quantity", quantity).Msg("Binance.GetMinQuantity")
+	return quantity
+}
+
+func (b Binance) Trade(side binance.SideType, symbol string, price float64) {
+	log.Info().Interface("side", side).Str("symbol", symbol).Float64("price", price).Msg(events.SignalTrade)
+
+	quantity := fmt.Sprintf("%.4f", b.GetMinQuantity(symbol, price))
+
+	order, err := b.client.NewCreateOrderService().
+		Symbol(symbol).
+		Side(side).
+		Type(binance.OrderTypeMarket).
+		Quantity(quantity).
+		Do(context.Background())
+
+	if err != nil {
+		log.Error().Interface("side", side).Float64("price", price).Str("quantity", quantity).Err(err).Msg("Binance.Trade")
+		b.pubsub.Publish(events.CriticalError, events.CriticalErrorPayload{err.Error()})
+		return
+	}
+
+	log.Info().Interface("side", side).Float64("price", price).Str("quantity", quantity).Msg("Binance.Trade.Order")
+
+	payload := events.NotifyTradePayload{order.OrderID, order.Side, order.Type, symbol, price, quantity}
 	b.pubsub.Publish(events.NotifyTrade, payload)
 }
 
