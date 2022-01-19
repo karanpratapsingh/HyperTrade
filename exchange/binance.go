@@ -80,6 +80,7 @@ func (b Binance) StringifyBalance(userBalances []binance.Balance) string {
 	return strings.Join(balances, "\n")
 }
 
+// Ref: https://www.binance.com/api/v3/exchangeInfo?symbol=ETHUSDT
 func (b Binance) getMinNotional(symbol string) float64 {
 	var minNotional string
 
