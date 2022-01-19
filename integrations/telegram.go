@@ -78,6 +78,17 @@ func (t Telegram) ListenForCommands() {
 			message.Text = "Command not defined"
 		}
 
+		// TODO: disable join all together?
+		if update.Message.Chat.ID != t.chatID {
+			from := update.Message.From
+
+			log.Warn().Str("name", from.FirstName).Int("ID", int(from.ID)).Msg("Unauthorized Activity")
+			message.Text = "You are not authorized, your activity has been recorded."
+
+			notification := fmt.Sprintf("Unauthorized Activity\n\nID: %v\nName: %v", from.ID, from.FirstName)
+			t.SendMessage(events.CriticalError, notification)
+		}
+
 		_, err := t.bot.Send(message)
 		if err != nil {
 			log.Error().Err(err).Msg("TelegramBot.ListenForCommands")
