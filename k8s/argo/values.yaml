@@ -1,0 +1,11 @@
+namespace: argocd
+
+application:
+  name: app
+  repoURL: https://github.com/karanpratapsingh/trader.git
+  path: k8s/app
+
+repository:
+  name: trader-github
+  url: https://github.com/karanpratapsingh/trader
+  token: "" # This is set at runtime
