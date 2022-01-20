@@ -38,9 +38,3 @@ resource "null_resource" "argo_install" {
     command = "KUBECONFIG=${local.kube_config_file} kubectl apply -n ${local.namespace} -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml"
   }
 }
-
-# resource "null_resource" "argo_create_app" {
-#   provisioner "local-exec" {
-#     command = "KUBECONFIG=${local.kube_config_file} helm"
-#   }
-# }
