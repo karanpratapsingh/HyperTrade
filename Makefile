@@ -13,3 +13,6 @@ run:
 
 build:
 	go build main.go
+
+connect-argo:
+	kubectl port-forward svc/argocd-server -n argocd 8080:443
