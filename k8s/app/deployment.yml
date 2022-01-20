@@ -14,8 +14,8 @@ spec:
         app: trader
     spec:
       containers:
-        - name: nginx
-          image: nginx:1.20
+        - name: k8s
+          image: karanpratapsingh4/kubernetes:hello-world
           ports:
             - containerPort: 80
 ---
