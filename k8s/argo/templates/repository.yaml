@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.repository.name }}
+  namespace: {{ .Values.namespace}}
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  url: {{ .Values.repository.url }}
+  password: {{ .Values.repository.token }}
+  username: not-used

@@ -89,7 +89,7 @@ func (r *Rsi) Predict(k types.Kline, symbol string) {
 				log.Warn().Str("symbol", symbol).Float64("last_rsi", last).Msg("Rsi.Oversold.InPosition")
 			} else {
 				r.pubsub.Publish(events.SignalTrade, events.SignalTradePayload{binance.SideTypeBuy, symbol, k.Price})
-				state.holding = true
+				state.holding = true // TODO: As we communicate async, we actually don't know if the order went through
 			}
 		}
 	}

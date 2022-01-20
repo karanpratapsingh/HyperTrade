@@ -1,0 +1,35 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: trader-deployment
+spec:
+  replicas: 1
+  strategy: {}
+  selector:
+    matchLabels:
+      app: trader      
+  template:
+    metadata:
+      labels:
+        app: trader
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.20
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trader-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: trader
+    version: "1"
+  ports:
+    - name: trader
+      protocol: TCP
+      port: 80
+      targetPort: 80
