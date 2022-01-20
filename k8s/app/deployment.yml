@@ -27,7 +27,6 @@ spec:
   type: LoadBalancer
   selector:
     app: trader
-    version: "1"
   ports:
     - name: trader
       protocol: TCP
