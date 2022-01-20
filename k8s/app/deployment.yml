@@ -14,15 +14,15 @@ spec:
         app: trader
     spec:
       containers:
-        - name: nginx
-          image: nginx:1.20
+        - name: hello
+          image: karanpratapsingh4/kubernetes:hello-world
           ports:
             - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: trader-svc
+  name: trader-service
 spec:
   type: LoadBalancer
   selector:
