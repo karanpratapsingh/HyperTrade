@@ -110,7 +110,8 @@ func (b Binance) getMinNotional(symbol string) float64 {
 func (b Binance) GetMinQuantity(symbol string, price float64) float64 {
 	var min float64 = b.getMinNotional(symbol)
 
-	quantity := toFixed((1/price)*min, 5)
+	// FIXME: Increase quantity due to precision loss
+	quantity := toFixed((1/price)*min, 5) * 1.25
 
 	log.Debug().Float64("min", min).Float64("price", price).Float64("quantity", quantity).Msg("Binance.GetMinQuantity")
 	return quantity
