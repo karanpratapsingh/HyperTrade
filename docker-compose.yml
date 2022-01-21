@@ -31,6 +31,21 @@ services:
     networks:
       - platform
 
+  strategy:
+    container_name: strategy
+    image: strategy
+    command: tail -f /dev/null
+    build:
+      context: ./services/strategy
+    env_file:
+      - ./services/strategy/.env
+    volumes:
+      - ./services/strategy:/app
+    depends_on:
+      - nats
+    networks:
+      - platform
+
   nats:
     container_name: nats
     image: nats:2.7.0-alpine
