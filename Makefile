@@ -9,6 +9,10 @@ dev-notification:
 	make up
 	docker exec -it notification bash
 
+dev-strategy:
+	make up
+	docker exec -it strategy bash
+
 stop:
 	docker compose stop
 
