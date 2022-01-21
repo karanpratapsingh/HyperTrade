@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "services/exchange"
+    },
+    {
+      "path": "services/notification"
+    },
+    {
+      "path": "services/strategy"
+    }
+  ]
+}
