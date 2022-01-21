@@ -15,11 +15,11 @@ $ cd ..
 
 _Note: If fails with `Error: Post "http://localhost/api/v1/namespaces"` just re-apply._
 
-This should create a `k8s/kubeconfig.yaml` file that we can use with `kubectl` and `helm`
+This should create a `infrastructure/k8s/kubeconfig.yaml` file that we can use with `kubectl` and `helm`
 
 ```
-$ chmod 600 ./k8s/kubeconfig.yaml
-$ export KUBECONFIG=./k8s/kubeconfig.yaml
+$ chmod 600 ./infrastructure/k8s/kubeconfig.yaml
+$ export KUBECONFIG=./infrastructure/k8s/kubeconfig.yaml
 ```
 
 - Get default Argo CD password
@@ -50,4 +50,4 @@ $ export ARGO_GITHUB_TOKEN=your_github_token
 $ helm install k8s/argo --set repository.token=$ARGO_GITHUB_TOKEN --generate-name
 ```
 
-- Now Argo CD should deploy your manifests in `k8s/app` automatically.
+- Now Argo CD should deploy your manifests in `infrastructure/k8s/app` automatically.
