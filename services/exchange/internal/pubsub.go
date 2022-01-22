@@ -1,4 +1,4 @@
-package events
+package internal
 
 import (
 	"github.com/nats-io/nats.go"

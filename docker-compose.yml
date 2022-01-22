@@ -1,21 +1,50 @@
 version: "3.8"
 
 services:
-  trader:
-    container_name: trader
-    image: trader
+  exchange:
+    container_name: exchange
+    image: exchange
+    command: tail -f /dev/null
     build:
-      context: .
+      context: ./services/exchange
     env_file:
-      - .env
+      - ./services/exchange/.env
     volumes:
-      - .:/app
-    ports:
-      - 4000:4000
+      - ./services/exchange:/app
     depends_on:
       - nats
     networks:
-      - trader
+      - platform
+
+  notification:
+    container_name: notification
+    image: notification
+    command: tail -f /dev/null
+    build:
+      context: ./services/notification
+    env_file:
+      - ./services/notification/.env
+    volumes:
+      - ./services/notification:/app
+    depends_on:
+      - nats
+    networks:
+      - platform
+
+  strategy:
+    container_name: strategy
+    image: strategy
+    command: tail -f /dev/null
+    build:
+      context: ./services/strategy
+    env_file:
+      - ./services/strategy/.env
+    volumes:
+      - ./services/strategy:/app
+    depends_on:
+      - nats
+    networks:
+      - platform
 
   nats:
     container_name: nats
@@ -26,6 +55,6 @@ services:
     ports:
       - 4222:4222
     networks:
-      - trader
+      - platform
 networks:
-  trader:
+  platform:

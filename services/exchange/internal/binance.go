@@ -1,4 +1,4 @@
-package exchange
+package internal
 
 import (
 	"context"
@@ -6,9 +6,6 @@ import (
 	"math"
 	"strconv"
 	"strings"
-	"trader/events"
-
-	"trader/types"
 
 	"github.com/adshao/go-binance/v2"
 	"github.com/rs/zerolog/log"
@@ -18,11 +15,11 @@ var ZeroBalance = 0.00000000
 
 type Binance struct {
 	client *binance.Client
-	pubsub events.PubSub
+	pubsub PubSub
 	test   bool
 }
 
-func NewBinance(key, secret string, pubsub events.PubSub, test bool) Binance {
+func NewBinance(key, secret string, pubsub PubSub, test bool) Binance {
 	log.Trace().Str("type", "binance").Bool("test", test).Msg("Binance.Init")
 
 	binance.UseTestnet = test
@@ -118,7 +115,7 @@ func (b Binance) GetMinQuantity(symbol string, price float64) float64 {
 }
 
 func (b Binance) Trade(side binance.SideType, symbol string, price float64) {
-	log.Info().Interface("side", side).Str("symbol", symbol).Float64("price", price).Msg(events.SignalTrade)
+	log.Info().Interface("side", side).Str("symbol", symbol).Float64("price", price).Msg(SignalTradeEvent)
 
 	quantity := fmt.Sprintf("%f", b.GetMinQuantity(symbol, price))
 
@@ -131,14 +128,19 @@ func (b Binance) Trade(side binance.SideType, symbol string, price float64) {
 
 	if err != nil {
 		log.Error().Interface("side", side).Float64("price", price).Str("quantity", quantity).Err(err).Msg("Binance.Trade")
-		b.pubsub.Publish(events.CriticalError, events.CriticalErrorPayload{err.Error()})
+		b.pubsub.Publish(CriticalErrorEvent, CriticalErrorEventPayload{err.Error()})
 		return
 	}
 
 	log.Info().Interface("side", side).Float64("price", price).Str("quantity", quantity).Msg("Binance.Trade.Order")
 
-	payload := events.NotifyTradePayload{order.OrderID, order.Side, order.Type, symbol, price, quantity}
-	b.pubsub.Publish(events.NotifyTrade, payload)
+	payload := NotifyTradeEventPayload{order.OrderID, order.Side, order.Type, symbol, price, quantity}
+	b.pubsub.Publish(NotifyTradeEvent, payload)
+}
+
+type Kline struct {
+	Price  float64
+	Closed bool
 }
 
 func (b Binance) Kline(symbol string, interval string) {
@@ -148,13 +150,13 @@ func (b Binance) Kline(symbol string, interval string) {
 		close := event.Kline.IsFinal
 		price, err := strconv.ParseFloat(event.Kline.Close, 64)
 
-		kline := types.Kline{price, close}
-
 		if err != nil {
 			log.Error().Err(err).Msg("Binance.Kline.Parse")
 		}
 
-		b.pubsub.Publish(events.Kline, events.KlinePayload{kline, symbol})
+		kline := Kline{price, close}
+
+		b.pubsub.Publish(KlineEvent, KlinePayload{kline, symbol})
 	}
 
 	errHandler := func(err error) {

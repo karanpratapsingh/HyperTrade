@@ -1,0 +1,24 @@
+{
+  "folders": [
+    {
+      "name": "Platform",
+      "path": "."
+    },
+    {
+      "name": "Infrastructure",
+      "path": "infrastructure"
+    },
+    {
+      "name": "Exchange Service",
+      "path": "services/exchange"
+    },
+    {
+      "name": "Notification Service",
+      "path": "services/notification"
+    },
+    {
+      "name": "Strategy Service",
+      "path": "services/strategy"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 locals {
   label            = "tf"
-  kube_config_file = "${path.module}/../k8s/kubeconfig.yaml"
+  kube_config_file = "${path.module}/k8s/kubeconfig.yaml"
   namespace        = "argocd"
 }
 

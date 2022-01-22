@@ -1,9 +1,7 @@
-package integrations
+package internal
 
 import (
 	"fmt"
-	"trader/events"
-	"trader/exchange"
 
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/rs/zerolog/log"
@@ -12,7 +10,6 @@ import (
 type Telegram struct {
 	bot    *telegram.BotAPI
 	chatID int64
-	ex     exchange.Binance
 }
 
 var (
@@ -20,7 +17,7 @@ var (
 	BalanceCommand = "balance"
 )
 
-func NewTelegramBot(token string, chatId int64, ex exchange.Binance) Telegram {
+func NewTelegramBot(token string, chatId int64) Telegram {
 	log.Trace().Msg("TelegramBot.Init")
 
 	bot, err := telegram.NewBotAPI(token)
@@ -31,7 +28,7 @@ func NewTelegramBot(token string, chatId int64, ex exchange.Binance) Telegram {
 
 	setDefaultCommands(bot)
 
-	return Telegram{bot, chatId, ex}
+	return Telegram{bot, chatId}
 }
 
 func (t Telegram) SendMessage(event string, msg string) {
@@ -72,8 +69,9 @@ func (t Telegram) ListenForCommands() {
 		case PingCommand:
 			message.Text = "Pong"
 		case BalanceCommand:
-			acc := t.ex.GetAccount()
-			message.Text = t.ex.StringifyBalance(acc.Balances)
+			// TODO: GET THIS FROM EXCHANGE SVC
+			// acc := t.ex.GetAccount()
+			// message.Text = t.ex.StringifyBalance(acc.Balances)
 		default:
 			message.Text = "Command not defined"
 		}
@@ -86,7 +84,7 @@ func (t Telegram) ListenForCommands() {
 			message.Text = "You are not authorized, your activity has been recorded."
 
 			notification := fmt.Sprintf("Unauthorized Activity\n\nID: %v\nName: %v", from.ID, from.FirstName)
-			t.SendMessage(events.CriticalError, notification)
+			t.SendMessage(CriticalErrorEvent, notification)
 		}
 
 		_, err := t.bot.Send(message)
@@ -96,7 +94,7 @@ func (t Telegram) ListenForCommands() {
 	}
 }
 
-func (t Telegram) FormatTradeMessage(p events.NotifyTradePayload) string {
+func (t Telegram) FormatTradeMessage(p NotifyTradeEventPayload) string {
 	message := fmt.Sprintf(
 		"Executed %v Order\n\n"+
 			"ID: %v\n"+
@@ -109,7 +107,7 @@ func (t Telegram) FormatTradeMessage(p events.NotifyTradePayload) string {
 	return message
 }
 
-func (t Telegram) FormatErrorMessage(p events.CriticalErrorPayload) string {
+func (t Telegram) FormatErrorMessage(p CriticalErrorEventPayload) string {
 	message := fmt.Sprintf("Critical Error\n\n%v", p.Error)
 
 	return message

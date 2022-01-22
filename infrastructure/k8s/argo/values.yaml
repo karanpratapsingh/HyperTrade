@@ -3,7 +3,7 @@ namespace: argocd
 application:
   name: app
   repoURL: https://github.com/karanpratapsingh/trader.git
-  path: k8s/app
+  path: infrastructure/k8s/app
 
 repository:
   name: trader-github
