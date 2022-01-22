@@ -19,13 +19,13 @@ async def main():
     rsi = RSI(pubsub)
 
     async def klineHandler(data):
-      await rsi.predict(data)
+        await rsi.predict(data)
 
     await pubsub.subscribe(Events.Kline, klineHandler)
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     try:
-      loop.run_until_complete(main())
+        loop.run_until_complete(main())
     finally:
-      loop.close()
+        loop.close()
