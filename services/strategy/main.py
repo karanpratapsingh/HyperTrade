@@ -1,33 +1,10 @@
 import asyncio
-import nats
-import os
-import time
-import json
 
-class Env():
-    NATS_URL = os.environ['NATS_URL']
-    NATS_USER = os.environ['NATS_USER']
-    NATS_PASS = os.environ['NATS_PASS']
+from internal.rsi import RSI
+from utils.env import Env
+from utils.events import Events
+from utils.pubsub import PubSub
 
-class Events:
-  Kline = "Event:Kline"
-
-
-class PubSub:
-  @staticmethod
-  async def init(url):
-    return await nats.connect(url)
-
-  @staticmethod
-  async def subscribe(nc, event, handler):
-    sub = await nc.subscribe("Event:Kline")
-    async for msg in sub.messages:
-      data = json.loads(msg.data.decode())
-      handler(data)
-
-  @staticmethod
-  async def publish(event, payload):
-    return await nc.publish(event, payload)
 
 async def main():
     url = "{user}:{password}@{url}".format(
@@ -36,16 +13,19 @@ async def main():
         url=Env.NATS_URL
     )
 
-    nc = await PubSub.init(url)
+    instance = await PubSub.init(url)
+    pubsub = PubSub(instance)
 
-    def klineHandler(data):
-      print(data['Kline'])
+    rsi = RSI(pubsub)
 
-    await PubSub.subscribe(nc, Events.Kline, klineHandler)
+    async def klineHandler(data):
+      await rsi.predict(data)
+
+    await pubsub.subscribe(Events.Kline, klineHandler)
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     try:
-        loop.run_until_complete(main())
+      loop.run_until_complete(main())
     finally:
-        loop.close()
+      loop.close()
