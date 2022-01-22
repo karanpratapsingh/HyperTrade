@@ -50,4 +50,4 @@ $ export ARGO_GITHUB_TOKEN=your_github_token
 $ helm install k8s/argo --set repository.token=$ARGO_GITHUB_TOKEN --generate-name
 ```
 
-- Now Argo CD should deploy your manifests in `infrastructure/k8s/app` automatically.
+- Now Argo CD should deploy your manifests in `infrastructure/k8s/app` automatically on commit.
