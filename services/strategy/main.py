@@ -1,6 +1,6 @@
 import asyncio
 
-from internal.rsi import RSI
+from internal.strategy import Strategy
 from utils.env import Env
 from utils.events import Events
 from utils.pubsub import PubSub
@@ -16,12 +16,13 @@ async def main():
     instance = await PubSub.init(url)
     pubsub = PubSub(instance)
 
-    rsi = RSI(pubsub)
+    strategy = Strategy()
 
-    async def klineHandler(data):
-        await rsi.predict(data)
+    async def handler(data):
+        strategy.populate(data)
+        strategy.print()
 
-    await pubsub.subscribe(Events.Kline, klineHandler)
+    await pubsub.subscribe(Events.Kline, handler)
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
