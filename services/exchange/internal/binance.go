@@ -150,11 +150,11 @@ func (b Binance) Kline(symbol string, interval string) {
 		close := event.Kline.IsFinal
 		price, err := strconv.ParseFloat(event.Kline.Close, 64)
 
-		kline := Kline{price, close}
-
 		if err != nil {
 			log.Error().Err(err).Msg("Binance.Kline.Parse")
 		}
+
+		kline := Kline{price, close}
 
 		b.pubsub.Publish(KlineEvent, KlinePayload{kline, symbol})
 	}
