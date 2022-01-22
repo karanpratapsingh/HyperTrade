@@ -139,28 +139,44 @@ func (b Binance) Trade(side binance.SideType, symbol string, price float64) {
 }
 
 type Kline struct {
-	Price  float64
-	Closed bool
+	Time   int64
+	Open   float64
+	High   float64
+	Low    float64
+	Close  float64
+	Volume float64
+	Final  bool
 }
 
 func (b Binance) Kline(symbol string, interval string) {
 	log.Info().Str("symbol", symbol).Str("interval", interval).Msg("Binance.Kline.Subscribe")
 
 	wsKlineHandler := func(event *binance.WsKlineEvent) {
-		close := event.Kline.IsFinal
-		price, err := strconv.ParseFloat(event.Kline.Close, 64)
+		time := event.Kline.StartTime / 1000
+		open := parseFloat(event.Kline.Open)
+		high := parseFloat(event.Kline.High)
+		low := parseFloat(event.Kline.Low)
+		close := parseFloat(event.Kline.Close)
+		volume := parseFloat(event.Kline.Volume)
+		final := event.Kline.IsFinal
 
-		if err != nil {
-			log.Error().Err(err).Msg("Binance.Kline.Parse")
-		}
+		kline := Kline{time, open, high, low, close, volume, final}
 
-		kline := Kline{price, close}
+		log.Info().
+			Str("symbol", symbol).
+			Float64("open", open).
+			Float64("high", high).
+			Float64("low", low).
+			Float64("close", close).
+			Float64("volume", volume).
+			Bool("final", final).
+			Msg(KlineEvent)
 
 		b.pubsub.Publish(KlineEvent, KlinePayload{kline, symbol})
 	}
 
 	errHandler := func(err error) {
-		log.Error().Err(err).Msg("Binance.Kline")
+		log.Error().Err(err).Msg("Binance.Kline.Error")
 
 		// Try to restart ws connection
 		log.Warn().Msg("Binance.Kline.Recover")
@@ -177,4 +193,14 @@ func round(num float64) int {
 func toFixed(num float64, precision int) float64 {
 	output := math.Pow(10, float64(precision))
 	return float64(round(num*output)) / output
+}
+
+func parseFloat(str string) float64 {
+	float, err := strconv.ParseFloat(str, 64)
+
+	if err != nil {
+		log.Error().Err(err).Msg("Parser.Float64")
+	}
+
+	return float
 }
