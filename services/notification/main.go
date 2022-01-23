@@ -20,9 +20,14 @@ func main() {
 
 	telegram := internal.NewTelegramBot(env.TelegramApiToken, env.TelegramChatId)
 
-	pubsub.Subscribe(internal.NotifyTradeEvent, func(p internal.NotifyTradeEventPayload) {
+	pubsub.Subscribe(internal.OrderEvent, func(p internal.OrderEventPayload) {
+		message := telegram.FormatOrderMessage(p)
+		telegram.SendMessage(internal.OrderEvent, message)
+	})
+
+	pubsub.Subscribe(internal.TradeEvent, func(p internal.TradeEventPayload) {
 		message := telegram.FormatTradeMessage(p)
-		telegram.SendMessage(internal.NotifyTradeEvent, message)
+		telegram.SendMessage(internal.TradeEvent, message)
 	})
 
 	pubsub.Subscribe(internal.CriticalErrorEvent, func(p internal.CriticalErrorEventPayload) {

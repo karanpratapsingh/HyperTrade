@@ -34,14 +34,14 @@ func main() {
 	go bex.Kline(symbol, interval)
 
 	pubsub.Subscribe(internal.DataFrameEvent, func(p internal.DataFrameEventPayload) {
-		ListenTrade(DB, p.Kline, p.Signal)
+		ListenTrade(DB, pubsub, p.Kline, p.Signal)
 	})
 
 	<-wait
 }
 
 // TODO: refactor this
-func ListenTrade(DB db.DB, kline internal.Kline, signal internal.Signal) {
+func ListenTrade(DB db.DB, pubsub internal.PubSub, kline internal.Kline, signal internal.Signal) {
 	side := getSide(signal)
 
 	if side == "" {
@@ -81,7 +81,11 @@ func ListenTrade(DB db.DB, kline internal.Kline, signal internal.Signal) {
 		// TODO: Execute Sell
 		entry := position.Price
 		DB.DeletePosition(symbol)
-		DB.CreateTrade(symbol, entry, closePrice, quantity)
+		trade := DB.CreateTrade(symbol, entry, closePrice, quantity)
+
+		payload := internal.TradeEventPayload{trade.ID, trade.Symbol, trade.Entry, trade.Exit, trade.Quantity, trade.Time}
+		pubsub.Publish(internal.TradeEvent, payload)
+
 		log.Trace().Float64("price", closePrice).Float64("quantity", quantity).Msg("Trade.Sell.Complete")
 	default:
 	}
@@ -97,8 +101,4 @@ func getSide(signal internal.Signal) binance.SideType {
 	}
 
 	return side
-}
-
-func isEmpty(value interface{}) bool {
-	return value == ""
 }
