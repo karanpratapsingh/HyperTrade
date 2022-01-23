@@ -138,16 +138,6 @@ func (b Binance) Trade(side binance.SideType, symbol string, price float64) {
 	b.pubsub.Publish(NotifyTradeEvent, payload)
 }
 
-type Kline struct {
-	Time   int64   `json:"time"`
-	Open   float64 `json:"open"`
-	High   float64 `json:"high"`
-	Low    float64 `json:"low"`
-	Close  float64 `json:"close"`
-	Volume float64 `json:"volume"`
-	Final  bool    `json:"final"`
-}
-
 func (b Binance) Kline(symbol string, interval string) {
 	log.Info().Str("symbol", symbol).Str("interval", interval).Msg("Binance.Kline.Subscribe")
 
