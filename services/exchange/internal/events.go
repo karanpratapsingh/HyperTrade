@@ -22,7 +22,7 @@ type NotifyTradeEventPayload struct {
 	Type     binance.OrderType `json:"type"`
 	Symbol   string            `json:"symbol"`
 	Price    float64           `json:"price"`
-	Quantity string            `json:"quantity"`
+	Quantity float64            `json:"quantity"`
 }
 
 var DataFrameEvent string = "Event:DataFrame"
