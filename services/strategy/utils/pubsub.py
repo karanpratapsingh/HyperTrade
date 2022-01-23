@@ -6,7 +6,7 @@ from utils.log import Logger
 
 class PubSub:
     instance = None
-    log = Logger.get("PubSub")
+    log = Logger.get()
 
     @staticmethod
     async def init(url):
