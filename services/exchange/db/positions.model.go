@@ -8,9 +8,9 @@ import (
 )
 
 type Positions struct {
-	Symbol string  `gorm:"primaryKey"`
-	Price  float64 `gorm:"not null"`
-	Amount float64 `gorm:"not null"`
+	Symbol   string  `gorm:"primaryKey"`
+	Price    float64 `gorm:"not null"`
+	Quantity float64 `gorm:"not null"`
 }
 
 func (db DB) GetPosition(symbol string) Positions {
@@ -25,11 +25,11 @@ func (db DB) GetPosition(symbol string) Positions {
 	return position
 }
 
-func (db DB) CreatePosition(symbol string, price, amount float64) error {
+func (db DB) CreatePosition(symbol string, price, quantity float64) error {
 	position := Positions{
-		Symbol: symbol,
-		Price:  price,
-		Amount: amount,
+		Symbol:   symbol,
+		Price:    price,
+		Quantity: quantity,
 	}
 
 	result := db.conn.Create(&position)
