@@ -21,7 +21,7 @@ func Seed(db DB) {
 			Name: "create config for ETHUSDT",
 			Type: &Configs{},
 			Fn: func() error {
-				return db.CreateConfig("ETHUSDT", 10)
+				return db.CreateConfig("ETHUSDT", 12, 12)
 			},
 		},
 	}
