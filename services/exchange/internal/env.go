@@ -10,6 +10,8 @@ type Env struct {
 	NatsUrl  string `envconfig:"NATS_URL"`
 	NatsUser string `envconfig:"NATS_USER"`
 	NatsPass string `envconfig:"NATS_PASS"`
+
+	DatabaseUrl string `envconfig:"DATABASE_URL"`
 }
 
 func GetEnv() Env {
