@@ -95,8 +95,8 @@ func (b Binance) Trade(side binance.SideType, symbol string, price, quantity flo
 
 	log.Info().Interface("side", side).Float64("price", price).Float64("quantity", quantity).Msg("Binance.Trade.Order")
 
-	payload := NotifyTradeEventPayload{order.OrderID, order.Side, order.Type, symbol, price, quantity}
-	b.pubsub.Publish(NotifyTradeEvent, payload)
+	payload := OrderEventPayload{order.OrderID, order.Side, order.Type, symbol, price, quantity}
+	b.pubsub.Publish(OrderEvent, payload)
 
 	return nil
 }

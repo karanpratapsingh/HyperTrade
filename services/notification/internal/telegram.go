@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"time"
 
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/rs/zerolog/log"
@@ -69,9 +70,7 @@ func (t Telegram) ListenForCommands() {
 		case PingCommand:
 			message.Text = "Pong"
 		case BalanceCommand:
-			// TODO: GET THIS FROM EXCHANGE SVC
-			// acc := t.ex.GetAccount()
-			// message.Text = t.ex.StringifyBalance(acc.Balances)
+			message.Text = "TODO: Get balance from exchange svc"
 		default:
 			message.Text = "Command not defined"
 		}
@@ -94,15 +93,31 @@ func (t Telegram) ListenForCommands() {
 	}
 }
 
-func (t Telegram) FormatTradeMessage(p NotifyTradeEventPayload) string {
+func (t Telegram) FormatOrderMessage(p OrderEventPayload) string {
 	message := fmt.Sprintf(
-		"Executed %v Order\n\n"+
+		"Created %v Order\n\n"+
 			"ID: %v\n"+
 			"Type: %v\n"+
 			"Symbol: %v\n"+
 			"Last Price: %v\n"+
 			"Quantity: %v",
 		p.Side, p.ID, p.Type, p.Symbol, p.Price, p.Quantity)
+
+	return message
+}
+
+func (t Telegram) FormatTradeMessage(p TradeEventPayload) string {
+	time := p.Time.Format(time.RFC822)
+
+	message := fmt.Sprintf(
+		"Executed Trade\n\n"+
+			"ID: %v\n"+
+			"Symbol: %v\n"+
+			"Entry: %v\n"+
+			"Exit: %v\n"+
+			"Quantity: %v\n"+
+			"Time: %v",
+		p.ID, p.Symbol, p.Entry, p.Exit, p.Quantity, time)
 
 	return message
 }
