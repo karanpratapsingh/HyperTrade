@@ -48,6 +48,7 @@ class Strategy:
 
         payload = {
             'kline': {
+                'symbol': data['symbol'],
                 'time': data['time'],
                 'open': data['open'],
                 'high': data['high'],
@@ -63,7 +64,7 @@ class Strategy:
                 'macd_signal': data['macd_signal'],
                 'macd_hist': data['macd_hist']
             },
-            'trade': {
+            'signal': {
                 'buy': data['buy'],
                 'sell': data['sell']
             }
