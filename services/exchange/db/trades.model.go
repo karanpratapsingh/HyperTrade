@@ -3,12 +3,11 @@ package db
 import (
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 )
 
 type Trades struct {
-	ID       uuid.UUID `gorm:"primaryKey;"`
+	ID       uint      `gorm:"primaryKey;"`
 	Symbol   string    `gorm:"not null"`
 	Entry    float64   `gorm:"not null"`
 	Exit     float64   `gorm:"not null"`
@@ -18,7 +17,6 @@ type Trades struct {
 
 func (db DB) CreateTrade(symbol string, entry, exit, quantity float64) Trades {
 	trade := Trades{
-		ID:       uuid.New(),
 		Symbol:   symbol,
 		Entry:    entry,
 		Exit:     exit,

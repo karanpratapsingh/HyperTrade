@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/adshao/go-binance/v2"
-	"github.com/google/uuid"
 )
 
 var CriticalErrorEvent string = "Event:CriticalError"
@@ -33,7 +32,7 @@ type OrderEventPayload struct {
 var TradeEvent string = "Event:Trade"
 
 type TradeEventPayload struct {
-	ID       uuid.UUID `json:"id"`
+	ID       uint      `json:"id"`
 	Symbol   string    `json:"symbol"`
 	Entry    float64   `json:"entry"`
 	Exit     float64   `json:"exit"`
