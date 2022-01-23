@@ -11,16 +11,7 @@ type CriticalErrorEventPayload struct {
 var KlineEvent string = "Event:Kline"
 
 type KlinePayload struct {
-	Kline  Kline  `json:"kline"`
-	Symbol string `json:"symbol"`
-}
-
-var SignalTradeEvent string = "Event:Signal:Trade"
-
-type SignalTradeEventPayload struct {
-	Side   binance.SideType `json:"side"`
-	Symbol string           `json:"symbol"`
-	Price  float64          `json:"price"`
+	Kline Kline `json:"kline"`
 }
 
 var NotifyTradeEvent string = "Event:Notify:Trade"
@@ -40,5 +31,5 @@ type DataFrameEventPayload struct {
 	Open       float64    `json:"open"`
 	Kline      Kline      `json:"kline"`
 	Indicators Indicators `json:"indicators"`
-	Trade      Trade      `json:"trade"`
+	Signal     Signal     `json:"signal"`
 }
