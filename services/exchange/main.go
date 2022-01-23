@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"exchange/internal"
+
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
@@ -27,5 +29,10 @@ func main() {
 	bex.PrintAccountInfo()
 
 	go bex.Kline(symbol, interval)
+
+	pubsub.Subscribe(internal.DataFrameEvent, func(p internal.DataFrameEventPayload) {
+		fmt.Println(p.Trade)
+	})
+
 	<-wait
 }
