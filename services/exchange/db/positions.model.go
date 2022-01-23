@@ -2,15 +2,17 @@ package db
 
 import (
 	"errors"
+	"time"
 
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
 )
 
 type Positions struct {
-	Symbol   string  `gorm:"primaryKey"`
-	Price    float64 `gorm:"not null"`
-	Quantity float64 `gorm:"not null"`
+	Symbol   string    `gorm:"primaryKey"`
+	Price    float64   `gorm:"not null"`
+	Quantity float64   `gorm:"not null"`
+	Time     time.Time `gorm:"not null"`
 }
 
 func (db DB) GetPosition(symbol string) Positions {

@@ -1,17 +1,19 @@
 package db
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 )
 
-// TODO: needs createdAt and updatedAt
 type Trades struct {
 	ID       uuid.UUID `gorm:"primaryKey;"`
 	Symbol   string    `gorm:"not null"`
 	Entry    float64   `gorm:"not null"`
 	Exit     float64   `gorm:"not null"`
 	Quantity float64   `gorm:"not null"`
+	Time     time.Time `gorm:"not null"`
 }
 
 func (db DB) CreateTrade(symbol string, entry, exit, quantity float64) error {
