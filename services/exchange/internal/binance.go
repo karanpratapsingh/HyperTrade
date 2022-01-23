@@ -77,62 +77,23 @@ func (b Binance) StringifyBalance(userBalances []binance.Balance) string {
 	return strings.Join(balances, "\n")
 }
 
-// Ref: https://www.binance.com/api/v3/exchangeInfo?symbol=ETHUSDT
-func (b Binance) getMinNotional(symbol string) float64 {
-	var minNotional string
-
-	info, err := b.client.NewExchangeInfoService().Symbol(symbol).Do(context.TODO())
-
-	if err != nil {
-		log.Error().Err(err).Msg("Binance.getMinNotional")
-	}
-
-	filters := info.Symbols[0].Filters
-
-	for _, filter := range filters {
-		if filter["filterType"] == "MIN_NOTIONAL" {
-			minNotional = filter["minNotional"].(string)
-		}
-	}
-
-	min, err := strconv.ParseFloat(minNotional, 64)
-
-	if err != nil {
-		log.Error().Err(err).Msg("Binance.getMinNotional.ParseFloat")
-	}
-
-	return min
-}
-
-func (b Binance) GetMinQuantity(symbol string, price float64) float64 {
-	var min float64 = b.getMinNotional(symbol)
-
-	// FIXME: Increase quantity due to precision loss
-	quantity := toFixed((1/price)*min, 5) * 1.25
-
-	log.Debug().Float64("min", min).Float64("price", price).Float64("quantity", quantity).Msg("Binance.GetMinQuantity")
-	return quantity
-}
-
-func (b Binance) Trade(side binance.SideType, symbol string, price float64) error {
-	log.Info().Interface("side", side).Str("symbol", symbol).Float64("price", price).Msg("Binance.Trade.Init")
-
-	quantity := fmt.Sprintf("%f", b.GetMinQuantity(symbol, price))
+func (b Binance) Trade(side binance.SideType, symbol string, price, quantity float64) error {
+	log.Info().Interface("side", side).Str("symbol", symbol).Float64("quantity", quantity).Msg("Binance.Trade.Init")
 
 	order, err := b.client.NewCreateOrderService().
 		Symbol(symbol).
 		Side(side).
 		Type(binance.OrderTypeMarket).
-		Quantity(quantity).
+		Quantity(fmt.Sprintf("%f", quantity)).
 		Do(context.Background())
 
 	if err != nil {
-		log.Error().Interface("side", side).Float64("price", price).Str("quantity", quantity).Err(err).Msg("Binance.Trade")
+		log.Error().Interface("side", side).Float64("price", price).Float64("quantity", quantity).Err(err).Msg("Binance.Trade")
 		b.pubsub.Publish(CriticalErrorEvent, CriticalErrorEventPayload{err.Error()})
 		return err
 	}
 
-	log.Info().Interface("side", side).Float64("price", price).Str("quantity", quantity).Msg("Binance.Trade.Order")
+	log.Info().Interface("side", side).Float64("price", price).Float64("quantity", quantity).Msg("Binance.Trade.Order")
 
 	payload := NotifyTradeEventPayload{order.OrderID, order.Side, order.Type, symbol, price, quantity}
 	b.pubsub.Publish(NotifyTradeEvent, payload)
@@ -179,6 +140,12 @@ func (b Binance) Kline(symbol string, interval string) {
 	}
 
 	binance.WsKlineServe(symbol, interval, wsKlineHandler, errHandler)
+}
+
+// Ref: https://www.binance.com/api/v3/exchangeInfo?symbol=$SYMBOL
+func GetMinQuantity(min float64, price float64) float64 {
+	quantity := toFixed((1/price)*min, 5)
+	return quantity
 }
 
 func round(num float64) int {
