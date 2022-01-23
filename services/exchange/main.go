@@ -48,27 +48,41 @@ func ListenTrade(DB db.DB, kline internal.Kline, signal internal.Signal) {
 		return
 	}
 
-	log.Trace().Str("symbol", kline.Symbol).Interface("side", side).Msg("Trade.Listen")
+	symbol := kline.Symbol
 
-	position := DB.GetPosition(kline.Symbol)
+	log.Trace().Str("symbol", symbol).Interface("side", side).Msg("Trade.Listen")
+
+	position := DB.GetPosition(symbol)
 	var holding bool = position.Symbol != ""
+
+	config := DB.GetConfig(symbol)
+
+	allowedAmt := config.AllowedAmount
+	closePrice := kline.Close
+	quantity := internal.GetMinQuantity(allowedAmt, closePrice)
 
 	switch side {
 	case binance.SideTypeBuy:
-		if !holding {
-			DB.CreatePosition(kline.Symbol, kline.Close, 0.005) // TODO: get value from db
-			log.Trace().Float64("price", kline.Close).Msg("Trade.Buy.Complete")
+		if holding {
+			log.Warn().Bool("holding", holding).Msg("Trade.Buy.Skip")
 			return
 		}
-		log.Warn().Bool("holding", holding).Msg("Trade.Buy.Skip")
+
+		// TODO: Execute Buy
+		DB.CreatePosition(symbol, closePrice, quantity)
+		log.Trace().Float64("price", closePrice).Float64("quantity", quantity).Msg("Trade.Buy.Complete")
 
 	case binance.SideTypeSell:
-		if holding {
-			DB.DeletePosition(kline.Symbol)
-			log.Trace().Float64("price", kline.Close).Msg("Trade.Sell.Complete")
+		if !holding {
+			log.Warn().Bool("holding", holding).Msg("Trade.Sell.Skip")
 			return
 		}
-		log.Warn().Bool("holding", holding).Msg("Trade.Sell.Skip")
+
+		// TODO: Execute Sell
+		entry := position.Price
+		DB.DeletePosition(symbol)
+		DB.CreateTrade(symbol, entry, closePrice, quantity)
+		log.Trace().Float64("price", closePrice).Float64("quantity", quantity).Msg("Trade.Sell.Complete")
 	default:
 	}
 }
