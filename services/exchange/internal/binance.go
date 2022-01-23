@@ -114,8 +114,8 @@ func (b Binance) GetMinQuantity(symbol string, price float64) float64 {
 	return quantity
 }
 
-func (b Binance) Trade(side binance.SideType, symbol string, price float64) {
-	log.Info().Interface("side", side).Str("symbol", symbol).Float64("price", price).Msg(SignalTradeEvent)
+func (b Binance) Trade(side binance.SideType, symbol string, price float64) error {
+	log.Info().Interface("side", side).Str("symbol", symbol).Float64("price", price).Msg("Binance.Trade.Init")
 
 	quantity := fmt.Sprintf("%f", b.GetMinQuantity(symbol, price))
 
@@ -129,19 +129,22 @@ func (b Binance) Trade(side binance.SideType, symbol string, price float64) {
 	if err != nil {
 		log.Error().Interface("side", side).Float64("price", price).Str("quantity", quantity).Err(err).Msg("Binance.Trade")
 		b.pubsub.Publish(CriticalErrorEvent, CriticalErrorEventPayload{err.Error()})
-		return
+		return err
 	}
 
 	log.Info().Interface("side", side).Float64("price", price).Str("quantity", quantity).Msg("Binance.Trade.Order")
 
 	payload := NotifyTradeEventPayload{order.OrderID, order.Side, order.Type, symbol, price, quantity}
 	b.pubsub.Publish(NotifyTradeEvent, payload)
+
+	return nil
 }
 
 func (b Binance) Kline(symbol string, interval string) {
 	log.Info().Str("symbol", symbol).Str("interval", interval).Msg("Binance.Kline.Subscribe")
 
 	wsKlineHandler := func(event *binance.WsKlineEvent) {
+		symbol := event.Kline.Symbol
 		time := event.Kline.StartTime / 1000
 		open := parseFloat(event.Kline.Open)
 		high := parseFloat(event.Kline.High)
@@ -150,7 +153,7 @@ func (b Binance) Kline(symbol string, interval string) {
 		volume := parseFloat(event.Kline.Volume)
 		final := event.Kline.IsFinal
 
-		kline := Kline{time, open, high, low, close, volume, final}
+		kline := Kline{symbol, time, open, high, low, close, volume, final}
 
 		log.Info().
 			Str("symbol", symbol).
@@ -162,7 +165,7 @@ func (b Binance) Kline(symbol string, interval string) {
 			Bool("final", final).
 			Msg(KlineEvent)
 
-		b.pubsub.Publish(KlineEvent, KlinePayload{kline, symbol})
+		b.pubsub.Publish(KlineEvent, KlinePayload{kline})
 	}
 
 	errHandler := func(err error) {
