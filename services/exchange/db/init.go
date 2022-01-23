@@ -16,26 +16,34 @@ type DB struct {
 func New() DB {
 	env := internal.GetEnv()
 
+	log.Trace().Msg("Database.Init")
+
 	dialect := postgres.Open(env.DatabaseUrl)
 
 	config := &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	}
 
-	db, err := gorm.Open(dialect, config)
+	conn, err := gorm.Open(dialect, config)
 
 	if err != nil {
 		log.Panic().Err(err).Msg("Database.Init.Error")
 	}
 
-	err = db.AutoMigrate(&Positions{})
+	err = conn.AutoMigrate(
+		&Configs{},
+		&Positions{},
+		&Trades{},
+	)
 
 	if err != nil {
 		log.Panic().Err(err).Msg("Database.Migrate.Error")
 	}
 
-	log.Info().Msg("Database.Init")
+	db := DB{conn}
 
-	return DB{db}
+	Seed(db)
+
+	return db
 
 }
