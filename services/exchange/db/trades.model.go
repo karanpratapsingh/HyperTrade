@@ -16,13 +16,14 @@ type Trades struct {
 	Time     time.Time `gorm:"not null"`
 }
 
-func (db DB) CreateTrade(symbol string, entry, exit, quantity float64) error {
+func (db DB) CreateTrade(symbol string, entry, exit, quantity float64) Trades {
 	trade := Trades{
 		ID:       uuid.New(),
 		Symbol:   symbol,
 		Entry:    entry,
 		Exit:     exit,
 		Quantity: quantity,
+		Time:     time.Now(),
 	}
 
 	result := db.conn.Create(&trade)
@@ -36,5 +37,5 @@ func (db DB) CreateTrade(symbol string, entry, exit, quantity float64) error {
 			Msg("DB.Trades.CreateTrade")
 	}
 
-	return result.Error
+	return trade
 }

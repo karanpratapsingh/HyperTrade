@@ -32,6 +32,7 @@ func (db DB) CreatePosition(symbol string, price, quantity float64) error {
 		Symbol:   symbol,
 		Price:    price,
 		Quantity: quantity,
+		Time:     time.Now(),
 	}
 
 	result := db.conn.Create(&position)
