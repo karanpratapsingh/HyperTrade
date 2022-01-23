@@ -5,16 +5,16 @@ import "github.com/adshao/go-binance/v2"
 var CriticalErrorEvent string = "Event:CriticalError"
 
 type CriticalErrorEventPayload struct {
-	Error string
+	Error string `json:"error"`
 }
 
 var NotifyTradeEvent string = "Event:Notify:Trade"
 
 type NotifyTradeEventPayload struct {
-	ID       int64
-	Side     binance.SideType
-	Type     binance.OrderType
-	Symbol   string
-	Price    float64
-	Quantity string
+	ID       int64             `json:"id"`
+	Side     binance.SideType  `json:"side"`
+	Type     binance.OrderType `json:"type"`
+	Symbol   string            `json:"symbol"`
+	Price    float64           `json:"price"`
+	Quantity string            `json:"quantity"`
 }

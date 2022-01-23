@@ -5,31 +5,37 @@ import "github.com/adshao/go-binance/v2"
 var CriticalErrorEvent string = "Event:CriticalError"
 
 type CriticalErrorEventPayload struct {
-	Error string
+	Error string `json:"error"`
 }
 
 var KlineEvent string = "Event:Kline"
 
 type KlinePayload struct {
-	Kline  Kline
-	Symbol string
+	Kline  Kline  `json:"kline"`
+	Symbol string `json:"symbol"`
 }
 
 var SignalTradeEvent string = "Event:Signal:Trade"
 
 type SignalTradeEventPayload struct {
-	Side   binance.SideType
-	Symbol string
-	Price  float64
+	Side   binance.SideType `json:"side"`
+	Symbol string           `json:"symbol"`
+	Price  float64          `json:"price"`
 }
 
 var NotifyTradeEvent string = "Event:Notify:Trade"
 
 type NotifyTradeEventPayload struct {
-	ID       int64
-	Side     binance.SideType
-	Type     binance.OrderType
-	Symbol   string
-	Price    float64
-	Quantity string
+	ID       int64             `json:"id"`
+	Side     binance.SideType  `json:"side"`
+	Type     binance.OrderType `json:"type"`
+	Symbol   string            `json:"symbol"`
+	Price    float64           `json:"price"`
+	Quantity string            `json:"quantity"`
+}
+
+var DataFrameEvent string = "Event:DataFrame"
+
+type DataFrameEventPayload struct {
+	Open float64 `json:"open"`
 }
