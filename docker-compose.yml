@@ -2,8 +2,8 @@ version: "3.8"
 
 services:
   exchange:
-    container_name: exchange
     image: exchange
+    container_name: exchange
     command: tail -f /dev/null
     build:
       context: ./services/exchange
@@ -13,12 +13,13 @@ services:
       - ./services/exchange:/app
     depends_on:
       - nats
+      - db
     networks:
       - platform
 
   notification:
-    container_name: notification
     image: notification
+    container_name: notification
     command: tail -f /dev/null
     build:
       context: ./services/notification
@@ -32,8 +33,8 @@ services:
       - platform
 
   strategy:
-    container_name: strategy
     image: strategy
+    container_name: strategy
     command: tail -f /dev/null
     build:
       context: ./services/strategy
@@ -46,9 +47,21 @@ services:
     networks:
       - platform
 
+  db:
+    image: postgres:14
+    container_name: db
+    environment:
+      - POSTGRES_USER=development
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=database
+    ports:
+      - 5432:5432
+    networks:
+      - platform
+
   nats:
-    container_name: nats
     image: nats:2.7.0-alpine
+    container_name: nats
     command:
       - "--user=development"
       - "--pass=development"
@@ -56,5 +69,6 @@ services:
       - 4222:4222
     networks:
       - platform
+
 networks:
   platform:
