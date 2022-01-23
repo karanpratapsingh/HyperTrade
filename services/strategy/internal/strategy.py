@@ -1,45 +1,86 @@
+import json
+
 import pandas as pd
-import talib
+import talib as ta
+from utils.log import Logger
 
 
 class Strategy:
     df = pd.DataFrame()
 
     def populate(self, data):
-        kline = data['Kline']
+        kline = data['kline']
 
-        # TODO: should we only run prediction for closed klines?
-        # final = kline['Final']
+        # TODO: should we only run prediction for closed kline?
+        # final = kline['final']
         # if not final:
         #     return
 
-        update = {
-            'time': kline['Time'],
-            'open': kline['Open'],
-            'high': kline['High'],
-            'low': kline['Low'],
-            'close': kline['Close'],
-            'volume': kline['Volume']
-        }
-
-        self.df = self.df.append(update, ignore_index=True)
+        self.df = self.df.append(kline, ignore_index=True)
         self.add_indicators()
         self.buy_trend()
         self.sell_trend()
+        self.set_datatypes()
 
-    def print(self):
-        print(self.df)
+    def set_datatypes(self):
+        types = {
+            "time": int,
+            'open': float,
+            'high': float,
+            'low': float,
+            'close': float,
+            'volume': float,
+            'final': bool,
+            'adx': float,
+            'rsi': float,
+            'macd': float,
+            'macd_signal': float,
+            'macd_hist': float,
+            'buy': bool,
+            'sell': bool,
+        }
+
+        self.df = self.df.astype(types)
+
+    def get_payload(self):
+        index = self.last_index()
+        data = json.loads(self.df.loc[index].to_json())
+
+        payload = {
+            'kline': {
+                'time': data['time'],
+                'open': data['open'],
+                'high': data['high'],
+                'low': data['low'],
+                'close': data['close'],
+                'volume': data['volume'],
+                'final': data['final']
+            },
+            'indicators': {
+                'adx': data['adx'],
+                'rsi': data['rsi'],
+                'macd': data['macd'],
+                'macd_signal': data['macd_signal'],
+                'macd_hist': data['macd_hist']
+            },
+            'trade': {
+                'buy': data['buy'],
+                'sell': data['sell']
+            }
+        }
+
+        return payload
 
     def add_indicators(self):
         frame = self.df
 
-        adx = talib.ADX(frame.high, frame.low, frame.close, timeperiod=14)
+        adx = ta.ADX(frame.high, frame.low, frame.close, timeperiod=14)
         frame['adx'] = adx
 
-        rsi = talib.RSI(frame.close)
+        rsi = ta.RSI(frame.close)
         frame['rsi'] = rsi
 
-        macd, macd_signal, macd_hist = talib.MACD(
+        macd, macd_signal, macd_hist = ta.MACD(
             frame.close, fastperiod=12, slowperiod=26, signalperiod=9)
         frame['macd'] = macd
         frame['macd_signal'] = macd_signal
@@ -73,7 +114,6 @@ class Strategy:
         condition = self.get_sell_condition(index)
 
         if condition:
-            # TODO: buy condition needs to be sync
             self.df.loc[index, 'sell'] = True
         else:
             self.df.loc[index, 'sell'] = False
