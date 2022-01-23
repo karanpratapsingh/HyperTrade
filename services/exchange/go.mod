@@ -4,7 +4,6 @@ go 1.17
 
 require (
 	github.com/adshao/go-binance/v2 v2.3.4
-	github.com/google/uuid v1.3.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/nats-io/nats.go v1.13.1-0.20211122170419-d7c1d78a50fc
 	github.com/rs/zerolog v1.26.1
