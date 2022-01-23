@@ -16,11 +16,12 @@ async def main():
     instance = await PubSub.init(url)
     pubsub = PubSub(instance)
 
-    strategy = Strategy()
+    strat = Strategy()
 
     async def handler(data):
-        strategy.populate(data)
-        strategy.print()
+        strat.populate(data)
+        payload = strat.get_payload()
+        await pubsub.publish(Events.DataFrame, payload)
 
     await pubsub.subscribe(Events.Kline, handler)
 
