@@ -3,9 +3,11 @@ import logging
 
 class Logger:
     @staticmethod
-    def get(name):
-        logging.basicConfig(format='%(name)s:%(levelname)s %(message)s')
-        log = logging.getLogger(name)
-        log.setLevel(logging.DEBUG)
+    def get():
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format='%(asctime)s %(levelname)s %(module)s %(message)s',
+            datefmt='%d-%b-%y %I:%M%p',
+        )
 
-        return log
+        return logging

@@ -1,6 +1,7 @@
 package internal
 
 type Kline struct {
+	Symbol string  `json:"symbol"`
 	Time   int64   `json:"time"`
 	Open   float64 `json:"open"`
 	High   float64 `json:"high"`
@@ -19,7 +20,7 @@ type Indicators struct {
 	MacdHistory *float64 `json:"macd_hist"`
 }
 
-type Trade struct {
+type Signal struct {
 	Buy  bool `json:"buy"`
 	Sell bool `json:"sell"`
 }

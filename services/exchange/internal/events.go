@@ -1,6 +1,10 @@
 package internal
 
-import "github.com/adshao/go-binance/v2"
+import (
+	"time"
+
+	"github.com/adshao/go-binance/v2"
+)
 
 var CriticalErrorEvent string = "Event:CriticalError"
 
@@ -11,27 +15,29 @@ type CriticalErrorEventPayload struct {
 var KlineEvent string = "Event:Kline"
 
 type KlinePayload struct {
-	Kline  Kline  `json:"kline"`
-	Symbol string `json:"symbol"`
+	Kline Kline `json:"kline"`
 }
 
-var SignalTradeEvent string = "Event:Signal:Trade"
+var OrderEvent string = "Event:Order"
 
-type SignalTradeEventPayload struct {
-	Side   binance.SideType `json:"side"`
-	Symbol string           `json:"symbol"`
-	Price  float64          `json:"price"`
-}
-
-var NotifyTradeEvent string = "Event:Notify:Trade"
-
-type NotifyTradeEventPayload struct {
+type OrderEventPayload struct {
 	ID       int64             `json:"id"`
 	Side     binance.SideType  `json:"side"`
 	Type     binance.OrderType `json:"type"`
 	Symbol   string            `json:"symbol"`
 	Price    float64           `json:"price"`
-	Quantity string            `json:"quantity"`
+	Quantity float64           `json:"quantity"`
+}
+
+var TradeEvent string = "Event:Trade"
+
+type TradeEventPayload struct {
+	ID       uint      `json:"id"`
+	Symbol   string    `json:"symbol"`
+	Entry    float64   `json:"entry"`
+	Exit     float64   `json:"exit"`
+	Quantity float64   `json:"quantity"`
+	Time     time.Time `json:"time"`
 }
 
 var DataFrameEvent string = "Event:DataFrame"
@@ -40,5 +46,5 @@ type DataFrameEventPayload struct {
 	Open       float64    `json:"open"`
 	Kline      Kline      `json:"kline"`
 	Indicators Indicators `json:"indicators"`
-	Trade      Trade      `json:"trade"`
+	Signal     Signal     `json:"signal"`
 }

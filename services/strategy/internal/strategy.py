@@ -11,11 +11,6 @@ class Strategy:
     def populate(self, data):
         kline = data['kline']
 
-        # TODO: should we only run prediction for closed kline?
-        # final = kline['final']
-        # if not final:
-        #     return
-
         self.df = self.df.append(kline, ignore_index=True)
         self.add_indicators()
         self.buy_trend()
@@ -48,6 +43,7 @@ class Strategy:
 
         payload = {
             'kline': {
+                'symbol': data['symbol'],
                 'time': data['time'],
                 'open': data['open'],
                 'high': data['high'],
@@ -63,7 +59,7 @@ class Strategy:
                 'macd_signal': data['macd_signal'],
                 'macd_hist': data['macd_hist']
             },
-            'trade': {
+            'signal': {
                 'buy': data['buy'],
                 'sell': data['sell']
             }
@@ -88,7 +84,7 @@ class Strategy:
 
         self.df = frame
 
-    def get_buy_condition(self, index):
+    def get_buy_condition(self, index) -> bool:
         rsi = self.df['rsi'][index]
         condition = rsi <= 40
 
