@@ -5,6 +5,10 @@
       "path": "."
     },
     {
+      "name": "Web",
+      "path": "web"
+    },
+    {
       "name": "Infrastructure",
       "path": "infrastructure"
     },

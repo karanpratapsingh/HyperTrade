@@ -1,6 +1,10 @@
 up:
 	docker compose up -d
 
+dev-web:
+	make up
+	docker exec -it web sh
+
 dev-exchange:
 	make up
 	docker exec -it exchange bash
