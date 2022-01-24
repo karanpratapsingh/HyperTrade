@@ -1,6 +1,22 @@
 version: "3.8"
 
 services:
+  web:
+    image: web
+    container_name: web
+    command: tail -f /dev/null
+    build:
+      context: ./web
+    volumes:
+      - ./web:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - exchange
+      - strategy
+    networks:
+      - platform
+
   exchange:
     image: exchange
     container_name: exchange
