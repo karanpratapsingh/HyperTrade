@@ -1,6 +1,9 @@
 .env
 *kubeconfig.y*ml
 
+# Helm
+*env.y*ml
+
 # Terraform
 **/.terraform/*
 *.tfstate
