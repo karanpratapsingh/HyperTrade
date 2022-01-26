@@ -5,7 +5,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . ./
-EXPOSE 4000
+EXPOSE 80
 RUN go install github.com/cespare/reflex@latest
 CMD reflex -g '**/*.go' -s go run main.go
 
@@ -20,5 +20,5 @@ RUN go build -o app
 
 FROM gcr.io/distroless/static
 COPY --from=builder app ./
-EXPOSE 4000
+EXPOSE 80
 CMD ["/app"]

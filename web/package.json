@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "GPLv3",
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite --port 80 --host",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "yarn eslint --ext .js,.jsx,.ts,.tsx .",

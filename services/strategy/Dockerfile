@@ -6,6 +6,7 @@ COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 COPY . ./
 RUN pip3 install watchdog pyyaml
+EXPOSE 80
 CMD watchmedo shell-command --patterns="*.py" --command='python3 main.py' .
 
 FROM python:3.8-slim AS production
@@ -15,4 +16,5 @@ RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && ta
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 COPY . ./
+EXPOSE 80
 CMD python3 main.py
