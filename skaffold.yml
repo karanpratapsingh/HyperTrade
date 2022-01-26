@@ -2,42 +2,42 @@ apiVersion: skaffold/v2beta20
 kind: Config
 build:
   artifacts:
-  - image: web
-    context: ./web
-    docker:
-      dockerfile: Dockerfile
-      target: development
-    sync:
-      manual:
-      - src: 'src/**/*.ts*'
-        dest: .
-  - image: exchange
-    context: ./services/exchange
-    docker:
-      dockerfile: Dockerfile
-      target: development
-    sync:
-      manual:
-      - src: '**/*.go'
-        dest: .
-  - image: notification
-    context: ./services/notification
-    docker:
-      dockerfile: Dockerfile
-      target: development
-    sync:
-      manual:
-      - src: '**/*.go'
-        dest: .
-  - image: strategy
-    context: ./services/strategy
-    docker:
-      dockerfile: Dockerfile
-      target: development
-    sync:
-      manual:
-      - src: '**/*.py'
-        dest: .
+    - image: web
+      context: ./web
+      docker:
+        dockerfile: Dockerfile
+        target: development
+      sync:
+        manual:
+          - src: "src/**/*.ts*"
+            dest: .
+    - image: exchange
+      context: ./services/exchange
+      docker:
+        dockerfile: Dockerfile
+        target: development
+      sync:
+        manual:
+          - src: "**/*.go"
+            dest: .
+    - image: notification
+      context: ./services/notification
+      docker:
+        dockerfile: Dockerfile
+        target: development
+      sync:
+        manual:
+          - src: "**/*.go"
+            dest: .
+    - image: strategy
+      context: ./services/strategy
+      docker:
+        dockerfile: Dockerfile
+        target: development
+      sync:
+        manual:
+          - src: "**/*.py"
+            dest: .
 deploy:
   helm:
     releases:
@@ -46,7 +46,7 @@ deploy:
         valuesFiles:
           - infrastructure/k8s/app/values.yaml
           - infrastructure/k8s/app/env.yaml
-        artifactOverrides: 
+        artifactOverrides:
           images.exchange: exchange
           images.notification: notification
           images.strategy: strategy
