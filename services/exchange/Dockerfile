@@ -7,7 +7,7 @@ RUN go mod download
 COPY . ./
 EXPOSE 4000
 RUN go install github.com/cespare/reflex@latest
-CMD reflex -gs '**/*.go' -s go run main.go
+CMD reflex -g '**/*.go' -s go run main.go
 
 FROM golang:1.17.2 AS builder
 ENV GOOS linux
