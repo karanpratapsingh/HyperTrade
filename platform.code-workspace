@@ -5,12 +5,12 @@
       "path": "."
     },
     {
-      "name": "Web",
-      "path": "web"
-    },
-    {
       "name": "Infrastructure",
       "path": "infrastructure"
+    },
+    {
+      "name": "Web",
+      "path": "web"
     },
     {
       "name": "Exchange Service",
