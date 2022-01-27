@@ -1,18 +1,14 @@
-FROM python:3.8 AS development
+FROM karanpratapsingh4/python:ta-lib AS development
 WORKDIR /app
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential gcc wget
-RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && tar -xzf ta-lib-0.4.0-src.tar.gz && cd ta-lib/ && ./configure --prefix=/usr && make && make install
+RUN pip3 install watchdog pyyaml
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 COPY . ./
-RUN pip3 install watchdog pyyaml
 EXPOSE 80
-CMD watchmedo shell-command --patterns="*.py" --command='python3 main.py' .
+CMD watchmedo shell-command --recursive --patterns="*.py" --command='python3 main.py' .
 
-FROM python:3.8-slim AS production
+FROM karanpratapsingh4/python:ta-lib AS production
 WORKDIR /app
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential gcc wget
-RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && tar -xzf ta-lib-0.4.0-src.tar.gz && cd ta-lib/ && ./configure --prefix=/usr && make && make install
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 COPY . ./
