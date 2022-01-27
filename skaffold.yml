@@ -3,7 +3,7 @@ kind: Config
 build:
   artifacts:
     - image: web
-      context: ./web
+      context: ./services/web
       docker:
         dockerfile: Dockerfile
         target: development

@@ -5,12 +5,8 @@
       "path": "."
     },
     {
-      "name": "Infrastructure",
-      "path": "infrastructure"
-    },
-    {
       "name": "Web",
-      "path": "web"
+      "path": "services/web"
     },
     {
       "name": "Exchange Service",
