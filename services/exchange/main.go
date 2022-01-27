@@ -22,7 +22,6 @@ var symbol = "ETHUSDT"
 func main() {
 	DB := db.New()
 
-	wait := make(chan bool)
 	env := internal.GetEnv()
 
 	pubsub := internal.NewPubSub(env.NatsUrl, env.NatsUser, env.NatsPass)
@@ -37,7 +36,8 @@ func main() {
 		ListenTrade(DB, pubsub, p.Kline, p.Signal)
 	})
 
-	<-wait
+	err := internal.NewApi()
+	log.Error().Err(err).Msg("Router.Error")
 }
 
 // TODO: refactor this
