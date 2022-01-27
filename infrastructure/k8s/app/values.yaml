@@ -1,0 +1,7 @@
+images:
+  db: postgres:13
+  exchange: exchange
+  nats: nats:2.7.0-alpine
+  notification: notification
+  strategy: strategy
+  web: web

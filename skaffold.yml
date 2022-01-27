@@ -1,0 +1,53 @@
+apiVersion: skaffold/v2beta20
+kind: Config
+build:
+  artifacts:
+    - image: web
+      context: ./services/web
+      docker:
+        dockerfile: Dockerfile
+        target: development
+      sync:
+        manual:
+          - src: "src/**/*.ts*"
+            dest: .
+    - image: exchange
+      context: ./services/exchange
+      docker:
+        dockerfile: Dockerfile
+        target: development
+      sync:
+        manual:
+          - src: "**/*.go"
+            dest: .
+    - image: notification
+      context: ./services/notification
+      docker:
+        dockerfile: Dockerfile
+        target: development
+      sync:
+        manual:
+          - src: "**/*.go"
+            dest: .
+    - image: strategy
+      context: ./services/strategy
+      docker:
+        dockerfile: Dockerfile
+        target: development
+      sync:
+        manual:
+          - src: "**/*.py"
+            dest: .
+deploy:
+  helm:
+    releases:
+      - name: app
+        chartPath: infrastructure/k8s/app
+        valuesFiles:
+          - infrastructure/k8s/app/values.yaml
+          - infrastructure/k8s/app/env.yaml
+        artifactOverrides:
+          images.exchange: exchange
+          images.notification: notification
+          images.strategy: strategy
+          images.web: web

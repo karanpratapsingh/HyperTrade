@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification
+spec:
+  selector:
+    app: notification
+  ports:
+    - port: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification
+spec:
+  replicas: 1
+  strategy: {}
+  selector:
+    matchLabels:
+      app: notification      
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+        - name: notification
+          image: {{ .Values.images.notification }}
+          ports:
+            - containerPort: 80
+          env:
+            - name: TELEGRAM_API_TOKEN
+              value: "{{ .Values.env.notification.TELEGRAM_API_TOKEN }}"
+            - name: TELEGRAM_CHAT_ID
+              value: "{{ .Values.env.notification.TELEGRAM_CHAT_ID }}"
+            - name: NATS_URL
+              value: "{{ .Values.env.notification.NATS_URL }}"
+            - name: NATS_USER
+              value: "{{ .Values.env.nats.USER }}"
+            - name: NATS_PASS
+              value: "{{ .Values.env.nats.PASS }}"

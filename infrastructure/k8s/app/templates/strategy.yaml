@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: strategy
+spec:
+  selector:
+    app: strategy
+  ports:
+    - port: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: strategy
+spec:
+  replicas: 1
+  strategy: {}
+  selector:
+    matchLabels:
+      app: strategy      
+  template:
+    metadata:
+      labels:
+        app: strategy
+    spec:
+      containers:
+        - name: strategy
+          image: {{ .Values.images.strategy }}
+          ports:
+            - containerPort: 80
+          env:
+            - name: NATS_URL
+              value: "{{ .Values.env.strategy.NATS_URL }}"
+            - name: NATS_USER
+              value: "{{ .Values.env.nats.USER }}"
+            - name: NATS_PASS
+              value: "{{ .Values.env.nats.PASS }}"

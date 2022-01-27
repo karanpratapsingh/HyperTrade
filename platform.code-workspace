@@ -6,11 +6,7 @@
     },
     {
       "name": "Web",
-      "path": "web"
-    },
-    {
-      "name": "Infrastructure",
-      "path": "infrastructure"
+      "path": "services/web"
     },
     {
       "name": "Exchange Service",

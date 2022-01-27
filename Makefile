@@ -1,27 +1,11 @@
-up:
-	docker compose up -d
+start:
+	scripts/start.sh
 
-dev-web:
-	make up
-	docker exec -it web sh
-
-dev-exchange:
-	make up
-	docker exec -it exchange bash
-
-dev-notification:
-	make up
-	docker exec -it notification bash
-
-dev-strategy:
-	make up
-	docker exec -it strategy bash
+dev:
+	skaffold dev --tail
 
 stop:
-	docker compose stop
-
-remove:
-	docker compose rm --force
+	minikube stop
 
 connect-argo:
 	kubectl port-forward svc/argocd-server -n argocd 8080:443

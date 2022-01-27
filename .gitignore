@@ -1,6 +1,16 @@
 .env
 *kubeconfig.y*ml
 
+# Web
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+
+# Helm
+*env.y*ml
+
 # Terraform
 **/.terraform/*
 *.tfstate
