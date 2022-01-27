@@ -1,8 +1,11 @@
 start:
 	minikube start
+	minikube addons enable ingress
+	echo "Please add this to your /etc/hosts"
+	echo "$(minikube ip) platform.com"
 
 dev:
-	skaffold dev --tail --port-forward
+	skaffold dev --tail
 
 stop:
 	minikube stop
