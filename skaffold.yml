@@ -4,6 +4,8 @@ build:
   artifacts:
     - image: proxy
       context: ./services/proxy
+    - image: nats
+      context: ./services/nats
     - image: web
       context: ./services/web
       docker:
@@ -50,6 +52,7 @@ deploy:
           - infrastructure/k8s/app/env.yaml
         artifactOverrides:
           images.proxy: proxy
+          images.nats: nats
           images.exchange: exchange
           images.notification: notification
           images.strategy: strategy
