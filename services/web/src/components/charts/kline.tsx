@@ -14,8 +14,6 @@ export function KlineChart(): React.ReactElement {
     data: kline,
     xField: 'time',
     yField: ['open', 'close', 'high', 'low'],
-    autoFit: false,
-    animation: false,
     yAxis: {
       label: {
         formatter: text => {

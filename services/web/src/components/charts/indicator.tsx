@@ -40,6 +40,7 @@ export function IndicatorChart(props: IndicatorChartProps): React.ReactElement {
     xField: 'interval',
     yField: 'value',
     seriesField: 'type',
+    width: 350 * 1.5,
     xAxis: {
       label: {
         formatter: (text, item, index) => {
