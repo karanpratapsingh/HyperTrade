@@ -21,7 +21,9 @@ export function useTrades(): Result<TradesResponse> {
     data,
     isLoading: loading,
     error,
-  } = useQuery<AxiosResponse<TradesResponse, Error>, Error>('trades', fetch);
+  } = useQuery<AxiosResponse<TradesResponse, Error>, Error>('trades', fetch, {
+    refetchInterval: 4 * 1000,
+  });
 
   return { data: data?.data, loading, error };
 }

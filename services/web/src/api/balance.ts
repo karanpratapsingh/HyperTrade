@@ -17,7 +17,9 @@ export function useBalance(): Result<BalanceResponse> {
     data,
     isLoading: loading,
     error,
-  } = useQuery<AxiosResponse<BalanceResponse, Error>, Error>('balance', fetch);
+  } = useQuery<AxiosResponse<BalanceResponse, Error>, Error>('balance', fetch, {
+    refetchInterval: 4 * 1000,
+  });
 
   return { data: data?.data, loading, error };
 }
