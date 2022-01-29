@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  display: flex;
+  flex: 1;
+}
+
+#root {
+  display: flex;
+  flex: 1;
+}
