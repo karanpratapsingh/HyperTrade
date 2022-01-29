@@ -5,6 +5,7 @@ import {
   NatsConnection,
   NatsError,
   StringCodec,
+  Subscription,
 } from 'nats.ws';
 
 const SERVER_URL = 'ws://localhost:8080/nats';
@@ -34,7 +35,10 @@ export class PubSub {
     }
   };
 
-  subscribe = <T>(event: string, cb: (data: T) => void): void => {
+  subscribe = <T>(
+    event: string,
+    cb: (data: T) => void
+  ): Subscription | undefined => {
     const callback = (err: NatsError | null, msg: Msg): void => {
       if (err) {
         throw err;
@@ -43,7 +47,7 @@ export class PubSub {
       cb(data);
     };
 
-    this.conn?.subscribe(event, { callback });
-    console.log('Subscribed to:', event);
+    const subscription = this.conn?.subscribe(event, { callback });
+    return subscription;
   };
 }
