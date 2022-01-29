@@ -21,8 +21,7 @@ func (db DB) GetTrades() []Trades {
 	result := db.conn.Find(&trades)
 
 	if result.Error != nil {
-		log.Error().Err(result.Error).
-			Msg("DB.Trades.GetTrades")
+		log.Error().Err(result.Error).Msg("DB.Trades.GetTrades")
 	}
 
 	return trades

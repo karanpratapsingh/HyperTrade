@@ -15,6 +15,19 @@ type Positions struct {
 	Time     time.Time `gorm:"not null" json:"time"`
 }
 
+func (db DB) GetPositions() []Positions {
+	var positions []Positions
+
+	result := db.conn.Find(&positions)
+
+	if result.Error != nil {
+		log.Error().Err(result.Error).
+			Msg("DB.Positions.GetPositions")
+	}
+
+	return positions
+}
+
 func (db DB) GetPosition(symbol string) Positions {
 	var position Positions
 

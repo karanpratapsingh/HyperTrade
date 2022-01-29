@@ -25,6 +25,7 @@ func NewApi(exchange Binance, db db.DB) error {
 	router.HandleFunc("/healthz", api.healthcheck).Methods(http.MethodGet)
 	router.HandleFunc("/balance", api.balance).Methods(http.MethodGet)
 	router.HandleFunc("/trades", api.trades).Methods(http.MethodGet)
+	router.HandleFunc("/positions", api.positions).Methods(http.MethodGet)
 
 	err := http.ListenAndServe(port, router)
 	return err
@@ -65,6 +66,18 @@ func (a Api) trades(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	response := TradesResponse{
 		Trades: a.db.GetTrades(),
+	}
+	json.NewEncoder(w).Encode(response)
+}
+
+type PositionsResponse struct {
+	Positions []db.Positions `json:"positions"`
+}
+
+func (a Api) positions(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	response := PositionsResponse{
+		Positions: a.db.GetPositions(),
 	}
 	json.NewEncoder(w).Encode(response)
 }
