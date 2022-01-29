@@ -5,6 +5,7 @@ import (
 
 	"exchange/db"
 	"exchange/internal"
+	"exchange/utils"
 
 	"github.com/adshao/go-binance/v2"
 	"github.com/rs/zerolog"
@@ -22,7 +23,7 @@ var symbol = "ETHUSDT"
 func main() {
 	DB := db.New()
 
-	env := internal.GetEnv()
+	env := utils.GetEnv()
 
 	pubsub := internal.NewPubSub(env.NatsUrl, env.NatsUser, env.NatsPass)
 	defer pubsub.Close()
@@ -36,7 +37,7 @@ func main() {
 		ListenTrade(DB, pubsub, p.Kline, p.Signal)
 	})
 
-	err := internal.NewApi(bex)
+	err := internal.NewApi(bex, DB)
 	log.Error().Err(err).Msg("Router.Error")
 }
 
