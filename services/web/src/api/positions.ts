@@ -22,7 +22,7 @@ export function usePositions(): Result<PositionsResponse> {
   } = useQuery<AxiosResponse<PositionsResponse, Error>, Error>(
     'positions',
     fetch,
-    { refetchInterval: 2 * 1000 }
+    { refetchInterval: 4 * 1000 }
   );
 
   return { data: data?.data, loading, error };
