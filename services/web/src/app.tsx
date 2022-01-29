@@ -6,6 +6,7 @@ import { BalanceList } from './components/balance';
 import { IndicatorChart } from './components/charts/indicator';
 import { KlineChart } from './components/charts/kline';
 import { ErrorBoundary } from './components/error-boundary';
+import { PositionsList } from './components/positions';
 import { TradesList } from './components/trades';
 import { DataFrameEvent, DataFrameEventPayload } from './events';
 import { useDataFrame } from './store/dataframe';
@@ -48,7 +49,9 @@ function App(): React.ReactElement {
         <div className='flex flex-1'>
           <TradesList />
         </div>
-        <div className='flex flex-1'>Positions</div>
+        <div className='flex flex-1'>
+          <PositionsList />
+        </div>
       </div>
     </div>
   );
