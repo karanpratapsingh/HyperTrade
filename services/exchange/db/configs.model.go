@@ -8,9 +8,9 @@ import (
 )
 
 type Configs struct {
-	Symbol        string  `gorm:"primaryKey"`
-	Minimum       float64 `gorm:"not null"`
-	AllowedAmount float64 `gorm:"not null"`
+	Symbol        string  `gorm:"primaryKey" json:"symbol"`
+	Minimum       float64 `gorm:"not null" json:"minimum"`
+	AllowedAmount float64 `gorm:"not null" json:"allowedAmount"`
 }
 
 func (db DB) GetConfig(symbol string) Configs {
