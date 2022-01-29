@@ -14,6 +14,7 @@
     "antd": "4.18.5",
     "autoprefixer": "10.4.2",
     "axios": "0.25.0",
+    "cryptocurrency-icons": "0.18.0",
     "dateformat": "5.0.2",
     "lodash": "4.17.21",
     "nats.ws": "1.6.0",
