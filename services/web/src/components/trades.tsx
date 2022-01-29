@@ -1,7 +1,7 @@
-import { List } from 'antd';
+import { Table } from 'antd';
+import dateFormat from 'dateformat';
 import { Trade, useTrades } from '../api/trades';
 import { Loader } from './loader';
-import dateFormat from 'dateformat';
 
 export function TradesList(): React.ReactElement {
   const { data, loading } = useTrades();
@@ -10,25 +10,41 @@ export function TradesList(): React.ReactElement {
     return <Loader />;
   }
 
-  function renderItem(item: Trade): React.ReactNode {
-    return (
-      <List.Item>
-        <span className='font-bold'>{item.id}</span>
-        <span className='font-bold'>{item.symbol}</span>
-        <span className='font-bold'>{item.entry}</span>
-        <span className='font-bold'>{item.exit}</span>
-        <span className='font-bold'>{item.quantity}</span>
-        <span className='font-bold'>{dateFormat(item.time, 'HH:MM:ss')}</span>
-      </List.Item>
-    );
-  }
+  const columns = [
+    {
+      title: 'Id',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Symbol',
+      dataIndex: 'symbol',
+      key: 'symbol',
+    },
+    {
+      title: 'Entry',
+      dataIndex: 'entry',
+      key: 'entry',
+    },
+    {
+      title: 'Exit',
+      dataIndex: 'exit',
+      key: 'exit',
+    },
+    {
+      title: 'Time',
+      dataIndex: 'time',
+      key: 'time',
+      render: (time: Trade['time']) => dateFormat(time, 'mmm dS hh:MM tt'),
+    },
+  ];
 
   return (
-    <List
-      header={<span className='text-xl font-bold'>Trades</span>}
-      style={{ width: '100%' }}
+    <Table
+      className='w-full text-xs font-light'
+      pagination={{ pageSize: 4 }}
+      columns={columns}
       dataSource={data?.trades}
-      renderItem={renderItem}
     />
   );
 }
