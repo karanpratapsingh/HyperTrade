@@ -2,6 +2,7 @@ import { Table } from 'antd';
 import dateFormat from 'dateformat';
 import { Position, usePositions } from '../api/positions';
 import { Loader } from './loader';
+import { Header } from './ui/header';
 
 export function PositionsList(): React.ReactElement {
   const { data, loading } = usePositions();
@@ -35,11 +36,14 @@ export function PositionsList(): React.ReactElement {
   ];
 
   return (
-    <Table
-      className='w-full text-xs font-light'
-      pagination={{ pageSize: 4 }}
-      columns={columns}
-      dataSource={data?.positions}
-    />
+    <div className='w-full flex flex-col'>
+      <Header title='Positions' subtitle='Positions currently holding' />
+      <Table
+        className='text-xs font-light'
+        columns={columns}
+        pagination={false}
+        dataSource={data?.positions}
+      />
+    </div>
   );
 }

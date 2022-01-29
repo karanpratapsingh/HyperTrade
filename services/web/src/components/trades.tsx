@@ -2,6 +2,7 @@ import { Table } from 'antd';
 import dateFormat from 'dateformat';
 import { Trade, useTrades } from '../api/trades';
 import { Loader } from './loader';
+import { Header } from './ui/header';
 
 export function TradesList(): React.ReactElement {
   const { data, loading } = useTrades();
@@ -40,11 +41,14 @@ export function TradesList(): React.ReactElement {
   ];
 
   return (
-    <Table
-      className='w-full text-xs font-light'
-      pagination={{ pageSize: 4 }}
-      columns={columns}
-      dataSource={data?.trades}
-    />
+    <div className='w-full flex flex-col'>
+      <Header title='Trades' subtitle='Trades executed so far' />
+      <Table
+        className='text-xs font-light'
+        pagination={{ pageSize: 4 }}
+        columns={columns}
+        dataSource={data?.trades}
+      />
+    </div>
   );
 }
