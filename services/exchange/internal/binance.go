@@ -6,6 +6,7 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/adshao/go-binance/v2"
 	"github.com/rs/zerolog/log"
@@ -39,6 +40,28 @@ func (b Binance) GetAccount() *binance.Account {
 	return account
 }
 
+type Balance struct {
+	Asset  string  `json:"asset"`
+	Amount float64 `json:"amount"`
+}
+
+func (b Binance) GetBalance() []Balance {
+	balances := []Balance{}
+	acc := b.GetAccount()
+
+	for _, balance := range acc.Balances {
+		asset := balance.Asset
+		amt := parseFloat(balance.Free)
+
+		if amt > ZeroBalance {
+			b := Balance{asset, amt}
+			balances = append(balances, b)
+		}
+	}
+
+	return balances
+}
+
 func (b Binance) PrintAccountInfo() {
 	acc := b.GetAccount()
 
@@ -60,11 +83,7 @@ func (b Binance) StringifyBalance(userBalances []binance.Balance) string {
 	var balances = []string{header}
 
 	for _, balance := range userBalances {
-		amt, err := strconv.ParseFloat(balance.Free, 64)
-
-		if err != nil {
-			log.Error().Err(err).Msg("Binance.ParsingBalance")
-		}
+		amt := parseFloat(balance.Free)
 
 		var separator rune = '•'
 
@@ -106,7 +125,7 @@ func (b Binance) Kline(symbol string, interval string) {
 
 	wsKlineHandler := func(event *binance.WsKlineEvent) {
 		symbol := event.Kline.Symbol
-		time := event.Kline.StartTime / 1000
+		time := time.Now().Unix() * 1000
 		open := parseFloat(event.Kline.Open)
 		high := parseFloat(event.Kline.High)
 		low := parseFloat(event.Kline.Low)

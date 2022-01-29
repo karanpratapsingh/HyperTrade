@@ -36,7 +36,7 @@ func main() {
 		ListenTrade(DB, pubsub, p.Kline, p.Signal)
 	})
 
-	err := internal.NewApi()
+	err := internal.NewApi(bex)
 	log.Error().Err(err).Msg("Router.Error")
 }
 
