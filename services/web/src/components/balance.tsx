@@ -1,6 +1,9 @@
-import { Avatar, List } from 'antd';
+import { Table } from 'antd';
+import Avatar from 'antd/lib/avatar/avatar';
 import { Balance, useBalance } from '../api/balance';
 import { Loader } from './loader';
+import { Header } from './ui/header';
+import usdt from 'cryptocurrency-icons/svg/icon/usdt.svg';
 
 export function BalanceList(): React.ReactElement {
   const { data, loading } = useBalance();
@@ -9,24 +12,34 @@ export function BalanceList(): React.ReactElement {
     return <Loader />;
   }
 
-  function renderItem(item: Balance): React.ReactNode {
-    const src = `https://cryptoicons.org/api/icon/${item.asset.toLocaleLowerCase()}/100`;
-
-    return (
-      <List.Item>
-        <Avatar src={src} />
-        <span className='font-bold'>{item.asset}</span>
-        <span className='font-bold'>{item.amount}</span>
-      </List.Item>
-    );
-  }
+  const columns = [
+    {
+      title: 'Asset',
+      dataIndex: 'asset',
+      key: 'asset',
+      render: (asset: Balance['asset']) => (
+        <div className='flex items-center'>
+          <Avatar src={usdt} />
+          <span className='ml-4'>{asset}</span>
+        </div>
+      ),
+    },
+    {
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amount',
+    },
+  ];
 
   return (
-    <List
-      header={<span className='text-xl font-bold'>Balance</span>}
-      style={{ width: '100%' }}
-      dataSource={data?.balance}
-      renderItem={renderItem}
-    />
+    <div className='w-full flex flex-col'>
+      <Header title='Balance' subtitle='Current balance' />
+      <Table
+        className='text-xs font-light'
+        columns={columns}
+        pagination={false}
+        dataSource={data?.balance}
+      />
+    </div>
   );
 }
