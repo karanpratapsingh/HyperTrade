@@ -1,7 +1,7 @@
 package db
 
 import (
-	"exchange/internal"
+	"exchange/utils"
 
 	"github.com/rs/zerolog/log"
 	"gorm.io/driver/postgres"
@@ -14,7 +14,7 @@ type DB struct {
 }
 
 func New() DB {
-	env := internal.GetEnv()
+	env := utils.GetEnv()
 
 	log.Trace().Msg("Database.Init")
 
