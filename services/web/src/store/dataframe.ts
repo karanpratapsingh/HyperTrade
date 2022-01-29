@@ -6,6 +6,8 @@ type DataFrameStore = {
   add(kline: DataFrameEventPayload): void;
 };
 
+const MAX_INTERVALS = 40;
+
 export const useDataFrame = create<DataFrameStore>(
   (set: SetState<DataFrameStore>, get: GetState<DataFrameStore>) => ({
     data: [],
@@ -13,7 +15,8 @@ export const useDataFrame = create<DataFrameStore>(
       const { data } = get();
 
       const update = [...data, frame];
-      if (update.length > 40) {
+
+      if (update.length > MAX_INTERVALS) {
         update.shift();
       }
 
