@@ -13,7 +13,7 @@ func init() {
 }
 
 func main() {
-	env := internal.GetEnv()
+	env := utils.GetEnv()
 
 	pubsub := internal.NewPubSub(env.NatsUrl, env.NatsUser, env.NatsPass)
 	defer pubsub.Close()
