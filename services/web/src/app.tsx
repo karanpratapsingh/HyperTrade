@@ -32,14 +32,13 @@ function App(): React.ReactElement {
 
   return (
     <div className='h-full p-16 flex flex-1'>
-      <div className='flex flex-col mr-8' style={{ flex: 3 }}>
+      <div className='flex flex-col mr-8' style={{ flex: 2 }}>
         <div>
           <KlineChart />
         </div>
         <div className='flex items-center justify-between mt-4'>
           <IndicatorChart types={['rsi', 'adx']} />
-          <IndicatorChart types={['macd']} />
-          <IndicatorChart types={['macd_hist', 'macd_signal']} />
+          <IndicatorChart types={['macd', 'macd_hist', 'macd_signal']} />
         </div>
       </div>
       <div className='flex flex-1 flex-col'>
