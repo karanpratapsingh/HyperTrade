@@ -1,0 +1,23 @@
+import create, { SetState, GetState } from 'zustand';
+import { DataFrameEventPayload } from '../events';
+
+type DataFrameStore = {
+  data: DataFrameEventPayload[];
+  add(kline: DataFrameEventPayload): void;
+};
+
+export const useDataFrame = create<DataFrameStore>(
+  (set: SetState<DataFrameStore>, get: GetState<DataFrameStore>) => ({
+    data: [],
+    add: (frame: DataFrameEventPayload) => {
+      const { data } = get();
+
+      const update = [...data, frame];
+      if (update.length > 40) {
+        update.shift();
+      }
+
+      set({ data: update });
+    },
+  })
+);
