@@ -8,10 +8,10 @@ import { KlineChart } from './components/charts/kline';
 import { ErrorBoundary } from './components/error-boundary';
 import { PositionsList } from './components/positions';
 import { TradesList } from './components/trades';
-import { DataFrameEvent, DataFrameEventPayload } from './events';
+import { PubSub } from './events/pubsub';
+import { DataFrameEvent, DataFrameEventPayload } from './events/types';
 import { useDataFrame } from './store/dataframe';
 import './styles/app.css';
-import { PubSub } from './utils/pubsub';
 
 const client = new QueryClient();
 
