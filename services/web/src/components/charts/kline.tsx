@@ -2,7 +2,7 @@ import { Stock, StockConfig } from '@ant-design/plots';
 import dateFormat from 'dateformat';
 import map from 'lodash/map';
 import React from 'react';
-import { DataFrameEventPayload, Kline } from '../../events';
+import { DataFrameEventPayload, Kline } from '../../events/types';
 import { useDataFrame } from '../../store/dataframe';
 
 export function KlineChart(): React.ReactElement {

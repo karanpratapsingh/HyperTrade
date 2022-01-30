@@ -2,7 +2,7 @@ import { Line, LineConfig } from '@ant-design/plots';
 import dateFormat from 'dateformat';
 import map from 'lodash/map';
 import React from 'react';
-import { DataFrameEventPayload, Indicators } from '../../events';
+import { DataFrameEventPayload, Indicators } from '../../events/types';
 import { useDataFrame } from '../../store/dataframe';
 
 interface IndicatorChartProps {
