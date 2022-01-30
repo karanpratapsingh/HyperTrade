@@ -1,12 +1,13 @@
 import { Oval } from 'react-loader-spinner';
+import { Colors } from '../theme/colors';
 
 export function Loader(): React.ReactElement {
   return (
     <Oval
       wrapperClass='h-full w-full items-center justify-center'
-      height={40}
-      width={40}
-      color={'black'}
+      height={25}
+      width={25}
+      color={Colors.primary}
     />
   );
 }
