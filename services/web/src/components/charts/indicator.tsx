@@ -58,5 +58,5 @@ export function IndicatorChart(props: IndicatorChartProps): React.ReactElement {
     smooth: true,
   };
 
-  return <Line {...config} />;
+  return <Line className='mb-4' {...config} />;
 }
