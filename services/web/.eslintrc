@@ -13,7 +13,6 @@
   ],
   "rules": {
     "quotes": ["error", "single"],
-    "camelcase": "error",
     "prefer-const": "error",
     "no-var": "error"
   }
