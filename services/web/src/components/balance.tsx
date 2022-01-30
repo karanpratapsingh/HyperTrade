@@ -1,9 +1,9 @@
 import { Table } from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
 import { Balance, useBalance } from '../api/balance';
+import { Icons } from '../theme/icons';
 import { Loader } from './loader';
 import { Header } from './ui/header';
-import usdt from 'cryptocurrency-icons/svg/icon/usdt.svg';
 
 export function BalanceList(): React.ReactElement {
   const { data, loading } = useBalance();
@@ -19,7 +19,7 @@ export function BalanceList(): React.ReactElement {
       key: 'asset',
       render: (asset: Balance['asset']) => (
         <div className='flex items-center'>
-          <Avatar src={usdt} />
+          <Avatar src={Icons[asset.toLowerCase()]} />
           <span className='ml-4'>{asset}</span>
         </div>
       ),
