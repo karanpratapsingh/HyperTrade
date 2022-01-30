@@ -1,5 +1,5 @@
-import create, { SetState, GetState } from 'zustand';
-import { DataFrameEventPayload } from '../events';
+import create, { GetState, SetState } from 'zustand';
+import { DataFrameEventPayload } from '../events/types';
 
 type DataFrameStore = {
   data: DataFrameEventPayload[];
