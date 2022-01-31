@@ -1,4 +1,10 @@
-import { Chart, dispose, init, KLineData } from 'klinecharts';
+import {
+  Chart,
+  dispose,
+  init,
+  KLineData,
+  TechnicalIndicator
+} from 'klinecharts';
 import { difference, map } from 'lodash';
 import React, { useEffect } from 'react';
 import { useDataFrame } from '../../store/dataframe';
@@ -47,6 +53,23 @@ const options = {
       },
     },
   },
+};
+
+const indicatorConfig: Record<TechnicalIndicators, TechnicalIndicator> = {
+  [TechnicalIndicators.RSI]: { name: 'RSI', calcParams: [14] },
+  [TechnicalIndicators.MACD]: { name: 'MACD' },
+  [TechnicalIndicators.VOL]: { name: 'VOL' },
+
+  [TechnicalIndicators.MA]: { name: 'MA' },
+  [TechnicalIndicators.EMA]: { name: 'EMA' },
+  [TechnicalIndicators.SMA]: { name: 'SMA' },
+
+  [TechnicalIndicators.BOLL]: { name: 'BOLL' },
+  [TechnicalIndicators.SAR]: { name: 'SAR' },
+  [TechnicalIndicators.BBI]: { name: 'BBI' },
+
+  [TechnicalIndicators.KDJ]: { name: 'KDJ' },
+  [TechnicalIndicators.OBV]: { name: 'OBV' },
 };
 
 export function KlineChart(props: KlineChartProps): React.ReactElement {
@@ -99,7 +122,7 @@ export function KlineChart(props: KlineChartProps): React.ReactElement {
   }, [chart, main, sub]);
 
   function setIndicators(
-    indicators: string[],
+    indicators: TechnicalIndicators[],
     stack: boolean,
     getId: (type: string) => string
   ): void {
@@ -111,7 +134,9 @@ export function KlineChart(props: KlineChartProps): React.ReactElement {
     });
 
     indicators.forEach(type => {
-      chart?.createTechnicalIndicator(type, stack, { id: getId(type) });
+      chart?.createTechnicalIndicator(indicatorConfig[type], stack, {
+        id: getId(type),
+      });
     });
   }
 

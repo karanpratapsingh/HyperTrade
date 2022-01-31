@@ -116,7 +116,7 @@ export function Chart(): React.ReactElement {
 
   return (
     <Content className='p-4 bg-white'>
-      <PageHeader className='p-0 pr-10' title={title} extra={extras} />
+      <PageHeader className='p-0 pl-2 pr-10' title={title} extra={extras} />
       <KlineChart type={type} main={main} sub={sub} />
     </Content>
   );

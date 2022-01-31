@@ -39,7 +39,6 @@ function App(): React.ReactElement {
         collapsible
         collapsed={collapsed}
         onCollapse={() => setCollapsed(!collapsed)}>
-        <div className='logo' />
         <Menu theme='dark' defaultSelectedKeys={['1']} mode='inline'>
           <Menu.Item icon={<AiOutlineAreaChart size={20} />}>Trade</Menu.Item>
           <Menu.Item icon={<AiTwotonePieChart size={20} />}>Info</Menu.Item>
