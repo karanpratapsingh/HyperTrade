@@ -1,8 +1,8 @@
 import { Layout, Menu } from 'antd';
 import 'antd/dist/antd.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { AiOutlineAreaChart } from 'react-icons/ai';
+import { BiBarChart } from 'react-icons/bi';
 import { RiDonutChartFill } from 'react-icons/ri';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ErrorBoundary } from './components/error-boundary';
@@ -14,11 +14,9 @@ import './styles/app.css';
 
 const client = new QueryClient();
 
-const {  Sider } = Layout;
+const { Sider } = Layout;
 
 function App(): React.ReactElement {
-  const [collapsed, setCollapsed] = useState(true);
-
   const add = useDataFrame(state => state.add);
 
   async function init() {
@@ -36,12 +34,9 @@ function App(): React.ReactElement {
 
   return (
     <Layout className='min-h-screen'>
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={() => setCollapsed(!collapsed)}>
-        <Menu theme='dark' defaultSelectedKeys={['1']} mode='inline'>
-          <Menu.Item icon={<AiOutlineAreaChart size={20} />}>Trade</Menu.Item>
+      <Sider className='bg-gray-100' theme='light' collapsed>
+        <Menu className='bg-gray-100' theme='light' defaultSelectedKeys={['1']} mode='vertical'>
+          <Menu.Item icon={<BiBarChart size={20} />}>Trade</Menu.Item>
           <Menu.Item icon={<RiDonutChartFill size={20} />}>Info</Menu.Item>
         </Menu>
       </Sider>
