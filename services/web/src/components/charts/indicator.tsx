@@ -46,14 +46,14 @@ export function IndicatorChart(props: IndicatorChartProps): React.ReactElement {
 
   const tickStyle = {
     style: {
-      color: Colors.grey,
+      color: Colors.gray,
       fontSize: 10,
       fontWeight: 300,
     },
   };
 
   const cartesianStyle = {
-    stroke: Colors.lightGrey,
+    stroke: Colors.lightGray,
   };
 
   return (

@@ -1,8 +1,8 @@
 import { Button, Layout, PageHeader, Select, Tag } from 'antd';
 import React, { useState } from 'react';
+import { AiOutlineAreaChart } from 'react-icons/ai';
 import { BiBarChart } from 'react-icons/bi';
 import { IoCloseCircle } from 'react-icons/io5';
-import { MdOutlineAreaChart } from 'react-icons/md';
 import {
   ChartType,
   KlineChart,
@@ -92,7 +92,7 @@ export function Chart(): React.ReactElement {
       <BiBarChart size={25} color={Colors.black} onClick={() => setType(ChartType.AREA)} />
     ),
     [ChartType.AREA]: (
-      <MdOutlineAreaChart size={25} color={Colors.black} onClick={() => setType(ChartType.CANDLE)} />
+      <AiOutlineAreaChart size={25} color={Colors.black} onClick={() => setType(ChartType.CANDLE)} />
     ),
   };
 

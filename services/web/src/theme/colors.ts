@@ -2,8 +2,8 @@ import { Indicators } from '../events/types';
 
 export enum Colors {
   primary = '#1890ff',
-  grey = '#9ca3af',
-  lightGrey = '#ddd',
+  gray = '#9ca3af',
+  lightGray = '#ddd',
   black = '#202020',
 }
 
