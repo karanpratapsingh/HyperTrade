@@ -36,7 +36,7 @@ function App(): React.ReactElement {
     <Layout className='min-h-screen'>
       <Sider className='bg-gray-100' theme='light' collapsed>
         <Menu className='bg-gray-100' theme='light' defaultSelectedKeys={['1']} mode='vertical'>
-          <Menu.Item icon={<BiBarChart size={20} />}>Trade</Menu.Item>
+          <Menu.Item icon={<BiBarChart size={25} />}>Indicators</Menu.Item>
           <Menu.Item icon={<RiDonutChartFill size={20} />}>Info</Menu.Item>
         </Menu>
       </Sider>
