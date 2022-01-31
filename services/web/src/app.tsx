@@ -2,7 +2,8 @@ import { Layout, Menu } from 'antd';
 import 'antd/dist/antd.css';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { AiOutlineAreaChart, AiTwotonePieChart } from 'react-icons/ai';
+import { AiOutlineAreaChart } from 'react-icons/ai';
+import { RiDonutChartFill } from 'react-icons/ri';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ErrorBoundary } from './components/error-boundary';
 import { PubSub } from './events/pubsub';
@@ -41,7 +42,7 @@ function App(): React.ReactElement {
         onCollapse={() => setCollapsed(!collapsed)}>
         <Menu theme='dark' defaultSelectedKeys={['1']} mode='inline'>
           <Menu.Item icon={<AiOutlineAreaChart size={20} />}>Trade</Menu.Item>
-          <Menu.Item icon={<AiTwotonePieChart size={20} />}>Info</Menu.Item>
+          <Menu.Item icon={<RiDonutChartFill size={20} />}>Info</Menu.Item>
         </Menu>
       </Sider>
       <Layout>

@@ -6,7 +6,7 @@ type DataFrameStore = {
   add(kline: DataFrameEventPayload): void;
 };
 
-const MAX_INTERVALS = 40;
+const MAX_INTERVALS = 100;
 
 export const useDataFrame = create<DataFrameStore>(
   (set: SetState<DataFrameStore>, get: GetState<DataFrameStore>) => ({

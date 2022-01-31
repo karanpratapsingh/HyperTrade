@@ -4,6 +4,7 @@ export enum Colors {
   primary = '#1890ff',
   grey = '#9ca3af',
   lightGrey = '#ddd',
+  black = '#202020',
 }
 
 export const LineColors: Record<keyof Indicators, string> = {

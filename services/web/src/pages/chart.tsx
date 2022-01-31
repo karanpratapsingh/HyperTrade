@@ -1,13 +1,15 @@
 import { Button, Layout, PageHeader, Select, Tag } from 'antd';
 import React, { useState } from 'react';
+import { BiBarChart } from 'react-icons/bi';
 import { IoCloseCircle } from 'react-icons/io5';
-import { FcCandleSticks, FcAreaChart } from 'react-icons/fc';
+import { MdOutlineAreaChart } from 'react-icons/md';
 import {
   ChartType,
   KlineChart,
-  TechnicalIndicators,
+  TechnicalIndicators
 } from '../components/charts/kline';
 import { Header } from '../components/ui/header';
+import { Colors } from '../theme/colors';
 
 interface SelectIndicatorsProps {
   value: TechnicalIndicators[];
@@ -87,10 +89,10 @@ export function Chart(): React.ReactElement {
 
   const typeIcon: Record<ChartType, React.ReactNode> = {
     [ChartType.CANDLE]: (
-      <FcCandleSticks size={25} onClick={() => setType(ChartType.AREA)} />
+      <BiBarChart size={25} color={Colors.black} onClick={() => setType(ChartType.AREA)} />
     ),
     [ChartType.AREA]: (
-      <FcAreaChart size={25} onClick={() => setType(ChartType.CANDLE)} />
+      <MdOutlineAreaChart size={25} color={Colors.black} onClick={() => setType(ChartType.CANDLE)} />
     ),
   };
 
