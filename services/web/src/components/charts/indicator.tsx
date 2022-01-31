@@ -1,62 +1,87 @@
-import { Line, LineConfig } from '@ant-design/plots';
 import dateFormat from 'dateformat';
 import map from 'lodash/map';
 import React from 'react';
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts';
 import { DataFrameEventPayload, Indicators } from '../../events/types';
 import { useDataFrame } from '../../store/dataframe';
+import { Colors, LineColors } from '../../theme/colors';
 
 interface IndicatorChartProps {
   types: (keyof Indicators)[];
 }
 
-type Line = {
-  type: keyof Indicators;
-  value: number;
-  interval: number;
-};
-
 export function IndicatorChart(props: IndicatorChartProps): React.ReactElement {
+  const { types } = props;
+
   const data = useDataFrame(state => state.data);
-  const indicators: Indicators[] = map<DataFrameEventPayload>(
+  const indicators = map<DataFrameEventPayload>(
     data,
-    'indicators'
+    ({ indicators, kline: { time } }: DataFrameEventPayload) => ({
+      ...indicators,
+      time,
+    })
   );
 
-  const lines = indicators.map((indicator, interval) => {
-    const array: Line[] = [];
+  let domain: number[] | undefined;
 
-    props.types.forEach(type => {
-      const value = indicator[type];
-      if (value) {
-        array.push({ type, value: parseFloat(value.toFixed(2)), interval });
-      }
-    });
+  if (types.includes('rsi')) {
+    domain = [0, 100];
+  }
 
-    return array;
-  });
+  function timeFormatter(date: any): string {
+    if (['auto', 0].includes(date)) {
+      return date;
+    }
 
-  const config: LineConfig = {
-    data: lines.flat(),
-    xField: 'interval',
-    yField: 'value',
-    seriesField: 'type',
-    width: 350 * 1.5,
-    xAxis: {
-      label: {
-        formatter: (text, item, index) => {
-          const date = new Date(data[index].kline.time);
-          return dateFormat(date, 'HH:MM:ss');
-        },
-      },
+    return dateFormat(date, 'HH:MM:ss');
+  }
+
+  const tickStyle = {
+    style: {
+      color: Colors.grey,
+      fontSize: 10,
+      fontWeight: 300,
     },
-    tooltip: {
-      title: 'Indicators',
-    },
-    legend: {
-      position: 'top',
-    },
-    smooth: true,
   };
 
-  return <Line className='mb-4' {...config} />;
+  const cartesianStyle = {
+    stroke: Colors.lightGrey,
+  };
+
+  return (
+    <LineChart
+      margin={{ left: -30, bottom: 10 }}
+      height={325}
+      width={550}
+      data={indicators}>
+      <Legend />
+      <CartesianGrid style={cartesianStyle} strokeDasharray='3' />
+      <XAxis
+        dy={5}
+        dataKey='time'
+        axisLine={false}
+        tick={tickStyle}
+        tickFormatter={timeFormatter}
+      />
+      <YAxis axisLine={false} domain={domain} tick={tickStyle} />
+      <Tooltip labelFormatter={timeFormatter} />
+      {types.map(type => (
+        <Line
+          type='monotone'
+          dataKey={type}
+          stroke={LineColors[type]}
+          activeDot={{ r: 8 }}
+          dot={{ r: 0 }}
+        />
+      ))}
+    </LineChart>
+  );
 }
