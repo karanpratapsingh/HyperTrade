@@ -2,6 +2,8 @@ import { Indicators } from '../events/types';
 
 export enum Colors {
   primary = '#1890ff',
+  grey = '#9ca3af',
+  lightGrey = '#ddd',
 }
 
 export const LineColors: Record<keyof Indicators, string> = {
