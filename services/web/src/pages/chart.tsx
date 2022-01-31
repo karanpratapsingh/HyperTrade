@@ -1,12 +1,12 @@
 import { Button, Layout, PageHeader, Select, Tag } from 'antd';
 import React, { useState } from 'react';
-import { AiOutlineAreaChart } from 'react-icons/ai';
+import { AiOutlineAreaChart, AiOutlineFunction } from 'react-icons/ai';
 import { BiBarChart } from 'react-icons/bi';
 import { IoCloseCircle } from 'react-icons/io5';
 import {
   ChartType,
   KlineChart,
-  TechnicalIndicators
+  TechnicalIndicators,
 } from '../components/charts/kline';
 import { Header } from '../components/ui/header';
 import { Colors } from '../theme/colors';
@@ -89,10 +89,18 @@ export function Chart(): React.ReactElement {
 
   const typeIcon: Record<ChartType, React.ReactNode> = {
     [ChartType.CANDLE]: (
-      <BiBarChart size={25} color={Colors.black} onClick={() => setType(ChartType.AREA)} />
+      <BiBarChart
+        size={25}
+        color={Colors.black}
+        onClick={() => setType(ChartType.AREA)}
+      />
     ),
     [ChartType.AREA]: (
-      <AiOutlineAreaChart size={25} color={Colors.black} onClick={() => setType(ChartType.CANDLE)} />
+      <AiOutlineAreaChart
+        size={25}
+        color={Colors.black}
+        onClick={() => setType(ChartType.CANDLE)}
+      />
     ),
   };
 
