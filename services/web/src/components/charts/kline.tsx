@@ -1,36 +1,48 @@
-import { Stock, StockConfig } from '@ant-design/plots';
-import dateFormat from 'dateformat';
-import map from 'lodash/map';
-import React from 'react';
-import { DataFrameEventPayload, Kline } from '../../events/types';
+import { Chart, dispose, init, KLineData } from 'klinecharts';
+import { map } from 'lodash';
+import React, { useEffect } from 'react';
 import { useDataFrame } from '../../store/dataframe';
 
+const CHART_ID = 'kline-chart';
+
 export function KlineChart(): React.ReactElement {
-  const data = useDataFrame(state => state.data);
-
-  const kline: Kline[] = map<DataFrameEventPayload>(data, 'kline');
-
-  const config: StockConfig = {
-    data: kline,
-    xField: 'time',
-    yField: ['open', 'close', 'high', 'low'],
-    yAxis: {
-      label: {
-        formatter: text => {
-          const label = Number.parseFloat(text);
-          return label.toFixed(2);
+  useEffect(() => {
+    const chart: Chart | null = init(CHART_ID, {
+      candle: {
+        tooltip: {
+          labels: ['T: ', 'O: ', 'C: ', 'H: ', 'O: ', 'V: '],
         },
       },
-    },
-    xAxis: {
-      label: {
-        formatter: (text, item, index) => {
-          const date = new Date(kline[index].time);
-          return dateFormat(date, 'HH:MM:ss');
-        },
-      },
-    },
-  };
+      technicalIndicator: {
+        lastValueMark: {
+          show: true,
+          text: {
+            show: true
+          }
+        }
+      }
+    });
 
-  return <Stock {...config} />;
+    const unsubscribe = useDataFrame.subscribe(({ data }) => {
+      const klineData: KLineData[] = map(
+        data,
+        ({ kline: { open, close, high, low, volume, time } }) => ({
+          open,
+          close,
+          high,
+          low,
+          volume,
+          timestamp: time,
+        })
+      );
+      chart?.applyNewData(klineData);
+    });
+
+    return () => {
+      dispose(CHART_ID);
+      unsubscribe();
+    };
+  }, []);
+
+  return <div id={CHART_ID} style={{ height: 600 }}></div>;
 }
