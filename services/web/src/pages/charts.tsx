@@ -7,9 +7,9 @@ import { BiBarChart } from 'react-icons/bi';
 import { IoSearchOutline } from 'react-icons/io5';
 import {
   ChartType,
-  IndicatorsInfo,
+  Indicators,
   KlineChart,
-  TechnicalIndicators
+  TechnicalIndicators,
 } from '../components/charts/kline';
 import { Header } from '../components/ui/header';
 import { Colors } from '../theme/colors';
@@ -17,24 +17,22 @@ import { Colors } from '../theme/colors';
 const { Content } = Layout;
 
 const mainIndicators: TechnicalIndicators[] = [
-  TechnicalIndicators.MA,
-  TechnicalIndicators.EMA,
-  TechnicalIndicators.SMA,
-  TechnicalIndicators.BOLL,
-  TechnicalIndicators.SAR,
-  TechnicalIndicators.BBI,
+  Indicators.MA,
+  Indicators.EMA,
+  Indicators.SMA,
+  Indicators.BOLL,
+  Indicators.SAR,
+  Indicators.BBI,
 ];
 
-const subIndicators = Object.keys(TechnicalIndicators) as TechnicalIndicators[];
+const subIndicators = Object.values(Indicators);
 
 export function Chart(): React.ReactElement {
   const [showIndicators, setShowIndicators] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const [type, setType] = useState<ChartType>(ChartType.CANDLE);
   const [main, setMain] = useState<TechnicalIndicators[]>([]);
-  const [sub, setSub] = useState<TechnicalIndicators[]>([
-    TechnicalIndicators.VOL,
-  ]);
+  const [sub, setSub] = useState<TechnicalIndicators[]>([Indicators.VOL]);
 
   const title = (
     <Header className='pb-4' title='Charts' subtitle='Live data charts' />
@@ -81,7 +79,7 @@ export function Chart(): React.ReactElement {
         footer={null}
         onCancel={() => setShowIndicators(false)}>
         <Input
-          className='mb-4'
+          className='mb-2'
           value={search}
           onChange={({ target }) => setSearch(target.value)}
           prefix={<IoSearchOutline />}
@@ -117,20 +115,23 @@ interface ListProps {
   onUpdate: (update: TechnicalIndicators[]) => void;
 }
 
-function searchFilter<T extends string>(collection: T[], value: string): T[] {
+function searchFilter(
+  collection: TechnicalIndicators[],
+  value: string
+): TechnicalIndicators[] {
   return [...collection].filter(indicator => {
     if (value === '') {
       return true;
     }
 
-    return includes(toLower(indicator), toLower(value));
+    return includes(toLower(indicator.name), toLower(value));
   });
 }
 
 function ListItem(props: ListProps): React.ReactElement {
   const { title, all, search, indicators, onUpdate } = props;
 
-  const filtered = searchFilter<TechnicalIndicators>(all, search);
+  const filtered = searchFilter(all, search);
 
   function renderList(indicator: TechnicalIndicators): React.ReactNode {
     function onClick({ target }: React.MouseEvent<HTMLElement>) {
@@ -138,7 +139,7 @@ function ListItem(props: ListProps): React.ReactElement {
       let update = [...indicators];
 
       if (!checked) {
-        update = update.filter(key => key !== indicator);
+        update = update.filter(({ name }) => name !== indicator.name);
       } else {
         update = [...update, indicator];
       }
@@ -151,9 +152,9 @@ function ListItem(props: ListProps): React.ReactElement {
       <div className='flex my-1 items-center'>
         <Checkbox checked={checked} onClick={onClick} />
         <span className='ml-2 font-light'>
-          {indicator}
+          {indicator.name}
           <span className='ml-1 italic font-light text-gray-400'>
-            ({IndicatorsInfo[indicator]})
+            ({indicator.description})
           </span>
         </span>
       </div>

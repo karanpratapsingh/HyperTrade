@@ -11,41 +11,32 @@ import { useDataFrame } from '../../store/dataframe';
 
 const CHART_ID = 'kline-chart';
 
-export enum TechnicalIndicators {
-  RSI = 'RSI',
-  MACD = 'MACD',
-  VOL = 'VOL',
-
-  MA = 'MA',
-  EMA = 'EMA',
-  SMA = 'SMA',
-
-  BOLL = 'BOLL',
-  SAR = 'SAR',
-  BBI = 'BBI',
-
-  KDJ = 'KDJ',
-  OBV = 'OBV',
+export interface TechnicalIndicators extends TechnicalIndicator {
+  description: string;
 }
+
+export const Indicators: Record<string, TechnicalIndicators> = {
+  RSI: {
+    name: 'RSI',
+    description: 'Relative Strength Index',
+    calcParams: [14],
+  },
+  MACD: { name: 'MACD', description: 'Moving Average Convergence/Divergence' },
+  VOL: { name: 'VOL', description: 'Volume' },
+  MA: { name: 'MA', description: 'Moving Average' },
+  EMA: { name: 'EMA', description: 'Exponential Moving Average' },
+  SMA: { name: 'SMA', description: 'Simple Moving Average' },
+  BOLL: { name: 'BOLL', description: 'Bollinger Bands' },
+  SAR: { name: 'SAR', description: 'Stop and Reverse' },
+  BBI: { name: 'BBI', description: 'Bull and Bear Index' },
+  KDJ: { name: 'KDJ', description: 'KDJ Index' },
+  OBV: { name: 'OBV', description: 'On Balance Volume' },
+};
 
 export enum ChartType {
   CANDLE = 'candle_solid',
   AREA = 'area',
 }
-
-export const IndicatorsInfo: Record<TechnicalIndicators, string> = {
-  [TechnicalIndicators.RSI]: 'Relative Strength Index',
-  [TechnicalIndicators.MACD]: 'Moving Average Convergence/Divergence',
-  [TechnicalIndicators.VOL]: 'Volume',
-  [TechnicalIndicators.MA]: 'Moving Average',
-  [TechnicalIndicators.EMA]: 'Exponential Moving Average',
-  [TechnicalIndicators.SMA]: 'Simple Moving Average',
-  [TechnicalIndicators.BOLL]: 'Bollinger Bands',
-  [TechnicalIndicators.SAR]: 'Stop and Reverse',
-  [TechnicalIndicators.BBI]: 'Bull and Bear Index',
-  [TechnicalIndicators.KDJ]: 'KDJ Index',
-  [TechnicalIndicators.OBV]: 'On Balance Volume',
-};
 
 interface KlineChartProps {
   type: ChartType;
@@ -67,23 +58,6 @@ const options = {
       },
     },
   },
-};
-
-const indicatorConfig: Record<TechnicalIndicators, TechnicalIndicator> = {
-  [TechnicalIndicators.RSI]: { name: 'RSI', calcParams: [14] },
-  [TechnicalIndicators.MACD]: { name: 'MACD' },
-  [TechnicalIndicators.VOL]: { name: 'VOL' },
-
-  [TechnicalIndicators.MA]: { name: 'MA' },
-  [TechnicalIndicators.EMA]: { name: 'EMA' },
-  [TechnicalIndicators.SMA]: { name: 'SMA' },
-
-  [TechnicalIndicators.BOLL]: { name: 'BOLL' },
-  [TechnicalIndicators.SAR]: { name: 'SAR' },
-  [TechnicalIndicators.BBI]: { name: 'BBI' },
-
-  [TechnicalIndicators.KDJ]: { name: 'KDJ' },
-  [TechnicalIndicators.OBV]: { name: 'OBV' },
 };
 
 export function KlineChart(props: KlineChartProps): React.ReactElement {
@@ -140,16 +114,16 @@ export function KlineChart(props: KlineChartProps): React.ReactElement {
     stack: boolean,
     getId: (type: string) => string
   ): void {
-    const all = Object.keys(TechnicalIndicators);
-    const diff = difference(all, indicators);
+    const all = Object.keys(Indicators);
+    const diff = difference(all, map(indicators, 'name'));
 
-    diff.forEach(type => {
-      chart?.removeTechnicalIndicator(getId(type));
+    diff.forEach(name => {
+      chart?.removeTechnicalIndicator(getId(name));
     });
 
-    indicators.forEach(type => {
-      chart?.createTechnicalIndicator(indicatorConfig[type], stack, {
-        id: getId(type),
+    indicators.forEach(indicator => {
+      chart?.createTechnicalIndicator(indicator, stack, {
+        id: getId(indicator.name),
       });
     });
   }
