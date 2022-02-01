@@ -138,7 +138,7 @@ function ListItem(props: ListProps): React.ReactElement {
 
     return (
       <div
-        className='flex my-1 items-center cursor-pointer'
+        className='flex py-1 my-1 items-center cursor-pointer'
         onClick={() => onCheck(!checked)}>
         <Checkbox checked={checked} />
         <span className='ml-2 font-light'>
@@ -182,6 +182,9 @@ function searchFilter(
       return true;
     }
 
-    return includes(toLower(indicator.name), toLower(value));
+    return (
+      includes(toLower(indicator.name), toLower(value)) ||
+      includes(toLower(indicator.description), toLower(value))
+    );
   });
 }
