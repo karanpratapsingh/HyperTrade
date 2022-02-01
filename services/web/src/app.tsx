@@ -16,6 +16,11 @@ const client = new QueryClient();
 
 const { Sider } = Layout;
 
+enum MenuItem {
+  CHARTS = 'charts',
+  INFO = 'info',
+}
+
 function App(): React.ReactElement {
   const add = useDataFrame(state => state.add);
 
@@ -38,12 +43,12 @@ function App(): React.ReactElement {
         <Menu
           className='bg-gray-100 mt-2'
           theme='light'
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={[MenuItem.CHARTS]}
           mode='inline'>
-          <Menu.Item key='charts' icon={<BiBarChart size={25} />}>
+          <Menu.Item key={MenuItem.CHARTS} icon={<BiBarChart size={25} />}>
             Charts
           </Menu.Item>
-          <Menu.Item key='info' icon={<RiDonutChartFill size={20} />}>
+          <Menu.Item key={MenuItem.INFO} icon={<RiDonutChartFill size={20} />}>
             Info
           </Menu.Item>
         </Menu>
