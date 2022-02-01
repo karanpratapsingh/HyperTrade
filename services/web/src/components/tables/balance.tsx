@@ -5,7 +5,7 @@ import { Icons } from '../../theme/icons';
 import { Loader } from '../ui/loader';
 import { Header } from '../ui/header';
 
-export function BalanceList(): React.ReactElement {
+export function BalanceTable(): React.ReactElement {
   const { data, loading } = useBalance();
 
   if (!data || loading) {

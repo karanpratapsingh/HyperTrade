@@ -4,7 +4,7 @@ import { Position, usePositions } from '../../api/positions';
 import { Loader } from '../ui/loader';
 import { Header } from '../ui/header';
 
-export function PositionsList(): React.ReactElement {
+export function PositionsTable(): React.ReactElement {
   const { data, loading } = usePositions();
 
   if (!data || loading) {

@@ -1,10 +1,10 @@
 import { Table } from 'antd';
 import dateFormat from 'dateformat';
-import { Trade, useTrades } from '../api/trades';
-import { Loader } from './loader';
-import { Header } from './ui/header';
+import { Trade, useTrades } from '../../api/trades';
+import { Loader } from '../ui/loader';
+import { Header } from '../ui/header';
 
-export function TradesList(): React.ReactElement {
+export function TradesTable(): React.ReactElement {
   const { data, loading } = useTrades();
 
   if (!data || loading) {
