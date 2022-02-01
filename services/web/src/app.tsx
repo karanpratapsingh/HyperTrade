@@ -10,16 +10,23 @@ import { PubSub } from './events/pubsub';
 import { DataFrameEvent, DataFrameEventPayload } from './events/types';
 import { Chart } from './pages/charts';
 import { useDataFrame } from './store/dataframe';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import './styles/app.css';
+import { Info } from './pages/info';
 
-const client = new QueryClient();
-
-const { Sider } = Layout;
+enum Paths {
+  HOME = '/',
+  INFO = '/info',
+}
 
 enum MenuItem {
   CHARTS = 'charts',
   INFO = 'info',
 }
+
+const client = new QueryClient();
+
+const { Sider } = Layout;
 
 function App(): React.ReactElement {
   const add = useDataFrame(state => state.add);
@@ -46,15 +53,18 @@ function App(): React.ReactElement {
           defaultSelectedKeys={[MenuItem.CHARTS]}
           mode='inline'>
           <Menu.Item key={MenuItem.CHARTS} icon={<BiBarChart size={25} />}>
-            Charts
+            <Link to={Paths.HOME}>Charts</Link>
           </Menu.Item>
           <Menu.Item key={MenuItem.INFO} icon={<RiDonutChartFill size={20} />}>
-            Info
+            <Link to={Paths.INFO}>Info</Link>
           </Menu.Item>
         </Menu>
       </Sider>
       <Layout>
-        <Chart />
+        <Routes>
+          <Route path={Paths.HOME} element={<Chart />} />
+          <Route path={Paths.INFO} element={<Info />} />
+        </Routes>
       </Layout>
     </Layout>
   );
@@ -62,9 +72,11 @@ function App(): React.ReactElement {
 
 ReactDOM.render(
   <QueryClientProvider client={client}>
-    <ErrorBoundary>
-      <App />
-    </ErrorBoundary>
+    <BrowserRouter>
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    </BrowserRouter>
   </QueryClientProvider>,
   document.getElementById('root')
 );
