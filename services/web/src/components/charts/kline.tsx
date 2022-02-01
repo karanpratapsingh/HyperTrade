@@ -33,6 +33,20 @@ export enum ChartType {
   AREA = 'area',
 }
 
+export const IndicatorsInfo: Record<TechnicalIndicators, string> = {
+  [TechnicalIndicators.RSI]: 'Relative Strength Index',
+  [TechnicalIndicators.MACD]: 'Moving Average Convergence/Divergence',
+  [TechnicalIndicators.VOL]: 'Volume',
+  [TechnicalIndicators.MA]: 'Moving Average',
+  [TechnicalIndicators.EMA]: 'Exponential Moving Average',
+  [TechnicalIndicators.SMA]: 'Simple Moving Average',
+  [TechnicalIndicators.BOLL]: 'Bollinger Bands',
+  [TechnicalIndicators.SAR]: 'Stop and Reverse',
+  [TechnicalIndicators.BBI]: 'Bull and Bear Index',
+  [TechnicalIndicators.KDJ]: 'KDJ Index',
+  [TechnicalIndicators.OBV]: 'On Balance Volume',
+};
+
 interface KlineChartProps {
   type: ChartType;
   main: TechnicalIndicators[];
