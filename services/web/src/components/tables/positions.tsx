@@ -1,8 +1,8 @@
 import { Table } from 'antd';
 import dateFormat from 'dateformat';
-import { Position, usePositions } from '../api/positions';
-import { Loader } from './loader';
-import { Header } from './ui/header';
+import { Position, usePositions } from '../../api/positions';
+import { Loader } from '../ui/loader';
+import { Header } from '../ui/header';
 
 export function PositionsList(): React.ReactElement {
   const { data, loading } = usePositions();

@@ -1,5 +1,5 @@
 import { Oval } from 'react-loader-spinner';
-import { Colors } from '../theme/colors';
+import { Colors } from '../../theme/colors';
 
 export function Loader(): React.ReactElement {
   return (

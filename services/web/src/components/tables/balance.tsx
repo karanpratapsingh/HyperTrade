@@ -1,9 +1,9 @@
 import { Table } from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
-import { Balance, useBalance } from '../api/balance';
-import { Icons } from '../theme/icons';
-import { Loader } from './loader';
-import { Header } from './ui/header';
+import { Balance, useBalance } from '../../api/balance';
+import { Icons } from '../../theme/icons';
+import { Loader } from '../ui/loader';
+import { Header } from '../ui/header';
 
 export function BalanceList(): React.ReactElement {
   const { data, loading } = useBalance();

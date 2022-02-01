@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { BiBarChart } from 'react-icons/bi';
 import { RiDonutChartFill } from 'react-icons/ri';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { ErrorBoundary } from './components/error-boundary';
+import { ErrorBoundary } from './components/misc/error-boundary';
 import { PubSub } from './events/pubsub';
 import { DataFrameEvent, DataFrameEventPayload } from './events/types';
 import { Chart } from './pages/charts';
