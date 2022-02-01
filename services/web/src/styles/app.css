@@ -11,3 +11,7 @@ body {
   display: flex;
   flex: 1;
 }
+
+.ant-modal {
+  transform-origin: unset !important;
+}
