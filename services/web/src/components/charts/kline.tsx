@@ -8,6 +8,7 @@ import {
 import { difference, map } from 'lodash';
 import React, { useEffect } from 'react';
 import { useDataFrame } from '../../store/dataframe';
+import { Loader } from '../ui/loader';
 
 const CHART_ID = 'kline-chart';
 
@@ -128,5 +129,10 @@ export function KlineChart(props: KlineChartProps): React.ReactElement {
     });
   }
 
-  return <div id={CHART_ID} style={{ height: '90%', width: '100%' }}></div>;
+  return (
+    <>
+      <div id={CHART_ID} className='w-full' style={{ height: '90%' }} />
+      <Loader className='absolute top-0 left-0' visible={!chart} />
+    </>
+  );
 }

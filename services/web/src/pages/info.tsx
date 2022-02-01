@@ -1,4 +1,5 @@
 import { Divider, Layout } from 'antd';
+import { StatsChart } from '../components/charts/stats';
 import { TradeChart } from '../components/charts/trade';
 import { BalanceTable } from '../components/tables/balance';
 import { PositionsTable } from '../components/tables/positions';
@@ -14,9 +15,9 @@ export function Info(): React.ReactElement {
         <PositionsTable />
         <TradesTable />
       </div>
-      <Divider className='min-h-full mx-12' type='vertical' />
+      <Divider className='min-h-full mx-8' type='vertical' />
       <div className='flex flex-col' style={{ flex: 3 }}>
-        <div className='flex flex-1'></div>
+        <StatsChart />
         <TradeChart />
       </div>
     </Content>

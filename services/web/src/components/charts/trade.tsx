@@ -38,7 +38,11 @@ export function TradeChart(): React.ReactElement {
 
   const domain = [Math.min(...all) - 5, Math.max(...all) + 5];
 
-  function timeFormatter(date: Date): string {
+  function timeFormatter(date: any): string {
+    if ([0, 'auto'].includes(date)) {
+      return date;
+    }
+
     return dateFormat(date, 'HH:MM:ss');
   }
 
