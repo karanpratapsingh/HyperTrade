@@ -117,19 +117,6 @@ interface ListProps {
   onUpdate: (update: TechnicalIndicators[]) => void;
 }
 
-function searchFilter(
-  collection: TechnicalIndicators[],
-  value: string
-): TechnicalIndicators[] {
-  return [...collection].filter(indicator => {
-    if (value === '') {
-      return true;
-    }
-
-    return includes(toLower(indicator.name), toLower(value));
-  });
-}
-
 function ListItem(props: ListProps): React.ReactElement {
   const { title, all, search, indicators, onUpdate } = props;
 
@@ -184,4 +171,17 @@ function ListItem(props: ListProps): React.ReactElement {
       {content}
     </div>
   );
+}
+
+function searchFilter(
+  collection: TechnicalIndicators[],
+  value: string
+): TechnicalIndicators[] {
+  return [...collection].filter(indicator => {
+    if (value === '') {
+      return true;
+    }
+
+    return includes(toLower(indicator.name), toLower(value));
+  });
 }

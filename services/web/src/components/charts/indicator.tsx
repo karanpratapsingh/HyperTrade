@@ -8,7 +8,7 @@ import {
   LineChart,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
 } from 'recharts';
 import { DataFrameEventPayload, Indicators } from '../../events/types';
 import { useDataFrame } from '../../store/dataframe';
@@ -73,15 +73,17 @@ export function IndicatorChart(props: IndicatorChartProps): React.ReactElement {
       />
       <YAxis axisLine={false} domain={domain} tick={tickStyle} />
       <Tooltip labelFormatter={timeFormatter} />
-      {types.map(type => (
-        <Line
-          type='monotone'
-          dataKey={type}
-          stroke={LineColors[type]}
-          activeDot={{ r: 8 }}
-          dot={{ r: 0 }}
-        />
-      ))}
+      {React.Children.toArray(
+        types.map(type => (
+          <Line
+            type='monotone'
+            dataKey={type}
+            stroke={LineColors[type]}
+            activeDot={{ r: 8 }}
+            dot={{ r: 0 }}
+          />
+        ))
+      )}
     </LineChart>
   );
 }
