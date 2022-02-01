@@ -3,7 +3,7 @@ import {
   dispose,
   init,
   KLineData,
-  TechnicalIndicator
+  TechnicalIndicator,
 } from 'klinecharts';
 import { difference, map } from 'lodash';
 import React, { useEffect } from 'react';
@@ -40,8 +40,8 @@ export enum ChartType {
 
 interface KlineChartProps {
   type: ChartType;
-  main: TechnicalIndicators[];
-  sub: TechnicalIndicators[];
+  primary: TechnicalIndicators[];
+  secondary: TechnicalIndicators[];
 }
 
 const options = {
@@ -61,7 +61,7 @@ const options = {
 };
 
 export function KlineChart(props: KlineChartProps): React.ReactElement {
-  const { type, main, sub } = props;
+  const { type, primary, secondary } = props;
 
   const [chart, setChart] = React.useState<Chart | null>(null);
 
@@ -105,9 +105,9 @@ export function KlineChart(props: KlineChartProps): React.ReactElement {
     const getSubId = (type: string) => `sub-${type}`;
     const getMainId = () => 'candle_pane';
 
-    setIndicators(main, true, getMainId);
-    setIndicators(sub, false, getSubId);
-  }, [chart, main, sub]);
+    setIndicators(primary, true, getMainId);
+    setIndicators(secondary, false, getSubId);
+  }, [chart, primary, secondary]);
 
   function setIndicators(
     indicators: TechnicalIndicators[],

@@ -16,7 +16,7 @@ import { Colors } from '../theme/colors';
 
 const { Content } = Layout;
 
-const mainIndicators: TechnicalIndicators[] = [
+const PrimaryIndicators: TechnicalIndicators[] = [
   Indicators.MA,
   Indicators.EMA,
   Indicators.SMA,
@@ -25,14 +25,16 @@ const mainIndicators: TechnicalIndicators[] = [
   Indicators.BBI,
 ];
 
-const subIndicators = Object.values(Indicators);
+const SecondaryIndicators = Object.values(Indicators);
 
 export function Chart(): React.ReactElement {
   const [showIndicators, setShowIndicators] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const [type, setType] = useState<ChartType>(ChartType.CANDLE);
-  const [main, setMain] = useState<TechnicalIndicators[]>([]);
-  const [sub, setSub] = useState<TechnicalIndicators[]>([Indicators.VOL]);
+  const [primary, setPrimary] = useState<TechnicalIndicators[]>([]);
+  const [secondary, setSecondary] = useState<TechnicalIndicators[]>([
+    Indicators.VOL,
+  ]);
 
   const title = (
     <Header className='pb-4' title='Charts' subtitle='Live data charts' />
@@ -72,34 +74,34 @@ export function Chart(): React.ReactElement {
   return (
     <Content className='p-4 bg-white'>
       <PageHeader className='p-0 pl-2 pr-12' title={title} extra={extras} />
-      <KlineChart type={type} main={main} sub={sub} />
+      <KlineChart type={type} primary={primary} secondary={secondary} />
       <Modal
+        className='mt-24'
         title={<Header title='Indicators' subtitle='Select indicators' />}
         visible={showIndicators}
         footer={null}
         onCancel={() => setShowIndicators(false)}>
         <Input
-          className='mb-2'
           value={search}
           onChange={({ target }) => setSearch(target.value)}
           prefix={<IoSearchOutline />}
         />
         <div
-          className='flex flex-col'
+          className='flex flex-col mt-3'
           style={{ height: 400, overflowY: 'scroll' }}>
           <ListItem
             title='Primary'
             search={search}
-            all={mainIndicators}
-            indicators={main}
-            onUpdate={(update: TechnicalIndicators[]) => setMain(update)}
+            all={PrimaryIndicators}
+            indicators={primary}
+            onUpdate={(update: TechnicalIndicators[]) => setPrimary(update)}
           />
           <ListItem
             title='Secondary'
             search={search}
-            all={subIndicators}
-            indicators={sub}
-            onUpdate={(update: TechnicalIndicators[]) => setSub(update)}
+            all={SecondaryIndicators}
+            indicators={secondary}
+            onUpdate={(update: TechnicalIndicators[]) => setSecondary(update)}
           />
         </div>
       </Modal>
@@ -134,8 +136,7 @@ function ListItem(props: ListProps): React.ReactElement {
   const filtered = searchFilter(all, search);
 
   function renderList(indicator: TechnicalIndicators): React.ReactNode {
-    function onClick({ target }: React.MouseEvent<HTMLElement>) {
-      const { checked }: any = target;
+    function onCheck(checked: boolean): void {
       let update = [...indicators];
 
       if (!checked) {
@@ -149,8 +150,10 @@ function ListItem(props: ListProps): React.ReactElement {
     const checked = indicators.includes(indicator);
 
     return (
-      <div className='flex my-1 items-center'>
-        <Checkbox checked={checked} onClick={onClick} />
+      <div
+        className='flex my-1 items-center cursor-pointer'
+        onClick={() => onCheck(!checked)}>
+        <Checkbox checked={checked} />
         <span className='ml-2 font-light'>
           {indicator.name}
           <span className='ml-1 italic font-light text-gray-400'>
@@ -161,7 +164,9 @@ function ListItem(props: ListProps): React.ReactElement {
     );
   }
 
-  let content: React.ReactNode | React.ReactNode[] = filtered.map(renderList);
+  let content: React.ReactNode | React.ReactNode[] = React.Children.toArray(
+    filtered.map(renderList)
+  );
 
   if (!filtered.length) {
     content = (

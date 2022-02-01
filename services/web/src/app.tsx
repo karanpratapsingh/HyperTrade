@@ -40,8 +40,12 @@ function App(): React.ReactElement {
           theme='light'
           defaultSelectedKeys={['1']}
           mode='inline'>
-          <Menu.Item icon={<BiBarChart size={25} />}>Charts</Menu.Item>
-          <Menu.Item icon={<RiDonutChartFill size={20} />}>Info</Menu.Item>
+          <Menu.Item key='charts' icon={<BiBarChart size={25} />}>
+            Charts
+          </Menu.Item>
+          <Menu.Item key='info' icon={<RiDonutChartFill size={20} />}>
+            Info
+          </Menu.Item>
         </Menu>
       </Sider>
       <Layout>
