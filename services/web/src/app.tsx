@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ErrorBoundary } from './components/error-boundary';
 import { PubSub } from './events/pubsub';
 import { DataFrameEvent, DataFrameEventPayload } from './events/types';
-import { Chart } from './pages/chart';
+import { Chart } from './pages/charts';
 import { useDataFrame } from './store/dataframe';
 import './styles/app.css';
 
@@ -36,11 +36,11 @@ function App(): React.ReactElement {
     <Layout className='min-h-screen'>
       <Sider className='bg-gray-100' theme='light' collapsed>
         <Menu
-          className='bg-gray-100'
+          className='bg-gray-100 mt-2'
           theme='light'
           defaultSelectedKeys={['1']}
           mode='inline'>
-          <Menu.Item icon={<BiBarChart size={25} />}>Indicators</Menu.Item>
+          <Menu.Item icon={<BiBarChart size={25} />}>Charts</Menu.Item>
           <Menu.Item icon={<RiDonutChartFill size={20} />}>Info</Menu.Item>
         </Menu>
       </Sider>
