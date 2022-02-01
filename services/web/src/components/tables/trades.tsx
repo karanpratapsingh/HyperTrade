@@ -47,7 +47,7 @@ export function TradesTable(): React.ReactElement {
         className='mt-4 text-xs font-light'
         pagination={{ pageSize: 4 }}
         columns={columns}
-        dataSource={data?.trades}
+        dataSource={data.trades}
       />
     </div>
   );

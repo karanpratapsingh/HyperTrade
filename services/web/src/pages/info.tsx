@@ -1,6 +1,6 @@
 import { Divider, Layout } from 'antd';
 import { StatsChart } from '../components/charts/stats';
-import { TradeChart } from '../components/charts/trade';
+import { TradeChart } from '../components/charts/trades';
 import { BalanceTable } from '../components/tables/balance';
 import { PositionsTable } from '../components/tables/positions';
 import { TradesTable } from '../components/tables/trades';

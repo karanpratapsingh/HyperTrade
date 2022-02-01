@@ -64,7 +64,7 @@ export function TradeChart(): React.ReactElement {
         margin={margin}
         height={540}
         width={900}
-        data={data?.trades}>
+        data={data.trades}>
         <Legend />
         <CartesianGrid style={cartesianStyle} strokeDasharray='3' />
         <XAxis

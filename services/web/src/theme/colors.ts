@@ -6,7 +6,7 @@ export enum Colors {
   black = '#202020',
 }
 
-export const LineColors: Record<string, string> = {
+export const LineColors = {
   entry: '#5ad8a6',
   exit: '#8884d8',
 };
