@@ -41,10 +41,10 @@ export function TradesList(): React.ReactElement {
   ];
 
   return (
-    <div className='w-full flex flex-col'>
+    <div className='mt-4 w-full flex flex-col'>
       <Header title='Trades' subtitle='Trades executed so far' />
       <Table
-        className='text-xs font-light'
+        className='mt-4 text-xs font-light'
         pagination={{ pageSize: 4 }}
         columns={columns}
         dataSource={data?.trades}

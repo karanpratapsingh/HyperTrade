@@ -35,7 +35,7 @@ export function BalanceList(): React.ReactElement {
     <div className='w-full flex flex-col'>
       <Header title='Balance' subtitle='Current balance' />
       <Table
-        className='text-xs font-light'
+        className='mt-4 text-xs font-light'
         columns={columns}
         pagination={false}
         dataSource={data?.balance}

@@ -36,10 +36,10 @@ export function PositionsList(): React.ReactElement {
   ];
 
   return (
-    <div className='w-full flex flex-col'>
+    <div className='mt-4 w-full flex flex-col'>
       <Header title='Positions' subtitle='Positions currently holding' />
       <Table
-        className='text-xs font-light'
+        className='mt-4 text-xs font-light'
         columns={columns}
         pagination={false}
         dataSource={data?.positions}
