@@ -16,8 +16,8 @@ export function Loader(props: LoaderProps): React.ReactElement {
         'h-full w-full items-center justify-center',
         className
       )}
-      height={25}
-      width={25}
+      height={30}
+      width={30}
       strokeWidth={4}
       visible={visible}
       color={Colors.primary}

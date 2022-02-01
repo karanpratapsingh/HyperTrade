@@ -47,7 +47,7 @@ export function TradeChart(): React.ReactElement {
   }
 
   const margin = {
-    left: -30,
+    left: -10,
     bottom: 10,
   };
 
