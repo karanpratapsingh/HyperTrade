@@ -1,11 +1,14 @@
 import { Table } from 'antd';
 import dateFormat from 'dateformat';
-import { Trade, useTrades } from '../../api/trades';
-import { Loader } from '../ui/loader';
+import { Trade, TradesResponse } from '../../api/trades';
+import { ApiHookResult } from '../../api/types';
 import { Header } from '../ui/header';
+import { Loader } from '../ui/loader';
 
-export function TradesTable(): React.ReactElement {
-  const { data, loading } = useTrades();
+interface TradesTableProps extends ApiHookResult<TradesResponse> {}
+
+export function TradesTable(props: TradesTableProps): React.ReactElement {
+  const { data, loading } = props;
 
   if (!data || loading) {
     return <Loader />;

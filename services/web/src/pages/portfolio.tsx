@@ -1,6 +1,7 @@
 import { Divider, Layout } from 'antd';
+import { useTrades } from '../api/trades';
 import { StatsChart } from '../components/charts/stats';
-import { TradeChart } from '../components/charts/trades';
+import { TradesChart } from '../components/charts/trades';
 import { BalanceTable } from '../components/tables/balance';
 import { PositionsTable } from '../components/tables/positions';
 import { TradesTable } from '../components/tables/trades';
@@ -8,17 +9,19 @@ import { TradesTable } from '../components/tables/trades';
 const { Content } = Layout;
 
 export function Portfolio(): React.ReactElement {
+  const trades = useTrades();
+
   return (
     <Content className='flex pl-6 pt-6 p-4 bg-white'>
       <div className='flex flex-col' style={{ flex: 2 }}>
         <BalanceTable />
         <PositionsTable />
-        <TradesTable />
+        <TradesTable {...trades} />
       </div>
       <Divider className='min-h-full mx-8' type='vertical' />
       <div className='flex flex-col' style={{ flex: 3 }}>
-        <StatsChart />
-        <TradeChart />
+        <StatsChart {...trades} />
+        <TradesChart {...trades} />
       </div>
     </Content>
   );

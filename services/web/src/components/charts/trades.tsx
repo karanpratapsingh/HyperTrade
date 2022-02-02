@@ -8,15 +8,18 @@ import {
   LineChart,
   Tooltip,
   XAxis,
-  YAxis,
+  YAxis
 } from 'recharts';
-import { useTrades } from '../../api/trades';
+import { TradesResponse } from '../../api/trades';
+import { ApiHookResult } from '../../api/types';
 import { Colors, LineColors } from '../../theme/colors';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
 
-export function TradeChart(): React.ReactElement {
-  const { data, loading } = useTrades();
+interface TradesChartProps extends ApiHookResult<TradesResponse> {}
+
+export function TradesChart(props: TradesChartProps): React.ReactElement {
+  const { data, loading } = props;
 
   if (!data || loading) {
     return <Loader />;

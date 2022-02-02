@@ -3,7 +3,8 @@ import { upperFirst } from 'lodash';
 import React from 'react';
 import { BsCurrencyDollar } from 'react-icons/bs';
 import { Cell, Pie, PieChart } from 'recharts';
-import { Trade, useTrades } from '../../api/trades';
+import { Trade, TradesResponse } from '../../api/trades';
+import { ApiHookResult } from '../../api/types';
 import { StatsColors } from '../../theme/colors';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
@@ -22,8 +23,10 @@ type PieData = {
   percent: number;
 };
 
-export function StatsChart(): React.ReactElement {
-  const { data, loading } = useTrades();
+interface StatsChartProps extends ApiHookResult<TradesResponse> {}
+
+export function StatsChart(props: StatsChartProps): React.ReactElement {
+  const { data, loading } = props;
 
   if (!data || loading) {
     return <Loader />;
