@@ -5,36 +5,24 @@ import React, { useState } from 'react';
 import { AiOutlineAreaChart, AiOutlineFunction } from 'react-icons/ai';
 import { BiBarChart } from 'react-icons/bi';
 import { IoSearchOutline } from 'react-icons/io5';
-import {
-  ChartType,
-  Indicators,
-  KlineChart,
-  TechnicalIndicators,
-} from '../components/charts/kline';
+import { ChartType, KlineChart } from '../components/charts/kline';
 import { Header } from '../components/ui/header';
+import {
+  PrimaryIndicators,
+  SecondaryIndicators, TechnicalIndicators
+} from '../config/indicators';
+import { useIndicatorsStore } from '../store/indicators';
 import { Colors } from '../theme/colors';
 
 const { Content } = Layout;
 
-const PrimaryIndicators: TechnicalIndicators[] = [
-  Indicators.MA,
-  Indicators.EMA,
-  Indicators.SMA,
-  Indicators.BOLL,
-  Indicators.SAR,
-  Indicators.BBI,
-];
-
-const SecondaryIndicators = Object.values(Indicators);
-
 export function Chart(): React.ReactElement {
+  const { primary, secondary, setPrimary, setSecondary } = useIndicatorsStore(
+    state => state
+  );
   const [showIndicators, setShowIndicators] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const [type, setType] = useState<ChartType>(ChartType.CANDLE);
-  const [primary, setPrimary] = useState<TechnicalIndicators[]>([]);
-  const [secondary, setSecondary] = useState<TechnicalIndicators[]>([
-    Indicators.VOL,
-  ]);
 
   const title = (
     <Header className='pb-4' title='Charts' subtitle='Live data charts' />
