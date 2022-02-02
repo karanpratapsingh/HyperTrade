@@ -23,7 +23,7 @@ export function Chart(): React.ReactElement {
   const [search, setSearch] = useState<string>('');
   const [type, setType] = useState<ChartType>(ChartType.CANDLE);
 
-  const title = (
+  const title: React.ReactNode = (
     <Header className='pb-4' title='Charts' subtitle='Live data charts' />
   );
 

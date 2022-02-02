@@ -9,7 +9,7 @@ import { StatsColors } from '../../theme/colors';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
 
-const ALLOWED = 12;
+const ALLOWED = 12; // TODO: fetch this from exchange service
 
 type Stats = {
   profit: number;

@@ -11,7 +11,7 @@ import { ErrorBoundary } from './components/misc/error-boundary';
 import { Paths } from './config/routes';
 import { PubSub } from './events/pubsub';
 import { DataFrameEvent, DataFrameEventPayload } from './events/types';
-import { Chart } from './pages/charts';
+import { Chart } from './pages/chart';
 import { Portfolio } from './pages/portfolio';
 import { useDataFrame } from './store/dataframe';
 import './styles/app.css';

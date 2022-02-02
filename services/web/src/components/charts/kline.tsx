@@ -41,7 +41,7 @@ export function KlineChart(props: KlineChartProps): React.ReactElement {
   useEffect(() => {
     const chart = init(CHART_ID, options);
 
-    const unsubscribe = useDataFrame.subscribe(({ data }) => {
+    const unsubscribe = useDataFrame.subscribe(({ data }): void => {
       const klineData: KLineData[] = map(
         data,
         ({ kline: { open, close, high, low, volume, time } }) => ({
