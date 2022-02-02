@@ -73,9 +73,7 @@ export function Chart(): React.ReactElement {
           onChange={({ target }) => setSearch(target.value)}
           prefix={<IoSearchOutline />}
         />
-        <div
-          className='flex flex-col mt-3'
-          style={{ height: 400, overflowY: 'scroll' }}>
+        <div className='flex flex-col h-96 mt-3 overflow-y-scroll'>
           <ListItem
             title='Primary'
             search={search}
@@ -145,9 +143,7 @@ function ListItem(props: ListProps): React.ReactElement {
   if (!filtered.length) {
     content = (
       <div className='mb-1'>
-        <span className='italic font-light text-gray-400'>
-          No results found
-        </span>
+        <span className='italic font-light text-gray-400'>Not found</span>
       </div>
     );
   }
