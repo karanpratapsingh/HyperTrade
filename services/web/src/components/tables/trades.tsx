@@ -44,7 +44,7 @@ export function TradesTable(props: TradesTableProps): React.ReactElement {
   ];
 
   return (
-    <div className='mt-4 w-full flex flex-col'>
+    <div className='mt-4 w-full flex flex-1 flex-col'>
       <Header title='Trades' subtitle='Trades executed so far' />
       <Table
         className='mt-4 text-xs font-light'

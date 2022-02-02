@@ -32,7 +32,7 @@ export function BalanceTable(): React.ReactElement {
   ];
 
   return (
-    <div className='w-full flex flex-col'>
+    <div className='w-full flex flex-1 flex-col'>
       <Header title='Balance' subtitle='Current balance' />
       <Table
         className='mt-4 text-xs font-light'
