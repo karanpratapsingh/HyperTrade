@@ -13,11 +13,7 @@ import { useDataFrame } from './store/dataframe';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import './styles/app.css';
 import { Portfolio } from './pages/portfolio';
-
-enum Paths {
-  HOME = '/',
-  PORTFOLIO = '/portfolio',
-}
+import { Paths } from './config/routes';
 
 enum MenuItem {
   CHARTS = 'charts',
@@ -54,7 +50,7 @@ function App(): React.ReactElement {
           <Menu.Item
             key={MenuItem.PORTFOLIO}
             icon={<RiDonutChartFill size={20} />}>
-            <Link to={Paths.PORTFOLIO}>Info</Link>
+            <Link to={Paths.PORTFOLIO}>Portfolio</Link>
           </Menu.Item>
         </Menu>
       </Sider>
