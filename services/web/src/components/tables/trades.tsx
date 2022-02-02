@@ -2,6 +2,7 @@ import { Table } from 'antd';
 import dateFormat from 'dateformat';
 import { Trade, TradesResponse } from '../../api/trades';
 import { ApiHookResult } from '../../api/types';
+import { paginationProps } from '../../utils/pagination';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
 
@@ -48,7 +49,7 @@ export function TradesTable(props: TradesTableProps): React.ReactElement {
       <Header title='Trades' subtitle='Trades executed so far' />
       <Table
         className='mt-4 text-xs font-light'
-        pagination={{ pageSize: 4 }}
+        pagination={paginationProps(data.trades.length)}
         columns={columns}
         dataSource={data.trades}
       />

@@ -2,8 +2,9 @@ import { Table } from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
 import { Balance, useBalance } from '../../api/balance';
 import { Icons } from '../../theme/icons';
-import { Loader } from '../ui/loader';
+import { paginationProps } from '../../utils/pagination';
 import { Header } from '../ui/header';
+import { Loader } from '../ui/loader';
 
 export function BalanceTable(): React.ReactElement {
   const { data, loading } = useBalance();
@@ -38,7 +39,7 @@ export function BalanceTable(): React.ReactElement {
       <Table
         className='mt-4 text-xs font-light'
         columns={columns}
-        pagination={{ pageSize: 4 }}
+        pagination={paginationProps(data.balance.length)}
         dataSource={data.balance}
       />
     </div>

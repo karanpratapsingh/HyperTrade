@@ -1,8 +1,9 @@
 import { Table } from 'antd';
 import dateFormat from 'dateformat';
 import { Position, usePositions } from '../../api/positions';
-import { Loader } from '../ui/loader';
+import { paginationProps } from '../../utils/pagination';
 import { Header } from '../ui/header';
+import { Loader } from '../ui/loader';
 
 export function PositionsTable(): React.ReactElement {
   const { data, loading } = usePositions();
@@ -41,7 +42,7 @@ export function PositionsTable(): React.ReactElement {
       <Table
         className='mt-4 text-xs font-light'
         columns={columns}
-        pagination={false}
+        pagination={paginationProps(data.positions.length)}
         dataSource={data.positions}
       />
     </div>
