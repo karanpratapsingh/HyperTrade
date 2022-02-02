@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/adshao/go-binance/v2 v2.3.4
+	github.com/gorilla/mux v1.8.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/nats-io/nats.go v1.13.1-0.20211122170419-d7c1d78a50fc
 	github.com/rs/zerolog v1.26.1
@@ -14,7 +15,6 @@ require (
 require (
 	github.com/bitly/go-simplejson v0.5.0 // indirect
 	github.com/golang/protobuf v1.5.0 // indirect
-	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.10.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
