@@ -29,6 +29,7 @@
     "react-router-dom": "6.2.1",
     "recharts": "2.1.8",
     "tailwindcss": "3.0.17",
+    "vercel-toast": "1.5.5",
     "zustand": "3.6.9"
   },
   "devDependencies": {
