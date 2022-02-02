@@ -36,7 +36,7 @@ function App(): React.ReactElement {
     await pubsub.init();
 
     pubsub.subscribe<DataFrameEventPayload>(DataFrameEvent, payload => {
-      add(payload);
+      add([payload]);
     });
   }
 

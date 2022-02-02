@@ -3,18 +3,18 @@ import { DataFrameEventPayload } from '../events/types';
 
 type DataFrameStore = {
   data: DataFrameEventPayload[];
-  add(kline: DataFrameEventPayload): void;
+  add(kline: DataFrameEventPayload[]): void;
 };
 
-const MAX_INTERVALS = 100;
+const MAX_INTERVALS = 120;
 
 export const useDataFrame = create<DataFrameStore>(
   (set: SetState<DataFrameStore>, get: GetState<DataFrameStore>) => ({
     data: [],
-    add: (frame: DataFrameEventPayload) => {
+    add: (frame: DataFrameEventPayload[]) => {
       const { data } = get();
 
-      const update = [...data, frame];
+      const update = [...data, ...frame];
 
       if (update.length > MAX_INTERVALS) {
         update.shift();
