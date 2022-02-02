@@ -1,19 +1,40 @@
 {
   "name": "web",
   "version": "0.0.0",
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "scripts": {
-    "dev": "vite --port 80 --host",
+    "dev": "vite --port 8080 --host",
     "build": "tsc && vite build",
-    "preview": "vite preview",
-    "lint": "yarn eslint --ext .js,.jsx,.ts,.tsx .",
-    "lint:fix": "yarn prettier --write . && yarn lint --fix"
+    "preview": "vite preview --port 8080 --host",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "lint:fix": "prettier --write . && npm run lint --fix"
   },
   "dependencies": {
+    "antd": "4.18.5",
+    "autoprefixer": "10.4.2",
+    "axios": "0.25.0",
+    "clsx": "1.1.1",
+    "cryptocurrency-icons": "0.18.0",
+    "dateformat": "5.0.2",
+    "klinecharts": "8.3.1",
+    "lodash": "4.17.21",
+    "nats.ws": "1.6.0",
+    "postcss": "8.4.5",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-icons": "4.3.1",
+    "react-loader-spinner": "5.1.0",
+    "react-query": "3.34.12",
+    "react-router": "6.2.1",
+    "react-router-dom": "6.2.1",
+    "recharts": "2.1.8",
+    "tailwindcss": "3.0.17",
+    "vercel-toast": "1.5.5",
+    "zustand": "3.6.9"
   },
   "devDependencies": {
+    "@types/dateformat": "5.0.0",
+    "@types/lodash": "4.14.178",
     "@types/react": "17.0.33",
     "@types/react-dom": "17.0.10",
     "@typescript-eslint/eslint-plugin": "5.10.0",

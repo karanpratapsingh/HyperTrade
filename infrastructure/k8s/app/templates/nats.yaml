@@ -6,7 +6,10 @@ spec:
   selector:
     app: nats
   ports:
-    - port: 4222
+    - name: nats
+      port: 4222
+    - name: ws
+      port: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -26,6 +29,11 @@ spec:
       containers:
         - name: nats
           image: {{ .Values.images.nats }}
-          command: ["nats-server", "--user={{ .Values.env.nats.USER }}", "--pass={{ .Values.env.nats.PASS }}"]
+          command:
+            - "nats-server"
+            - "--config=nats.conf"
+            - "--user={{ .Values.env.nats.USER }}"
+            - "--pass={{ .Values.env.nats.PASS }}"
           ports:
             - containerPort: 4222
+            - containerPort: 8080

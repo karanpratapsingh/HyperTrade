@@ -9,10 +9,23 @@ import (
 )
 
 type Positions struct {
-	Symbol   string    `gorm:"primaryKey"`
-	Price    float64   `gorm:"not null"`
-	Quantity float64   `gorm:"not null"`
-	Time     time.Time `gorm:"not null"`
+	Symbol   string    `gorm:"primaryKey" json:"symbol"`
+	Price    float64   `gorm:"not null" json:"price"`
+	Quantity float64   `gorm:"not null" json:"quantity"`
+	Time     time.Time `gorm:"not null" json:"time"`
+}
+
+func (db DB) GetPositions() []Positions {
+	var positions []Positions
+
+	result := db.conn.Find(&positions)
+
+	if result.Error != nil {
+		log.Error().Err(result.Error).
+			Msg("DB.Positions.GetPositions")
+	}
+
+	return positions
 }
 
 func (db DB) GetPosition(symbol string) Positions {

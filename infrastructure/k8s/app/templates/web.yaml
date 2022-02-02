@@ -6,7 +6,7 @@ spec:
   selector:
     app: web
   ports:
-    - port: 80
+    - port: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -27,4 +27,9 @@ spec:
         - name: web
           image: {{ .Values.images.web }}          
           ports:
-            - containerPort: 80
+            - containerPort: 8080
+          env:
+            - name: VITE_NATS_USER
+              value: "{{ .Values.env.nats.USER }}"
+            - name: VITE_NATS_PASS
+              value: "{{ .Values.env.nats.PASS }}"

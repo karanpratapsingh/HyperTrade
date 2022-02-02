@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  display: flex;
+  flex: 1;
+}
+
+#root {
+  display: flex;
+  flex: 1;
+}
+
+.ant-modal {
+  transform-origin: unset !important;
+}
+
+.ant-statistic-content {
+  display: flex;
+  align-items: center;
+}

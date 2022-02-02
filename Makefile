@@ -1,5 +1,5 @@
 start:
-	scripts/start.sh
+	minikube start
 
 dev:
 	skaffold dev --tail
