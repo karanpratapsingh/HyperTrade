@@ -15,3 +15,8 @@ body {
 .ant-modal {
   transform-origin: unset !important;
 }
+
+.ant-statistic-content {
+  display: flex;
+  align-items: center;
+}
