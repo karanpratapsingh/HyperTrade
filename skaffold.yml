@@ -9,7 +9,6 @@ build:
     - image: web
       context: ./services/web
       docker:
-        dockerfile: Dockerfile
         target: development
       sync:
         manual:
@@ -18,7 +17,6 @@ build:
     - image: exchange
       context: ./services/exchange
       docker:
-        dockerfile: Dockerfile
         target: development
       sync:
         manual:
@@ -27,7 +25,6 @@ build:
     - image: notification
       context: ./services/notification
       docker:
-        dockerfile: Dockerfile
         target: development
       sync:
         manual:
@@ -36,7 +33,6 @@ build:
     - image: strategy
       context: ./services/strategy
       docker:
-        dockerfile: Dockerfile
         target: development
       sync:
         manual:
