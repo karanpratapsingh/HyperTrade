@@ -7,6 +7,7 @@ import {
   StringCodec,
   Subscription,
 } from 'nats.ws';
+import Notifications from '../utils/notifications';
 
 const SERVER_URL = 'ws://localhost:8080/nats';
 
@@ -30,7 +31,9 @@ export class PubSub {
         user: AUTH.user,
         pass: AUTH.pass,
       });
+      Notifications.success('Connection established');
     } catch (err) {
+      Notifications.error(err?.message);
       console.error(err);
     }
   };
