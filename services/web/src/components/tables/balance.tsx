@@ -28,6 +28,7 @@ export function BalanceTable(): React.ReactElement {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
+      render: (amount: Balance['amount']) => <span>{amount.toFixed(4)}</span>,
     },
   ];
 
@@ -37,7 +38,7 @@ export function BalanceTable(): React.ReactElement {
       <Table
         className='mt-4 text-xs font-light'
         columns={columns}
-        pagination={false}
+        pagination={{ pageSize: 4 }}
         dataSource={data.balance}
       />
     </div>
