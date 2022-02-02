@@ -5,15 +5,15 @@ import ReactDOM from 'react-dom';
 import { BiBarChart } from 'react-icons/bi';
 import { RiDonutChartFill } from 'react-icons/ri';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import { ErrorBoundary } from './components/misc/error-boundary';
+import { Paths } from './config/routes';
 import { PubSub } from './events/pubsub';
 import { DataFrameEvent, DataFrameEventPayload } from './events/types';
 import { Chart } from './pages/charts';
-import { useDataFrame } from './store/dataframe';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import './styles/app.css';
 import { Portfolio } from './pages/portfolio';
-import { Paths } from './config/routes';
+import { useDataFrame } from './store/dataframe';
+import './styles/app.css';
 
 enum MenuItem {
   CHARTS = 'charts',
@@ -40,7 +40,7 @@ function App(): React.ReactElement {
     init();
   }, []);
 
-  return (
+  const content: React.ReactNode = (
     <Layout className='min-h-screen'>
       <Sider className='bg-gray-100' theme='light' collapsed>
         <Menu className='bg-gray-100 mt-2' theme='light' mode='inline'>
@@ -62,15 +62,14 @@ function App(): React.ReactElement {
       </Layout>
     </Layout>
   );
+
+  return (
+    <QueryClientProvider client={client}>
+      <BrowserRouter>
+        <ErrorBoundary>{content}</ErrorBoundary>
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
 }
 
-ReactDOM.render(
-  <QueryClientProvider client={client}>
-    <BrowserRouter>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    </BrowserRouter>
-  </QueryClientProvider>,
-  document.getElementById('root')
-);
+ReactDOM.render(<App />, document.getElementById('root'));
