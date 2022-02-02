@@ -32,8 +32,6 @@ build:
             dest: .
     - image: strategy
       context: ./services/strategy
-      docker:
-        target: development
       sync:
         manual:
           - src: "**/*.py"

@@ -20,8 +20,6 @@ build:
         target: production
     - image: strategy
       context: ./services/strategy
-      docker:
-        target: production
 deploy:
   helm:
     releases:
