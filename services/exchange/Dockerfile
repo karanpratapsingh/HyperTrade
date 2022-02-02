@@ -18,7 +18,7 @@ RUN go mod download
 COPY . ./
 RUN go build -o app
 
-FROM gcr.io/distroless/static
+FROM gcr.io/distroless/static as production
 COPY --from=builder app ./
 EXPOSE 80
 CMD ["/app"]
