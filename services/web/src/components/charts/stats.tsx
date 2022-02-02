@@ -62,7 +62,7 @@ export function StatsChart(): React.ReactElement {
             )}
           </Pie>
         </PieChart>
-        <div className='flex flex-col ml-8'>
+        <div className='flex flex-col ml-6'>
           {React.Children.toArray(
             pie.map(({ type, value }) => (
               <Statistic
