@@ -1,30 +1,37 @@
+import { Result } from 'antd';
 import React from 'react';
 
-export class ErrorBoundary extends React.Component {
-  state: {
-    error: Error | null;
-    hasError: boolean;
+interface ErrorBoundaryState {
+  error: Error | null;
+  hasError: boolean;
+}
+
+export class ErrorBoundary extends React.Component<any, ErrorBoundaryState> {
+  state: ErrorBoundaryState = {
+    error: null,
+    hasError: false,
   };
 
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      error: null,
-      hasError: false,
-    };
-  }
-
-  static getDerivedStateFromError(error: Error) {
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { error, hasError: true };
   }
 
-  render() {
+  render(): React.ReactNode {
     const { error, hasError } = this.state;
-    // TODO: make this nicer!
+    const { children } = this.props;
+
     if (error && hasError) {
-      return <h1>Something went wrong.{error.message}</h1>;
+      return (
+        <div className='flex flex-1 items-center justify-center'>
+          <Result
+            status='warning'
+            title='Something went wrong'
+            subTitle={error?.message}
+          />
+        </div>
+      );
     }
 
-    return this.props.children;
+    return children;
   }
 }
