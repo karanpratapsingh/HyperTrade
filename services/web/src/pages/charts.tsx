@@ -18,9 +18,7 @@ import { Colors } from '../theme/colors';
 const { Content } = Layout;
 
 export function Chart(): React.ReactElement {
-  const { primary, secondary, setPrimary, setSecondary } = useIndicatorsStore(
-    state => state
-  );
+  const { primary, secondary, setPrimary, setSecondary } = useIndicatorsStore();
   const [showIndicators, setShowIndicators] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const [type, setType] = useState<ChartType>(ChartType.CANDLE);
