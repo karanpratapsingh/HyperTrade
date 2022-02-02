@@ -59,8 +59,8 @@ export function Chart(): React.ReactElement {
   ];
 
   return (
-    <Content className='p-4 bg-white'>
-      <PageHeader className='p-0 pl-2 pr-12' title={title} extra={extras} />
+    <Content className='p-6 bg-white'>
+      <PageHeader className='p-0 pr-12' title={title} extra={extras} />
       <KlineChart type={type} primary={primary} secondary={secondary} />
       <Modal
         className='mt-24'
