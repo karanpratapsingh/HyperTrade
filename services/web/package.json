@@ -1,7 +1,7 @@
 {
   "name": "web",
   "version": "0.0.0",
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "scripts": {
     "dev": "vite --port 8080 --host",
     "build": "tsc && vite build",
