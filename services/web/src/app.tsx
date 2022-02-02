@@ -12,16 +12,16 @@ import { Chart } from './pages/charts';
 import { useDataFrame } from './store/dataframe';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import './styles/app.css';
-import { Info } from './pages/info';
+import { Portfolio } from './pages/portfolio';
 
 enum Paths {
   HOME = '/',
-  INFO = '/info',
+  PORTFOLIO = '/portfolio',
 }
 
 enum MenuItem {
   CHARTS = 'charts',
-  INFO = 'info',
+  PORTFOLIO = 'portfolio',
 }
 
 const client = new QueryClient();
@@ -47,23 +47,21 @@ function App(): React.ReactElement {
   return (
     <Layout className='min-h-screen'>
       <Sider className='bg-gray-100' theme='light' collapsed>
-        <Menu
-          className='bg-gray-100 mt-2'
-          theme='light'
-          defaultSelectedKeys={[MenuItem.CHARTS]}
-          mode='inline'>
+        <Menu className='bg-gray-100 mt-2' theme='light' mode='inline'>
           <Menu.Item key={MenuItem.CHARTS} icon={<BiBarChart size={25} />}>
             <Link to={Paths.HOME}>Charts</Link>
           </Menu.Item>
-          <Menu.Item key={MenuItem.INFO} icon={<RiDonutChartFill size={20} />}>
-            <Link to={Paths.INFO}>Info</Link>
+          <Menu.Item
+            key={MenuItem.PORTFOLIO}
+            icon={<RiDonutChartFill size={20} />}>
+            <Link to={Paths.PORTFOLIO}>Info</Link>
           </Menu.Item>
         </Menu>
       </Sider>
       <Layout>
         <Routes>
           <Route path={Paths.HOME} element={<Chart />} />
-          <Route path={Paths.INFO} element={<Info />} />
+          <Route path={Paths.PORTFOLIO} element={<Portfolio />} />
         </Routes>
       </Layout>
     </Layout>

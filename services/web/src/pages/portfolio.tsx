@@ -7,7 +7,7 @@ import { TradesTable } from '../components/tables/trades';
 
 const { Content } = Layout;
 
-export function Info(): React.ReactElement {
+export function Portfolio(): React.ReactElement {
   return (
     <Content className='flex pl-6 pt-6 p-4 bg-white'>
       <div className='flex flex-col' style={{ flex: 2 }}>
