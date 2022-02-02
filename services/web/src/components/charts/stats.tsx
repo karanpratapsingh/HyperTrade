@@ -1,4 +1,4 @@
-import { Statistic } from 'antd';
+import { Empty, Statistic } from 'antd';
 import { upperFirst } from 'lodash';
 import React from 'react';
 import { BsCurrencyDollar } from 'react-icons/bs';
@@ -23,6 +23,9 @@ type PieData = {
   percent: number;
 };
 
+const height = 200;
+const width = 180;
+
 interface StatsChartProps extends ApiHookResult<TradesResponse> {}
 
 export function StatsChart(props: StatsChartProps): React.ReactElement {
@@ -32,26 +35,35 @@ export function StatsChart(props: StatsChartProps): React.ReactElement {
     return <Loader />;
   }
 
-  const { profit, loss, total } = calculateStats(data.trades);
+  const stats = calculateStats(data.trades);
 
-  const pie: PieData[] = [
-    {
-      type: 'profit',
-      value: profit,
-      percent: percent(profit, total),
-    },
-    {
-      type: 'loss',
-      value: loss,
-      percent: percent(loss, total),
-    },
-  ];
+  let content: React.ReactNode | null = (
+    <div
+      className='flex flex-1 items-center justify-center'
+      style={{ height, width }}>
+      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+    </div>
+  );
 
-  return (
-    <div className='flex flex-col'>
-      <Header title='Portfolio' subtitle='Portfolio statistics' />
-      <div className='flex items-center my-2'>
-        <PieChart height={200} width={180}>
+  if (stats) {
+    const { profit, loss, total } = stats;
+
+    const pie: PieData[] = [
+      {
+        type: 'profit',
+        value: profit,
+        percent: percent(profit, total),
+      },
+      {
+        type: 'loss',
+        value: loss,
+        percent: percent(loss, total),
+      },
+    ];
+
+    content = (
+      <>
+        <PieChart height={height} width={width}>
           <Pie
             data={pie}
             innerRadius={60}
@@ -79,12 +91,23 @@ export function StatsChart(props: StatsChartProps): React.ReactElement {
             ))
           )}
         </div>
-      </div>
+      </>
+    );
+  }
+
+  return (
+    <div className='flex flex-col'>
+      <Header title='Portfolio' subtitle='Portfolio statistics' />
+      <div className='flex items-center my-2'>{content}</div>
     </div>
   );
 }
 
-function calculateStats(trades: Trade[]): Stats {
+function calculateStats(trades: Trade[]): Stats | null {
+  if (!trades.length) {
+    return null;
+  }
+
   const amounts = trades.map(({ entry, exit }) => {
     const percentage = ((exit - entry) / entry) * 100;
     const value = percentage * ALLOWED;
