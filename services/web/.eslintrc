@@ -14,6 +14,7 @@
   "rules": {
     "quotes": ["error", "single"],
     "prefer-const": "error",
-    "no-var": "error"
+    "no-var": "error",
+    "@typescript-eslint/no-empty-interface": "off"
   }
 }
