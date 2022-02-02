@@ -2,13 +2,6 @@ import { createToast } from 'vercel-toast';
 
 const timeout = 2000;
 
-function success(message: string): void {
-  createToast(message, {
-    timeout,
-    type: 'success',
-  });
-}
-
 function info(message: string): void {
   createToast(message, {
     timeout,
@@ -31,7 +24,6 @@ function error(message: string): void {
 }
 
 const Notifications = {
-  success,
   info,
   warning,
   error,

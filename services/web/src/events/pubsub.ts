@@ -31,7 +31,6 @@ export class PubSub {
         user: AUTH.user,
         pass: AUTH.pass,
       });
-      Notifications.success('Connection established');
     } catch (err) {
       Notifications.error(err?.message);
       console.error(err);
