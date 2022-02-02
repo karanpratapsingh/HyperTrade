@@ -1,4 +1,4 @@
-import { Result } from './types';
+import { ApiHookResult } from './types';
 import axios, { AxiosResponse } from 'axios';
 import { useQuery } from 'react-query';
 
@@ -11,11 +11,11 @@ export type Trade = {
   time: Date;
 };
 
-type TradesResponse = {
+export type TradesResponse = {
   trades: Trade[];
 };
 
-export function useTrades(): Result<TradesResponse> {
+export function useTrades(): ApiHookResult<TradesResponse> {
   const fetch = () => axios.get('/exchange/trades');
   const {
     data,

@@ -1,5 +1,5 @@
-export type Result<T, E = Error> = {
+export interface ApiHookResult<T, E = Error> {
   data: T | undefined;
   loading: boolean;
   error: E | null;
-};
+}

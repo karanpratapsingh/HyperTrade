@@ -1,17 +1,17 @@
 import axios, { AxiosResponse } from 'axios';
 import { useQuery } from 'react-query';
-import { Result } from './types';
+import { ApiHookResult } from './types';
 
 export type Balance = {
   asset: string;
   amount: number;
 };
 
-type BalanceResponse = {
+export type BalanceResponse = {
   balance: Balance[];
 };
 
-export function useBalance(): Result<BalanceResponse> {
+export function useBalance(): ApiHookResult<BalanceResponse> {
   const fetch = () => axios.get('/exchange/balance');
   const {
     data,
