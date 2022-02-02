@@ -6,14 +6,17 @@ interface ErrorBoundaryState {
   hasError: boolean;
 }
 
-export class ErrorBoundary extends React.Component<any, ErrorBoundaryState> {
+export class ErrorBoundary extends React.Component {
   state: ErrorBoundaryState = {
     error: null,
     hasError: false,
   };
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { error, hasError: true };
+    return {
+      error,
+      hasError: true,
+    };
   }
 
   render(): React.ReactNode {
