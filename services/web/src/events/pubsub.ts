@@ -32,7 +32,7 @@ export class PubSub {
         pass: AUTH.pass,
       });
     } catch (err) {
-      Notifications.error(err?.message);
+      Notifications.error((err as any)?.message);
       console.error(err);
     }
   };
