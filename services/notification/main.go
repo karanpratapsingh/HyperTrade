@@ -2,6 +2,7 @@ package main
 
 import (
 	"notification/internal"
+	"notification/utils"
 	"os"
 
 	"github.com/rs/zerolog"
