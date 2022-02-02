@@ -1,10 +1,10 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_NATS_USER: string
-  readonly VITE_NATS_PASS: string
+  readonly VITE_NATS_USER: string;
+  readonly VITE_NATS_PASS: string;
 }
 
 interface ImportMeta {
-  readonly env: ImportMetaEnv
+  readonly env: ImportMetaEnv;
 }

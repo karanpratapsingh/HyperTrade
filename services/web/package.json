@@ -6,8 +6,8 @@
     "dev": "vite --port 8080 --host",
     "build": "tsc && vite build",
     "preview": "vite preview --port 8080 --host",
-    "lint": "yarn eslint --ext .js,.jsx,.ts,.tsx .",
-    "lint:fix": "yarn prettier --write . && yarn lint --fix"
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "lint:fix": "prettier --write . && npm run lint --fix"
   },
   "dependencies": {
     "antd": "4.18.5",

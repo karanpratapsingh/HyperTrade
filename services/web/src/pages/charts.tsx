@@ -9,7 +9,8 @@ import { ChartType, KlineChart } from '../components/charts/kline';
 import { Header } from '../components/ui/header';
 import {
   PrimaryIndicators,
-  SecondaryIndicators, TechnicalIndicators
+  SecondaryIndicators,
+  TechnicalIndicators,
 } from '../config/indicators';
 import { useIndicatorsStore } from '../store/indicators';
 import { Colors } from '../theme/colors';

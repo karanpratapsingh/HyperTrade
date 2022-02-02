@@ -8,7 +8,7 @@ import {
   LineChart,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
 } from 'recharts';
 import { TradesResponse } from '../../api/trades';
 import { ApiHookResult } from '../../api/types';
@@ -41,7 +41,7 @@ export function TradesChart(props: TradesChartProps): React.ReactElement {
 
   const domain = [Math.min(...all) - 5, Math.max(...all) + 5];
 
-  function timeFormatter(date: any): string {
+  function timeFormatter(date: string): string {
     if ([0, 'auto'].includes(date)) {
       return date;
     }
