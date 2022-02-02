@@ -42,7 +42,7 @@ export function PositionsTable(): React.ReactElement {
         className='mt-4 text-xs font-light'
         columns={columns}
         pagination={false}
-        dataSource={data?.positions}
+        dataSource={data.positions}
       />
     </div>
   );

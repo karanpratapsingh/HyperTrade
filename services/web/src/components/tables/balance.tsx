@@ -38,7 +38,7 @@ export function BalanceTable(): React.ReactElement {
         className='mt-4 text-xs font-light'
         columns={columns}
         pagination={false}
-        dataSource={data?.balance}
+        dataSource={data.balance}
       />
     </div>
   );
