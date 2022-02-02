@@ -47,7 +47,7 @@ export function StatsChart(): React.ReactElement {
   return (
     <div className='flex flex-col'>
       <Header title='Portfolio' subtitle='Portfolio statistics' />
-      <div className='flex my-2'>
+      <div className='flex items-center my-2'>
         <PieChart height={200} width={180}>
           <Pie
             data={pie}
@@ -56,22 +56,26 @@ export function StatsChart(): React.ReactElement {
             paddingAngle={2}
             dataKey='percent'>
             {React.Children.toArray(
-              pie.map(({ type }) => <Cell key={type} fill={StatsColors[type]} />)
+              pie.map(({ type }) => (
+                <Cell key={type} fill={StatsColors[type]} />
+              ))
             )}
           </Pie>
         </PieChart>
-        {React.Children.toArray(
-          pie.map(({ type, value }) => (
-            <Statistic
-              className='mr-4'
-              title={upperFirst(type)}
-              value={value}
-              precision={2}
-              valueStyle={{ color: StatsColors[type] }}
-              prefix={<BsCurrencyDollar />}
-            />
-          ))
-        )}
+        <div className='flex flex-col ml-8'>
+          {React.Children.toArray(
+            pie.map(({ type, value }) => (
+              <Statistic
+                className='mb-2'
+                title={upperFirst(type)}
+                value={value}
+                precision={2}
+                valueStyle={{ color: StatsColors[type] }}
+                prefix={<BsCurrencyDollar />}
+              />
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
