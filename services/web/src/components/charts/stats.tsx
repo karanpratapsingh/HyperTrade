@@ -4,7 +4,7 @@ import React from 'react';
 import { BsCurrencyDollar } from 'react-icons/bs';
 import { Cell, Pie, PieChart } from 'recharts';
 import { Trade, useTrades } from '../../api/trades';
-import { StatsColor } from '../../theme/colors';
+import { StatsColors } from '../../theme/colors';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
 
@@ -56,7 +56,7 @@ export function StatsChart(): React.ReactElement {
             paddingAngle={2}
             dataKey='percent'>
             {React.Children.toArray(
-              pie.map(({ type }) => <Cell key={type} fill={StatsColor[type]} />)
+              pie.map(({ type }) => <Cell key={type} fill={StatsColors[type]} />)
             )}
           </Pie>
         </PieChart>
@@ -67,7 +67,7 @@ export function StatsChart(): React.ReactElement {
               title={upperFirst(type)}
               value={value}
               precision={2}
-              valueStyle={{ color: StatsColor[type] }}
+              valueStyle={{ color: StatsColors[type] }}
               prefix={<BsCurrencyDollar />}
             />
           ))
