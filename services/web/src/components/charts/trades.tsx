@@ -65,9 +65,9 @@ export function TradesChart(props: TradesChartProps): React.ReactElement {
       <LineChart
         className='mt-4'
         margin={margin}
+        data={data.trades}
         height={540}
-        width={900}
-        data={data.trades}>
+        width={940}>
         <Legend />
         <CartesianGrid style={cartesianStyle} strokeDasharray='3' />
         <XAxis
