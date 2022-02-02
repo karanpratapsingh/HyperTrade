@@ -26,3 +26,7 @@ body {
   align-items: center !important;
   justify-content: center !important;
 }
+
+.ant-page-header-heading-left {
+  margin: 0px !important;
+}
