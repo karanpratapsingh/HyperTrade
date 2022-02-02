@@ -1,4 +1,5 @@
 import 'antd/dist/antd.css';
+import 'vercel-toast/dist/vercel-toast.css';
 import { Layout, Menu } from 'antd';
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
