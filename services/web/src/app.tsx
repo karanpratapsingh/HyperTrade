@@ -43,7 +43,11 @@ function App(): React.ReactElement {
   const content: React.ReactNode = (
     <Layout className='min-h-screen'>
       <Sider className='bg-gray-100' theme='light' collapsed>
-        <Menu className='bg-gray-100 mt-2' theme='light' mode='inline'>
+        <Menu
+          className='bg-gray-100 mt-2'
+          theme='light'
+          mode='inline'
+          defaultSelectedKeys={[MenuItem.CHARTS]}>
           <Menu.Item key={MenuItem.CHARTS} icon={<BiBarChart size={25} />}>
             <Link to={Paths.HOME}>Charts</Link>
           </Menu.Item>
