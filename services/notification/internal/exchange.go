@@ -21,11 +21,13 @@ type BalanceResponse struct {
 	Balance []Balance `json:"balance"`
 }
 
+var ProxyURL = "http://proxy.default:8080"
+
 func GetBalanceString() string {
-	url := "http://exchange.default/balance"
+	url := fmt.Sprintf("%v/exchange/balance", ProxyURL)
 
 	client := http.Client{
-		Timeout: time.Second * 2,
+		Timeout: time.Second * 4,
 	}
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
