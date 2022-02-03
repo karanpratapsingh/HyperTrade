@@ -3,19 +3,11 @@ import { upperFirst } from 'lodash';
 import React from 'react';
 import { BsCurrencyDollar } from 'react-icons/bs';
 import { Cell, Pie, PieChart } from 'recharts';
-import { Trade, TradesResponse } from '../../api/trades';
-import { ApiHookResult } from '../../api/types';
+import { useStats } from '../../api/stats';
 import { StatsColors } from '../../theme/colors';
+import { percent } from '../../utils/math';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
-
-const ALLOWED = 12; // TODO: fetch this from exchange service
-
-type Stats = {
-  profit: number;
-  loss: number;
-  total: number;
-};
 
 type PieData = {
   type: 'profit' | 'loss';
@@ -26,16 +18,12 @@ type PieData = {
 const height = 200;
 const width = 180;
 
-interface StatsChartProps extends ApiHookResult<TradesResponse> {}
-
-export function StatsChart(props: StatsChartProps): React.ReactElement {
-  const { data, loading } = props;
+export function StatsChart(): React.ReactElement {
+  const { data, loading } = useStats();
 
   if (!data || loading) {
     return <Loader />;
   }
-
-  const stats = calculateStats(data.trades);
 
   let content: React.ReactNode | null = (
     <div
@@ -45,8 +33,8 @@ export function StatsChart(props: StatsChartProps): React.ReactElement {
     </div>
   );
 
-  if (stats) {
-    const { profit, loss, total } = stats;
+  if (data?.stats) {
+    const { profit, loss, total } = data.stats;
 
     const pie: PieData[] = [
       {
@@ -84,7 +72,7 @@ export function StatsChart(props: StatsChartProps): React.ReactElement {
                 className='mb-2'
                 title={upperFirst(type)}
                 value={value}
-                precision={2}
+                precision={4}
                 valueStyle={{ color: StatsColors[type] }}
                 prefix={<BsCurrencyDollar />}
               />
@@ -101,41 +89,4 @@ export function StatsChart(props: StatsChartProps): React.ReactElement {
       <div className='flex items-center my-2'>{content}</div>
     </div>
   );
-}
-
-function calculateStats(trades: Trade[]): Stats | null {
-  if (!trades.length) {
-    return null;
-  }
-
-  const amounts = trades.map(({ entry, exit }) => {
-    const percentage = ((exit - entry) / entry) * 100;
-    const value = percentage * ALLOWED;
-    return value;
-  });
-
-  let loss = 0;
-  let profit = 0;
-
-  for (const amount of amounts) {
-    if (amount < 0) {
-      loss += amount * -1;
-    }
-
-    if (amount > 0) {
-      profit += amount;
-    }
-  }
-
-  const total = loss + profit;
-
-  return {
-    loss,
-    profit,
-    total,
-  };
-}
-
-function percent(value: number, total: number): number {
-  return (value / total) * 100;
 }

@@ -14,7 +14,7 @@ export function Portfolio(): React.ReactElement {
   return (
     <Content className='flex p-6 bg-white'>
       <div className='flex flex-col' style={{ flex: 3 }}>
-        <StatsChart {...trades} />
+        <StatsChart />
         <TradesChart {...trades} />
       </div>
       <Divider className='min-h-full mx-8' type='vertical' />
