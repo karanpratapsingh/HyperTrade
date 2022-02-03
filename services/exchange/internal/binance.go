@@ -44,10 +44,10 @@ func (b Binance) PrintAccountInfo(symbol string) {
 	acc := b.GetAccount()
 
 	fmt.Println("-------- Account Info --------")
-	fmt.Println("Symbol:", symbol)
 	fmt.Println("Type:", acc.AccountType)
 	fmt.Println("Can Trade:", acc.CanTrade)
 	fmt.Println("Test Mode:", b.test)
+	fmt.Println("Symbol:", symbol)
 	fmt.Println(b.GetBalanceString())
 	fmt.Println("------------------------------")
 }
