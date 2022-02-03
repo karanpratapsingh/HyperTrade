@@ -70,3 +70,39 @@ func GetBalance() (BalanceResponse, error) {
 
 	return response, nil
 }
+
+type Stats struct {
+	Profit float64 `json:"profit"`
+	Loss   float64 `json:"loss"`
+	Total  float64 `json:"total"`
+}
+
+type StatsResponse struct {
+	Stats *Stats `json:"stats"`
+}
+
+func GetStats() (StatsResponse, error) {
+	res, err := NewRequest(http.MethodGet, "exchange/stats", nil)
+	response := StatsResponse{}
+
+	if err != nil {
+		log.Error().Err(err).Msg("Request.Exchange.GetStats.Get")
+		return response, err
+	}
+
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	fmt.Print(string(body))
+	if err != nil {
+		log.Error().Err(err).Msg("Request.Exchange.GetStats.ReadAll")
+		return response, err
+	}
+
+	if err := json.Unmarshal(body, &response); err != nil {
+		log.Error().Err(err).Msg("Request.Exchange.GetStats.Unmarshal")
+		return response, err
+	}
+
+	return response, nil
+}
