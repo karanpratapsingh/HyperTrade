@@ -54,7 +54,7 @@ function App(): React.ReactElement {
           </Menu.Item>
           <Menu.Item
             key={MenuItem.PORTFOLIO}
-            icon={<RiDonutChartFill size={20} />}>
+            icon={<RiDonutChartFill size={22} />}>
             <Link to={Paths.PORTFOLIO}>Portfolio</Link>
           </Menu.Item>
         </Menu>
