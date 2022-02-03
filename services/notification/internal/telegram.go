@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -70,7 +71,12 @@ func (t Telegram) ListenForCommands() {
 		case PingCommand:
 			message.Text = "Pong"
 		case BalanceCommand:
-			message.Text = GetBalanceString()
+			balance, err := GetBalance()
+			if err != nil {
+				message.Text = err.Error()
+			} else {
+				message.Text = t.FormatBalanceMessage(balance)
+			}
 		default:
 			message.Text = "Command not defined"
 		}
@@ -119,6 +125,24 @@ func (t Telegram) FormatTradeMessage(p TradeEventPayload) string {
 		p.ID, p.Symbol, p.Entry, p.Exit, p.Quantity, time)
 
 	return message
+}
+
+func (t Telegram) FormatBalanceMessage(r BalanceResponse) string {
+	header := "Balance:"
+
+	if r.Test {
+		header = fmt.Sprintln("Test", header)
+	}
+
+	var balances = []string{header}
+	var separator rune = '•'
+
+	for _, balance := range r.Balance {
+		b := fmt.Sprintf("%c %v %v", separator, balance.Asset, balance.Amount)
+		balances = append(balances, b)
+	}
+
+	return strings.Join(balances, "\n")
 }
 
 func (t Telegram) FormatErrorMessage(p CriticalErrorEventPayload) string {
