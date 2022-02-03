@@ -10,17 +10,17 @@ import (
 )
 
 type Api struct {
-	exchange Binance
 	db       db.DB
+	exchange Binance
 }
 
-func NewApi(exchange Binance, db db.DB) error {
+func NewApi(db db.DB, exchange Binance) error {
 	port := ":80"
 
 	log.Trace().Str("port", port).Msg("Internal.Api.Init")
 
 	router := mux.NewRouter()
-	api := Api{exchange, db}
+	api := Api{db, exchange}
 
 	router.HandleFunc("/healthz", api.healthcheck).Methods(http.MethodGet)
 	router.HandleFunc("/balance", api.balance).Methods(http.MethodGet)
@@ -38,12 +38,12 @@ type HealthzResponse struct {
 }
 
 func (Api) healthcheck(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
 	response := HealthzResponse{
 		Status:  200,
 		Message: "Healthy",
 	}
 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -58,11 +58,12 @@ type BalanceResponse struct {
 }
 
 func (a Api) balance(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
 	response := BalanceResponse{
 		Test:    a.exchange.test,
 		Balance: a.exchange.GetBalance(),
 	}
+
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -71,10 +72,11 @@ type TradesResponse struct {
 }
 
 func (a Api) trades(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
 	response := TradesResponse{
 		Trades: a.db.GetTrades(),
 	}
+
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -83,10 +85,11 @@ type PositionsResponse struct {
 }
 
 func (a Api) positions(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
 	response := PositionsResponse{
 		Positions: a.db.GetPositions(),
 	}
+
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -101,13 +104,14 @@ type StatsResponse struct {
 }
 
 func (a Api) stats(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	query := r.URL.Query()
+	symbol := query.Get("symbol")
 
 	var response StatsResponse
 	var stats Stats
 
 	trades := a.db.GetTrades()
-	config := a.db.GetConfig("ETHUSDT") //TODO: get from env
+	config := a.db.GetConfig(symbol)
 
 	if len(trades) != 0 {
 		for _, trade := range trades {
@@ -125,5 +129,6 @@ func (a Api) stats(w http.ResponseWriter, r *http.Request) {
 		response = StatsResponse{&stats}
 	}
 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
 }
