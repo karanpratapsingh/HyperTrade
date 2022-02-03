@@ -11,19 +11,19 @@ if ! [ -x "$(command -v yq)" ]; then
 fi
 
 if ! [ -x "$(command -v minikube)" ]; then
-  echo "Error: minikube is not installed."
+  echo "[x] Error: minikube is not installed."
   echo "Please install it from https://minikube.sigs.k8s.io/docs/start/"
   exit 1
 fi
 
 if ! [ -x "$(command -v skaffold)" ]; then
-  echo "Error: skaffold is not installed."
+  echo "[x] Error: skaffold is not installed."
   echo "Please install it from https://skaffold.dev/docs/install/"
   exit 1
 fi
 
 if ! [ -x "$(command -v helm)" ]; then
-  echo "Error: helm is not installed."
+  echo "[x] Error: helm is not installed."
   echo "Please install it from https://helm.sh/docs/intro/install/"
   exit 1
 fi
@@ -45,6 +45,11 @@ echo "
 VITE_NATS_USER=$NATS_USER
 VITE_NATS_PASS=$NATS_PASS
 " >>$WEB_ENV_PATH
+
+echo "[*] installing dependencies"
+cd services/exchange && go mod tidy && cd ../..
+cd services/notification && go mod tidy && cd ../..
+cd services/web && npm install && cd ../..
 
 echo "[*] starting minikube"
 minikube start
