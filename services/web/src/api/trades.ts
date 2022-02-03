@@ -1,6 +1,6 @@
-import { ApiHookResult } from './types';
 import axios, { AxiosResponse } from 'axios';
 import { useQuery } from 'react-query';
+import { ApiHookResult } from './types';
 
 export type Trade = {
   id: number;
