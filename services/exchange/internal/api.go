@@ -26,6 +26,7 @@ func NewApi(exchange Binance, db db.DB) error {
 	router.HandleFunc("/balance", api.balance).Methods(http.MethodGet)
 	router.HandleFunc("/trades", api.trades).Methods(http.MethodGet)
 	router.HandleFunc("/positions", api.positions).Methods(http.MethodGet)
+	router.HandleFunc("/stats", api.stats).Methods(http.MethodGet)
 
 	err := http.ListenAndServe(port, router)
 	return err
@@ -44,6 +45,11 @@ func (Api) healthcheck(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(response)
+}
+
+type Balance struct {
+	Asset  string  `json:"asset"`
+	Amount float64 `json:"amount"`
 }
 
 type BalanceResponse struct {
@@ -81,5 +87,43 @@ func (a Api) positions(w http.ResponseWriter, r *http.Request) {
 	response := PositionsResponse{
 		Positions: a.db.GetPositions(),
 	}
+	json.NewEncoder(w).Encode(response)
+}
+
+type Stats struct {
+	Profit float64 `json:"profit"`
+	Loss   float64 `json:"loss"`
+	Total  float64 `json:"total"`
+}
+
+type StatsResponse struct {
+	Stats *Stats `json:"stats"`
+}
+
+func (a Api) stats(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+
+	var response StatsResponse
+	var stats Stats
+
+	trades := a.db.GetTrades()
+	config := a.db.GetConfig("ETHUSDT") //TODO: get from env
+
+	if len(trades) != 0 {
+		for _, trade := range trades {
+			percentage := ((trade.Exit - trade.Entry) / trade.Entry) * 100
+			amount := percentage * config.AllowedAmount
+
+			if amount > 0 {
+				stats.Profit += amount
+			} else {
+				stats.Loss += -1 * amount
+			}
+		}
+
+		stats.Total = stats.Profit + stats.Loss
+		response = StatsResponse{&stats}
+	}
+
 	json.NewEncoder(w).Encode(response)
 }
