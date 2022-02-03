@@ -28,8 +28,3 @@ spec:
           image: {{ .Values.images.web }}          
           ports:
             - containerPort: 8080
-          env:
-            - name: VITE_NATS_USER
-              value: "{{ .Values.env.nats.USER }}"
-            - name: VITE_NATS_PASS
-              value: "{{ .Values.env.nats.PASS }}"
