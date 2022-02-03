@@ -16,17 +16,17 @@ var ZeroBalance = 0.00000000
 
 type Binance struct {
 	client *binance.Client
-	pubsub PubSub
 	test   bool
+	pubsub PubSub
 }
 
-func NewBinance(key, secret string, pubsub PubSub, test bool) Binance {
+func NewBinance(key, secret string, test bool, pubsub PubSub) Binance {
 	log.Trace().Str("type", "binance").Bool("test", test).Msg("Binance.Init")
 
 	binance.UseTestnet = test
 	client := binance.NewClient(key, secret)
 
-	return Binance{client, pubsub, test}
+	return Binance{client, test, pubsub}
 }
 
 func (b Binance) GetAccount() *binance.Account {
@@ -40,10 +40,11 @@ func (b Binance) GetAccount() *binance.Account {
 	return account
 }
 
-func (b Binance) PrintAccountInfo() {
+func (b Binance) PrintAccountInfo(symbol string) {
 	acc := b.GetAccount()
 
 	fmt.Println("-------- Account Info --------")
+	fmt.Println("Symbol:", symbol)
 	fmt.Println("Type:", acc.AccountType)
 	fmt.Println("Can Trade:", acc.CanTrade)
 	fmt.Println("Test Mode:", b.test)
