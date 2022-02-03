@@ -47,12 +47,14 @@ func (Api) healthcheck(w http.ResponseWriter, r *http.Request) {
 }
 
 type BalanceResponse struct {
+	Test    bool      `json:"test"`
 	Balance []Balance `json:"balance"`
 }
 
 func (a Api) balance(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	response := BalanceResponse{
+		Test:    a.exchange.test,
 		Balance: a.exchange.GetBalance(),
 	}
 	json.NewEncoder(w).Encode(response)

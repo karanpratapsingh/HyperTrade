@@ -8,6 +8,7 @@ export type Balance = {
 };
 
 export type BalanceResponse = {
+  test: boolean;
   balance: Balance[];
 };
 
