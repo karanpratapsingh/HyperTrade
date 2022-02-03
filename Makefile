@@ -2,6 +2,7 @@ prepare:
 	scripts/prepare.sh
 
 dev:
+	make prepare
 	skaffold dev --profile=development --tail
 
 run:
