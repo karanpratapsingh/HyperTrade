@@ -1,41 +1,64 @@
 apiVersion: skaffold/v2beta20
 kind: Config
-build:
-  artifacts:
-    - image: proxy
-      context: ./services/proxy
-    - image: nats
-      context: ./services/nats
-    - image: web
-      context: ./services/web
-      docker:
-        target: development
-      sync:
-        manual:
-          - src: "src/**/*.ts*"
-            dest: .
-    - image: exchange
-      context: ./services/exchange
-      docker:
-        target: development
-      sync:
-        manual:
-          - src: "**/*.go"
-            dest: .
-    - image: notification
-      context: ./services/notification
-      docker:
-        target: development
-      sync:
-        manual:
-          - src: "**/*.go"
-            dest: .
-    - image: strategy
-      context: ./services/strategy
-      sync:
-        manual:
-          - src: "**/*.py"
-            dest: .
+profiles:
+  - name: production
+    build:
+      artifacts:
+        - image: proxy
+          context: ./services/proxy
+        - image: nats
+          context: ./services/nats
+        - image: web
+          context: ./services/web
+          docker:
+            target: production
+        - image: exchange
+          context: ./services/exchange
+          docker:
+            target: production
+        - image: notification
+          context: ./services/notification
+          docker:
+            target: production
+        - image: strategy
+          context: ./services/strategy
+  - name: development
+    build:
+      artifacts:
+        - image: proxy
+          context: ./services/proxy
+        - image: nats
+          context: ./services/nats
+        - image: web
+          context: ./services/web
+          docker:
+            target: development
+          sync:
+            manual:
+              - src: "src/**/*.ts*"
+                dest: .
+        - image: exchange
+          context: ./services/exchange
+          docker:
+            target: development
+          sync:
+            manual:
+              - src: "**/*.go"
+                dest: .
+        - image: notification
+          context: ./services/notification
+          docker:
+            target: development
+          sync:
+            manual:
+              - src: "**/*.go"
+                dest: .
+        - image: strategy
+          context: ./services/strategy
+          sync:
+            manual:
+              - src: "**/*.py"
+                dest: .
 deploy:
   helm:
     releases:
