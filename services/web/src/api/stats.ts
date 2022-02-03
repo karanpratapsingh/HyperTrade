@@ -12,8 +12,8 @@ export type StatsResponse = {
   stats: Stats | null;
 };
 
-export function useStats(): ApiHookResult<StatsResponse> {
-  const fetch = () => axios.get('/exchange/stats');
+export function useStats(symbol: string): ApiHookResult<StatsResponse> {
+  const fetch = () => axios.get(`/exchange/stats?symbol=${symbol}`);
   const {
     data,
     isLoading: loading,

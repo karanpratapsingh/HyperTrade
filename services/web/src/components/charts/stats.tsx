@@ -5,6 +5,7 @@ import { BsCurrencyDollar } from 'react-icons/bs';
 import { Cell, Pie, PieChart } from 'recharts';
 import { useStats } from '../../api/stats';
 import { StatsColors } from '../../theme/colors';
+import Env from '../../utils/env';
 import { percent } from '../../utils/math';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
@@ -19,7 +20,7 @@ const height = 200;
 const width = 180;
 
 export function StatsChart(): React.ReactElement {
-  const { data, loading } = useStats();
+  const { data, loading } = useStats(Env.SYMBOL);
 
   if (!data || loading) {
     return <Loader />;
