@@ -51,11 +51,6 @@ func (b Binance) PrintAccountInfo() {
 	fmt.Println("------------------------------")
 }
 
-type Balance struct {
-	Asset  string  `json:"asset"`
-	Amount float64 `json:"amount"`
-}
-
 func (b Binance) GetBalance() []Balance {
 	acc := b.GetAccount()
 	balances := []Balance{}
