@@ -65,7 +65,6 @@ $ helm install k8s/argo --set repository.token=$ARGO_GITHUB_TOKEN --generate-nam
 
 - Check the `infrastructure/k8s/app/env.example.yaml` and add your secrets then save it as `infrastructure/k8s/app/env.yaml`
 - `make prepare` (prepare local environment)
-- `make install` (prepare local environment)
 - `make dev` (for development)
 - `make run` (preview production mode)
 - `make deploy` (deploy to production cluster)
