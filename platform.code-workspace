@@ -9,15 +9,15 @@
       "path": "services/web"
     },
     {
-      "name": "Exchange Service",
+      "name": "Exchange",
       "path": "services/exchange"
     },
     {
-      "name": "Notification Service",
+      "name": "Notification",
       "path": "services/notification"
     },
     {
-      "name": "Strategy Service",
+      "name": "Strategy",
       "path": "services/strategy"
     }
   ]
