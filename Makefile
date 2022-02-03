@@ -1,5 +1,5 @@
-start:
-	minikube start
+prepare:
+	scripts/prepare.sh
 
 install:
 	cd services/exchange && go mod tidy && cd ..
@@ -8,6 +8,12 @@ install:
 
 dev:
 	skaffold dev --tail
+
+run:
+	skaffold run --config=./skaffold.prod.yml --tail
+
+deploy:
+	echo "TODO: deploy"
 
 stop:
 	minikube stop
