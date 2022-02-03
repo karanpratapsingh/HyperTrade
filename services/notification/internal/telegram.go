@@ -70,12 +70,11 @@ func (t Telegram) ListenForCommands() {
 		case PingCommand:
 			message.Text = "Pong"
 		case BalanceCommand:
-			message.Text = "TODO: Get balance from exchange svc"
+			message.Text = GetBalanceString()
 		default:
 			message.Text = "Command not defined"
 		}
 
-		// TODO: disable join all together?
 		if update.Message.Chat.ID != t.chatID {
 			from := update.Message.From
 
