@@ -18,18 +18,18 @@ func init() {
 
 var interval string = "1m"
 
-var symbol = "ETHUSDT"
-
 func main() {
-	DB := db.New()
-
 	env := utils.GetEnv()
+	symbol := env.Symbol
+
+	DB := db.New(env.DatabaseUrl)
+	DB.Seed(symbol)
 
 	pubsub := internal.NewPubSub(env.NatsUrl, env.NatsUser, env.NatsPass)
 	defer pubsub.Close()
 
-	bex := internal.NewBinance(env.BinanceApiKey, env.BinanceApiSecretKey, pubsub, env.BinanceTestnet)
-	bex.PrintAccountInfo()
+	bex := internal.NewBinance(env.BinanceApiKey, env.BinanceApiSecretKey, env.BinanceTestnet, pubsub)
+	bex.PrintAccountInfo(symbol)
 
 	go bex.Kline(symbol, interval)
 
@@ -37,7 +37,7 @@ func main() {
 		ListenTrade(DB, pubsub, p.Kline, p.Signal)
 	})
 
-	err := internal.NewApi(bex, DB)
+	err := internal.NewApi(DB, bex)
 	log.Error().Err(err).Msg("Router.Error")
 }
 
