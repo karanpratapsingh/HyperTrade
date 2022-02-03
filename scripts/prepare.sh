@@ -31,6 +31,7 @@ fi
 SECRETS_PATH=infrastructure/k8s/app/env.yaml
 WEB_ENV_PATH=services/web/.env
 
+SYMBOL=$(yq ".env.global.SYMBOL" $SECRETS_PATH)
 NATS_USER=$(yq ".env.nats.USER" $SECRETS_PATH)
 NATS_PASS=$(yq ".env.nats.PASS" $SECRETS_PATH)
 
@@ -42,6 +43,7 @@ else
 fi
 
 echo "
+VITE_SYMBOL=$SYMBOL
 VITE_NATS_USER=$NATS_USER
 VITE_NATS_PASS=$NATS_PASS
 " >>$WEB_ENV_PATH
