@@ -3,9 +3,9 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/rs/zerolog/log"
@@ -23,56 +23,50 @@ type BalanceResponse struct {
 
 var ProxyURL = "http://proxy.default:8080"
 
-func GetBalanceString() string {
-	url := fmt.Sprintf("%v/exchange/balance", ProxyURL)
+type Response *http.Response
+
+func NewRequest(method, route string, body io.Reader) (*http.Response, error) {
+	url := fmt.Sprintf("%v/%v", ProxyURL, route)
 
 	client := http.Client{
-		Timeout: time.Second * 4,
+		Timeout: 4 * time.Second,
 	}
 
-	req, err := http.NewRequest(http.MethodGet, url, nil)
-
+	req, err := http.NewRequest(method, url, body)
 	if err != nil {
-		log.Error().Err(err).Msg("Internal.Exchange.GetBalance.NewRequest")
-		return err.Error()
+		return nil, err
 	}
 
 	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, err
+}
+
+func GetBalance() (BalanceResponse, error) {
+	res, err := NewRequest(http.MethodGet, "exchange/balance", nil)
+	response := BalanceResponse{}
 
 	if err != nil {
-		log.Error().Err(err).Msg("Internal.Exchange.GetBalance.Get")
-		return err.Error()
+		log.Error().Err(err).Msg("Request.Exchange.GetBalance.Get")
+		return response, err
 	}
 
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
-
+	fmt.Print(string(body))
 	if err != nil {
-		log.Error().Err(err).Msg("Internal.Exchange.GetBalance.ReadAll")
-		return err.Error()
+		log.Error().Err(err).Msg("Request.Exchange.GetBalance.ReadAll")
+		return response, err
 	}
-
-	response := BalanceResponse{}
 
 	if err := json.Unmarshal(body, &response); err != nil {
-		log.Error().Err(err).Msg("Internal.Exchange.GetBalance.Unmarshal")
-		return err.Error()
+		log.Error().Err(err).Msg("Request.Exchange.GetBalance.Unmarshal")
+		return response, err
 	}
 
-	header := "Balance:"
-
-	if response.Test {
-		header = fmt.Sprintln("Test", header)
-	}
-
-	var balances = []string{header}
-	var separator rune = '•'
-
-	for _, balance := range response.Balance {
-		b := fmt.Sprintf("%c %v %v", separator, balance.Asset, balance.Amount)
-		balances = append(balances, b)
-	}
-
-	return strings.Join(balances, "\n")
+	return response, nil
 }
