@@ -29,6 +29,8 @@ spec:
           ports:
             - containerPort: 80
           env:
+            - name: SYMBOL
+              value: "{{ .Values.env.global.SYMBOL }}"
             - name: TELEGRAM_API_TOKEN
               value: "{{ .Values.env.notification.TELEGRAM_API_TOKEN }}"
             - name: TELEGRAM_CHAT_ID
