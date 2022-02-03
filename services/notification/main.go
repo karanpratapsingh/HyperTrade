@@ -36,5 +36,5 @@ func main() {
 		telegram.SendMessage(internal.CriticalErrorEvent, message)
 	})
 
-	telegram.ListenForCommands()
+	telegram.ListenForCommands(env.Symbol)
 }

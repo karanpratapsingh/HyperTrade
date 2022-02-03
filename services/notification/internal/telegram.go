@@ -51,7 +51,7 @@ func (t Telegram) SetDefaultCommands() {
 	}
 }
 
-func (t Telegram) ListenForCommands() {
+func (t Telegram) ListenForCommands(symbol string) {
 	log.Trace().Msg("TelegramBot.ListenForCommands.Init")
 
 	update := telegram.NewUpdate(0)
@@ -85,7 +85,7 @@ func (t Telegram) ListenForCommands() {
 				message.Text = t.FormatBalanceMessage(balance)
 			}
 		case StatsCommand:
-			stats, err := GetStats()
+			stats, err := GetStats(symbol)
 			if err != nil {
 				message.Text = err.Error()
 			} else {
