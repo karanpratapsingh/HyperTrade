@@ -104,6 +104,7 @@ type StatsResponse struct {
 }
 
 func (a Api) stats(w http.ResponseWriter, r *http.Request) {
+	enc := json.NewEncoder(w)
 	query := r.URL.Query()
 	symbol := query.Get("symbol")
 
@@ -112,6 +113,12 @@ func (a Api) stats(w http.ResponseWriter, r *http.Request) {
 
 	trades := a.db.GetTrades()
 	config := a.db.GetConfig(symbol)
+
+	if symbol == "" || config.Symbol == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		enc.Encode(response)
+		return
+	}
 
 	if len(trades) != 0 {
 		for _, trade := range trades {
@@ -130,5 +137,5 @@ func (a Api) stats(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
+	enc.Encode(response)
 }
