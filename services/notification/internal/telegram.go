@@ -17,6 +17,7 @@ type Telegram struct {
 var (
 	PingCommand    = "ping"
 	BalanceCommand = "balance"
+	StatsCommand   = "stats"
 )
 
 func NewTelegramBot(token string, chatId int64) Telegram {
@@ -28,19 +29,25 @@ func NewTelegramBot(token string, chatId int64) Telegram {
 		log.Fatal().Err(err).Msg("TelegramBot.Init")
 	}
 
-	setDefaultCommands(bot)
+	t := Telegram{bot, chatId}
+	t.SetDefaultCommands()
 
-	return Telegram{bot, chatId}
+	return t
 }
 
-func (t Telegram) SendMessage(event string, msg string) {
-	log.Info().Str("event", event).Msg("TelegramBot.SendMessage")
+func (t Telegram) SetDefaultCommands() {
+	log.Trace().Msg("TelegramBot.SetMyCommands")
 
-	message := telegram.NewMessage(t.chatID, msg)
-	_, err := t.bot.Send(message)
+	ping := telegram.BotCommand{PingCommand, "Ping"}
+	balance := telegram.BotCommand{BalanceCommand, "Get available balance"}
+	stats := telegram.BotCommand{StatsCommand, "Get trade statistics"}
+
+	config := telegram.NewSetMyCommands(ping, balance, stats)
+
+	_, err := t.bot.Request(config)
 
 	if err != nil {
-		log.Error().Err(err).Msg("TelegramBot.SendMessage")
+		log.Fatal().Err(err).Msg("TelegramBot.SetCommands")
 	}
 }
 
@@ -77,6 +84,13 @@ func (t Telegram) ListenForCommands() {
 			} else {
 				message.Text = t.FormatBalanceMessage(balance)
 			}
+		case StatsCommand:
+			stats, err := GetStats()
+			if err != nil {
+				message.Text = err.Error()
+			} else {
+				message.Text = t.FormatStatsMessage(stats)
+			}
 		default:
 			message.Text = "Command not defined"
 		}
@@ -98,9 +112,20 @@ func (t Telegram) ListenForCommands() {
 	}
 }
 
+func (t Telegram) SendMessage(event string, msg string) {
+	log.Info().Str("event", event).Msg("TelegramBot.SendMessage")
+
+	message := telegram.NewMessage(t.chatID, msg)
+	_, err := t.bot.Send(message)
+
+	if err != nil {
+		log.Error().Err(err).Msg("TelegramBot.SendMessage")
+	}
+}
+
 func (t Telegram) FormatOrderMessage(p OrderEventPayload) string {
 	message := fmt.Sprintf(
-		"Created %v Order\n\n"+
+		"Created %v Order:\n\n"+
 			"ID: %v\n"+
 			"Type: %v\n"+
 			"Symbol: %v\n"+
@@ -115,7 +140,7 @@ func (t Telegram) FormatTradeMessage(p TradeEventPayload) string {
 	time := p.Time.Format(time.RFC822)
 
 	message := fmt.Sprintf(
-		"Executed Trade\n\n"+
+		"Executed Trade:\n\n"+
 			"ID: %v\n"+
 			"Symbol: %v\n"+
 			"Entry: %v\n"+
@@ -128,7 +153,7 @@ func (t Telegram) FormatTradeMessage(p TradeEventPayload) string {
 }
 
 func (t Telegram) FormatBalanceMessage(r BalanceResponse) string {
-	header := "Balance:"
+	header := "Balance:\n"
 
 	if r.Test {
 		header = fmt.Sprintln("Test", header)
@@ -145,23 +170,20 @@ func (t Telegram) FormatBalanceMessage(r BalanceResponse) string {
 	return strings.Join(balances, "\n")
 }
 
-func (t Telegram) FormatErrorMessage(p CriticalErrorEventPayload) string {
-	message := fmt.Sprintf("Critical Error\n\n%v", p.Error)
+func (t Telegram) FormatStatsMessage(r StatsResponse) string {
+	var message string
+
+	if r.Stats == nil {
+		message = "Stats:\n\nNo data available yet"
+	} else {
+		message = fmt.Sprintf("Stats:\n\nProfit: %.4f\nLoss: %.4f", r.Stats.Profit, r.Stats.Loss)
+	}
 
 	return message
 }
 
-func setDefaultCommands(bot *telegram.BotAPI) {
-	log.Trace().Msg("TelegramBot.SetMyCommands")
+func (t Telegram) FormatErrorMessage(p CriticalErrorEventPayload) string {
+	message := fmt.Sprintf("Critical Error\n\n%v", p.Error)
 
-	ping := telegram.BotCommand{PingCommand, "Ping"}
-	balance := telegram.BotCommand{BalanceCommand, "Get available balance"}
-
-	config := telegram.NewSetMyCommands(ping, balance)
-
-	_, err := bot.Request(config)
-
-	if err != nil {
-		log.Fatal().Err(err).Msg("TelegramBot.SetCommands")
-	}
+	return message
 }
