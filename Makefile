@@ -7,10 +7,10 @@ install:
 	cd services/web && npm install && cd ..
 
 dev:
-	skaffold dev --tail
+	skaffold dev --profile=development --tail
 
 run:
-	skaffold run --config=./skaffold.prod.yml --tail
+	skaffold run --profile=production --tail
 
 deploy:
 	echo "TODO: deploy"
