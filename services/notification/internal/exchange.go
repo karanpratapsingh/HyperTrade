@@ -81,8 +81,9 @@ type StatsResponse struct {
 	Stats *Stats `json:"stats"`
 }
 
-func GetStats() (StatsResponse, error) {
-	res, err := NewRequest(http.MethodGet, "exchange/stats", nil)
+func GetStats(symbol string) (StatsResponse, error) {
+	route := fmt.Sprintf("exchange/stats?symbol=%v", symbol)
+	res, err := NewRequest(http.MethodGet, route, nil)
 	response := StatsResponse{}
 
 	if err != nil {
@@ -93,7 +94,7 @@ func GetStats() (StatsResponse, error) {
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
-	fmt.Print(string(body))
+
 	if err != nil {
 		log.Error().Err(err).Msg("Request.Exchange.GetStats.ReadAll")
 		return response, err
