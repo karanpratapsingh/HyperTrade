@@ -40,14 +40,25 @@ func (b Binance) GetAccount() *binance.Account {
 	return account
 }
 
+func (b Binance) PrintAccountInfo() {
+	acc := b.GetAccount()
+
+	fmt.Println("-------- Account Info --------")
+	fmt.Println("Type:", acc.AccountType)
+	fmt.Println("Can Trade:", acc.CanTrade)
+	fmt.Println("Test Mode:", b.test)
+	fmt.Println(b.GetBalanceString())
+	fmt.Println("------------------------------")
+}
+
 type Balance struct {
 	Asset  string  `json:"asset"`
 	Amount float64 `json:"amount"`
 }
 
 func (b Binance) GetBalance() []Balance {
-	balances := []Balance{}
 	acc := b.GetAccount()
+	balances := []Balance{}
 
 	for _, balance := range acc.Balances {
 		asset := balance.Asset
@@ -62,18 +73,9 @@ func (b Binance) GetBalance() []Balance {
 	return balances
 }
 
-func (b Binance) PrintAccountInfo() {
-	acc := b.GetAccount()
+func (b Binance) GetBalanceString() string {
+	userBalances := b.GetBalance()
 
-	fmt.Println("-------- Account Info --------")
-	fmt.Println("Type:", acc.AccountType)
-	fmt.Println("Can Trade:", acc.CanTrade)
-	fmt.Println("Test Mode:", b.test)
-	fmt.Println(b.StringifyBalance(acc.Balances))
-	fmt.Println("------------------------------")
-}
-
-func (b Binance) StringifyBalance(userBalances []binance.Balance) string {
 	header := "Balance:"
 
 	if b.test {
@@ -81,16 +83,11 @@ func (b Binance) StringifyBalance(userBalances []binance.Balance) string {
 	}
 
 	var balances = []string{header}
+	var separator rune = '•'
 
 	for _, balance := range userBalances {
-		amt := parseFloat(balance.Free)
-
-		var separator rune = '•'
-
-		if amt > ZeroBalance {
-			b := fmt.Sprintf("%c %v %v", separator, balance.Asset, balance.Free)
-			balances = append(balances, b)
-		}
+		b := fmt.Sprintf("%c %v %v", separator, balance.Asset, balance.Amount)
+		balances = append(balances, b)
 	}
 
 	return strings.Join(balances, "\n")
