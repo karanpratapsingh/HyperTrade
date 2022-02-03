@@ -5,15 +5,17 @@ import {
   NatsConnection,
   NatsError,
   StringCodec,
-  Subscription,
+  Subscription
 } from 'nats.ws';
+import { API_HOST } from '../config/api';
+import Env from '../utils/env';
 import Notifications from '../utils/notifications';
 
-const SERVER_URL = 'ws://localhost:8080/nats';
+const SERVER_URL = `ws://${API_HOST}/nats`;
 
 const AUTH = {
-  user: import.meta.env.VITE_NATS_USER,
-  pass: import.meta.env.VITE_NATS_PASS,
+  user: Env.NATS_USER,
+  pass: Env.NATS_PASS,
 };
 
 export class PubSub {
