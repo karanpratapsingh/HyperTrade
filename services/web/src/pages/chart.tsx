@@ -69,19 +69,21 @@ export function Chart(): React.ReactElement {
         footer={null}
         onCancel={() => setShowIndicators(false)}>
         <Input
+          autoFocus
+          size='large'
           value={search}
           onChange={({ target }) => setSearch(target.value)}
           prefix={<IoSearchOutline />}
         />
-        <div className='flex flex-col h-96 mt-3 overflow-y-scroll'>
-          <ListItem
+        <div className='flex flex-col h-96 mt-2 overflow-y-scroll'>
+          <IndicatorsList
             title='Primary'
             search={search}
             all={PrimaryIndicators}
             indicators={primary}
             onUpdate={(update: TechnicalIndicators[]) => setPrimary(update)}
           />
-          <ListItem
+          <IndicatorsList
             title='Secondary'
             search={search}
             all={SecondaryIndicators}
@@ -94,7 +96,7 @@ export function Chart(): React.ReactElement {
   );
 }
 
-interface ListProps {
+interface IndicatorsListProps {
   title: string;
   search: string;
   all: TechnicalIndicators[];
@@ -102,7 +104,7 @@ interface ListProps {
   onUpdate: (update: TechnicalIndicators[]) => void;
 }
 
-function ListItem(props: ListProps): React.ReactElement {
+function IndicatorsList(props: IndicatorsListProps): React.ReactElement {
   const { title, all, search, indicators, onUpdate } = props;
 
   const filtered = searchFilter(all, search);

@@ -31,6 +31,18 @@ body {
   margin: 0px !important;
 }
 
+.ant-input {
+  @apply font-light;
+  @apply ml-1;
+}
+
+.ant-input-affix-wrapper {
+  @apply border-gray-200;
+  @apply mb-2;
+  @apply px-2;
+  @apply py-1;
+}
+
 .table {
   min-height: 16rem;
 }
