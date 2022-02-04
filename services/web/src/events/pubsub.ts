@@ -9,7 +9,7 @@ import {
 } from 'nats.ws';
 import { API_HOST } from '../config/api';
 import Env from '../utils/env';
-import Notifications from '../utils/notifications';
+import * as Notifications from '../utils/notifications';
 
 const SERVER_URL = `ws://${API_HOST}/nats`;
 
