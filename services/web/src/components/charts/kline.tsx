@@ -12,8 +12,14 @@ export enum ChartType {
   AREA = 'area',
 }
 
+export enum AxisType {
+  NORMAL = 'normal',
+  PERCENTAGE = 'percentage',
+}
+
 interface KlineChartProps {
   type: ChartType;
+  axis: AxisType;
   primary: TechnicalIndicators[];
   secondary: TechnicalIndicators[];
 }
@@ -23,6 +29,9 @@ const options = {
     tooltip: {
       labels: ['T: ', 'O: ', 'C: ', 'H: ', 'O: ', 'V: '],
     },
+  },
+  yAxis: {
+    type: 'percentage',
   },
   technicalIndicator: {
     lastValueMark: {
@@ -35,7 +44,7 @@ const options = {
 };
 
 export function KlineChart(props: KlineChartProps): React.ReactElement {
-  const { type, primary, secondary } = props;
+  const { type, axis, primary, secondary } = props;
 
   const [chart, setChart] = React.useState<Chart | null>(null);
 
@@ -74,6 +83,16 @@ export function KlineChart(props: KlineChartProps): React.ReactElement {
 
     chart?.setStyleOptions(options);
   }, [chart, type]);
+
+  useEffect(() => {
+    const options = {
+      yAxis: {
+        type: axis,
+      },
+    };
+
+    chart?.setStyleOptions(options);
+  }, [chart, axis]);
 
   useEffect(() => {
     const getSubId = (type: string) => `sub-${type}`;

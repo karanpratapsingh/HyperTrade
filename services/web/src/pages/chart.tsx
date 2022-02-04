@@ -2,10 +2,15 @@ import { Button, Input, Layout, Modal, PageHeader } from 'antd';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
 import { includes, toLower } from 'lodash';
 import React, { useState } from 'react';
-import { AiOutlineAreaChart, AiOutlineFunction } from 'react-icons/ai';
+import {
+  AiOutlineAreaChart,
+  AiOutlineFunction,
+  AiOutlineFieldNumber,
+  AiOutlinePercentage,
+} from 'react-icons/ai';
 import { BiBarChart } from 'react-icons/bi';
 import { IoSearchOutline } from 'react-icons/io5';
-import { ChartType, KlineChart } from '../components/charts/kline';
+import { AxisType, ChartType, KlineChart } from '../components/charts/kline';
 import { Header } from '../components/ui/header';
 import {
   PrimaryIndicators,
@@ -18,10 +23,19 @@ import { Colors } from '../theme/colors';
 const { Content } = Layout;
 
 export function Chart(): React.ReactElement {
-  const { primary, secondary, setPrimary, setSecondary } = useIndicatorsStore();
+  const {
+    type,
+    axis,
+    primary,
+    secondary,
+    setPrimary,
+    setSecondary,
+    setType,
+    setAxis,
+  } = useIndicatorsStore();
+
   const [showIndicators, setShowIndicators] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
-  const [type, setType] = useState<ChartType>(ChartType.CANDLE);
 
   const title: React.ReactNode = (
     <Header className='pb-4' title='Charts' subtitle='Live data charts' />
@@ -44,8 +58,26 @@ export function Chart(): React.ReactElement {
     ),
   };
 
+  const axisIcon: Record<AxisType, React.ReactNode> = {
+    [AxisType.NORMAL]: (
+      <AiOutlinePercentage
+        size={22}
+        color={Colors.black}
+        onClick={() => setAxis(AxisType.PERCENTAGE)}
+      />
+    ),
+    [AxisType.PERCENTAGE]: (
+      <AiOutlineFieldNumber
+        size={25}
+        color={Colors.black}
+        onClick={() => setAxis(AxisType.NORMAL)}
+      />
+    ),
+  };
+
   const extras: React.ReactNode[] = React.Children.toArray([
     <Button type='link' icon={typeIcon[type]} />,
+    <Button type='link' icon={axisIcon[axis]} />,
     <Button
       type='link'
       icon={
@@ -61,7 +93,12 @@ export function Chart(): React.ReactElement {
   return (
     <Content className='p-6 bg-white'>
       <PageHeader className='p-0 pr-12' title={title} extra={extras} />
-      <KlineChart type={type} primary={primary} secondary={secondary} />
+      <KlineChart
+        type={type}
+        axis={axis}
+        primary={primary}
+        secondary={secondary}
+      />
       <Modal
         className='mt-24'
         title={<Header title='Indicators' subtitle='Select indicators' />}
