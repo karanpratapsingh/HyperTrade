@@ -32,8 +32,11 @@ spec:
           command:
             - "nats-server"
             - "--config=nats.conf"
-            - "--user={{ .Values.env.nats.USER }}"
-            - "--pass={{ .Values.env.nats.PASS }}"
           ports:
             - containerPort: 4222
             - containerPort: 8080
+          env:
+            - name: USER
+              value: "{{ .Values.env.nats.USER }}"
+            - name: PASS
+              value: "{{ .Values.env.nats.PASS }}"
