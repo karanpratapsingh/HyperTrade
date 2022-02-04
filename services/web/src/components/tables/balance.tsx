@@ -1,7 +1,7 @@
 import { Table } from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
 import { Balance, useBalance } from '../../api/balance';
-import { Icons } from '../../theme/icons';
+import { getCryptoIcon } from '../../theme/icons';
 import { paginationProps } from '../../utils/pagination';
 import * as animated from '../ui/animated';
 import { Header } from '../ui/header';
@@ -21,7 +21,7 @@ export function BalanceTable(): React.ReactElement {
       key: 'asset',
       render: (asset: Balance['asset']) => (
         <div className='flex items-center'>
-          <Avatar src={Icons[asset.toLowerCase()]} />
+          <Avatar src={getCryptoIcon(asset)} />
           <span className='ml-4'>{asset}</span>
         </div>
       ),
