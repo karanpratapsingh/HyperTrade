@@ -9,7 +9,7 @@ import {
   LineChart,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
 } from 'recharts';
 import { TradesResponse } from '../../api/trades';
 import { ApiHookResult } from '../../api/types';

@@ -5,7 +5,7 @@ import {
   NatsConnection,
   NatsError,
   StringCodec,
-  Subscription
+  Subscription,
 } from 'nats.ws';
 import { API_HOST } from '../config/api';
 import Env from '../utils/env';
