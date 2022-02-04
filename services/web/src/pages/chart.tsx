@@ -44,7 +44,7 @@ export function Chart(): React.ReactElement {
     ),
   };
 
-  const extras = [
+  const extras: React.ReactNode[] = React.Children.toArray([
     <Button type='link' icon={typeIcon[type]} />,
     <Button
       type='link'
@@ -56,7 +56,7 @@ export function Chart(): React.ReactElement {
         />
       }
     />,
-  ];
+  ]);
 
   return (
     <Content className='p-6 bg-white'>
