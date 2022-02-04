@@ -3,6 +3,7 @@ import dateFormat from 'dateformat';
 import { Trade, TradesResponse } from '../../api/trades';
 import { ApiHookResult } from '../../api/types';
 import { paginationProps } from '../../utils/pagination';
+import * as animated from '../ui/animated';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
 
@@ -45,7 +46,7 @@ export function TradesTable(props: TradesTableProps): React.ReactElement {
   ];
 
   return (
-    <div className='mt-4 w-full flex flex-1 flex-col table'>
+    <animated.Div className='mt-4 w-full flex flex-1 flex-col table'>
       <Header title='Trades' subtitle='Trades executed so far' />
       <Table
         className='mt-4 text-xs font-light'
@@ -53,6 +54,6 @@ export function TradesTable(props: TradesTableProps): React.ReactElement {
         columns={columns}
         dataSource={data.trades}
       />
-    </div>
+    </animated.Div>
   );
 }

@@ -3,6 +3,7 @@ import Avatar from 'antd/lib/avatar/avatar';
 import { Balance, useBalance } from '../../api/balance';
 import { Icons } from '../../theme/icons';
 import { paginationProps } from '../../utils/pagination';
+import * as animated from '../ui/animated';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
 
@@ -34,7 +35,7 @@ export function BalanceTable(): React.ReactElement {
   ];
 
   return (
-    <div className='w-full flex flex-1 flex-col table'>
+    <animated.Div className='w-full flex flex-1 flex-col table'>
       <Header title='Balance' subtitle='Current balance' />
       <Table
         className='mt-4 text-xs font-light'
@@ -42,6 +43,6 @@ export function BalanceTable(): React.ReactElement {
         pagination={paginationProps(data.balance.length)}
         dataSource={data.balance}
       />
-    </div>
+    </animated.Div>
   );
 }

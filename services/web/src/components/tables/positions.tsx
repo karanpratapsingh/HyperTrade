@@ -2,6 +2,7 @@ import { Table } from 'antd';
 import dateFormat from 'dateformat';
 import { Position, usePositions } from '../../api/positions';
 import { paginationProps } from '../../utils/pagination';
+import * as animated from '../ui/animated';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
 
@@ -37,7 +38,7 @@ export function PositionsTable(): React.ReactElement {
   ];
 
   return (
-    <div className='mt-4 w-full flex flex-1 flex-col table'>
+    <animated.Div className='mt-4 w-full flex flex-1 flex-col table'>
       <Header title='Positions' subtitle='Positions currently holding' />
       <Table
         className='mt-4 text-xs font-light'
@@ -45,6 +46,6 @@ export function PositionsTable(): React.ReactElement {
         pagination={paginationProps(data.positions.length)}
         dataSource={data.positions}
       />
-    </div>
+    </animated.Div>
   );
 }
