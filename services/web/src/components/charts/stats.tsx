@@ -7,6 +7,7 @@ import { useStats } from '../../api/stats';
 import { StatsColors } from '../../theme/colors';
 import Env from '../../utils/env';
 import { percent } from '../../utils/math';
+import * as animated from '../ui/animated';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
 
@@ -27,11 +28,11 @@ export function StatsChart(): React.ReactElement {
   }
 
   let content: React.ReactNode | null = (
-    <div
+    <animated.Div
       className='flex flex-1 items-center justify-center'
       style={{ height, width }}>
       <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-    </div>
+    </animated.Div>
   );
 
   if (data?.stats) {
@@ -85,9 +86,9 @@ export function StatsChart(): React.ReactElement {
   }
 
   return (
-    <div className='flex flex-col'>
+    <animated.Div className='flex flex-col'>
       <Header title='Portfolio' subtitle='Portfolio statistics' />
-      <div className='flex items-center my-2'>{content}</div>
-    </div>
+      <div className='flex items-center my-2 mb-4'>{content}</div>
+    </animated.Div>
   );
 }

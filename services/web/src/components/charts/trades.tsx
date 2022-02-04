@@ -9,11 +9,12 @@ import {
   LineChart,
   Tooltip,
   XAxis,
-  YAxis,
+  YAxis
 } from 'recharts';
 import { TradesResponse } from '../../api/trades';
 import { ApiHookResult } from '../../api/types';
 import { Colors, LineColors } from '../../theme/colors';
+import * as animated from '../ui/animated';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
 
@@ -106,9 +107,9 @@ export function TradesChart(props: TradesChartProps): React.ReactElement {
   }
 
   return (
-    <div className='flex flex-1 flex-col'>
+    <animated.Div className='flex flex-1 flex-col'>
       <Header title='Chart' subtitle='Trades line chart' />
       {content}
-    </div>
+    </animated.Div>
   );
 }

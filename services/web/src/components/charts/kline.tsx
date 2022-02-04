@@ -3,6 +3,7 @@ import { difference, map } from 'lodash';
 import React, { useEffect } from 'react';
 import { Indicators, TechnicalIndicators } from '../../config/indicators';
 import { useDataFrame } from '../../store/dataframe';
+import * as animated from '../ui/animated';
 
 const CHART_ID = 'kline-chart';
 
@@ -101,5 +102,7 @@ export function KlineChart(props: KlineChartProps): React.ReactElement {
     });
   }
 
-  return <div id={CHART_ID} className='w-full' style={{ height: '92%' }} />;
+  return (
+    <animated.Div id={CHART_ID} className='w-full' style={{ height: '92%' }} />
+  );
 }
