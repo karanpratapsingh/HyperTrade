@@ -101,5 +101,5 @@ export function KlineChart(props: KlineChartProps): React.ReactElement {
     });
   }
 
-  return <div id={CHART_ID} className='w-full' style={{ height: '90%' }} />;
+  return <div id={CHART_ID} className='w-full' style={{ height: '92%' }} />;
 }
