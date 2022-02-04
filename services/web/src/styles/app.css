@@ -30,3 +30,7 @@ body {
 .ant-page-header-heading-left {
   margin: 0px !important;
 }
+
+.table {
+  min-height: 16rem;
+}

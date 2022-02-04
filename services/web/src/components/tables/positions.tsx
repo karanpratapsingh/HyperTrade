@@ -37,7 +37,7 @@ export function PositionsTable(): React.ReactElement {
   ];
 
   return (
-    <div className='mt-4 w-full flex flex-1 flex-col'>
+    <div className='mt-4 w-full flex flex-1 flex-col table'>
       <Header title='Positions' subtitle='Positions currently holding' />
       <Table
         className='mt-4 text-xs font-light'
