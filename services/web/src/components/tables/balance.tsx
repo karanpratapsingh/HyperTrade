@@ -1,5 +1,4 @@
-import { Table } from 'antd';
-import Avatar from 'antd/lib/avatar/avatar';
+import { Avatar, Table } from 'antd';
 import { Balance, useBalance } from '../../api/balance';
 import { getCryptoIcon } from '../../theme/icons';
 import { paginationProps } from '../../utils/pagination';

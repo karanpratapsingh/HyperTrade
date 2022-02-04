@@ -1,5 +1,5 @@
 import { Empty, Statistic } from 'antd';
-import { upperFirst } from 'lodash';
+import upperFirst from 'lodash/upperFirst';
 import React from 'react';
 import { BsCurrencyDollar } from 'react-icons/bs';
 import { Cell, Pie, PieChart } from 'recharts';

@@ -1,11 +1,11 @@
-import { Button, Input, Layout, Modal, PageHeader } from 'antd';
-import Checkbox from 'antd/lib/checkbox/Checkbox';
-import { includes, toLower } from 'lodash';
+import { Button, Checkbox, Input, Layout, Modal, PageHeader } from 'antd';
+import includes from 'lodash/includes';
+import toLower from 'lodash/toLower';
 import React, { useState } from 'react';
 import {
   AiOutlineAreaChart,
-  AiOutlineFunction,
   AiOutlineFieldNumber,
+  AiOutlineFunction,
   AiOutlinePercentage,
 } from 'react-icons/ai';
 import { BiBarChart } from 'react-icons/bi';

@@ -1,4 +1,4 @@
-import { toLower } from 'lodash';
+import toLower from 'lodash/toLower';
 import { Balance } from '../api/balance';
 
 export function getCryptoIcon(asset: Balance['asset']): string {

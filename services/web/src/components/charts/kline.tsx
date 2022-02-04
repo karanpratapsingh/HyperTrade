@@ -1,5 +1,6 @@
 import { Chart, dispose, init, KLineData } from 'klinecharts';
-import { difference, map } from 'lodash';
+import difference from 'lodash/difference';
+import map from 'lodash/map';
 import React, { useEffect } from 'react';
 import { Indicators, TechnicalIndicators } from '../../config/indicators';
 import { useDataFrame } from '../../store/dataframe';

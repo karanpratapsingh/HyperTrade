@@ -1,6 +1,7 @@
 import { Empty } from 'antd';
 import dateFormat from 'dateformat';
-import { concat, map } from 'lodash';
+import concat from 'lodash/concat';
+import map from 'lodash/map';
 import React from 'react';
 import {
   CartesianGrid,
