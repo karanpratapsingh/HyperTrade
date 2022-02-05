@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import { PubSub } from '../events/pubsub';
 import { Events } from '../events/types';
-import { ApiHookResult } from './types';
+import { ApiHookResult, options } from './types';
 
 export type Stats = {
   profit: number;
@@ -29,9 +29,7 @@ export function useStats(symbol: string): ApiHookResult<StatsResponse> {
     data,
     isLoading: loading,
     error,
-  } = useQuery<StatsResponse, Error>('stats', () => getStats(symbol), {
-    refetchInterval: 4 * 1000,
-  });
+  } = useQuery<StatsResponse, Error>('stats', () => getStats(symbol), options);
 
   return { data, loading, error };
 }

@@ -46,7 +46,7 @@ func (p *PubSub) Publish(event string, payload interface{}) {
 }
 
 func (p PubSub) Request(event string, payload interface{}, response interface{}) error {
-	err := p.conn.Request(event, payload, response, 4*time.Second)
+	err := p.conn.Request(event, payload, response, 5*time.Second)
 
 	if err != nil {
 		log.Error().Err(err).Str("event", event).Msg("PubSub.Request")

@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import { PubSub } from '../events/pubsub';
 import { Events } from '../events/types';
-import { ApiHookResult } from './types';
+import { ApiHookResult, options } from './types';
 
 export type Trade = {
   id: number;
@@ -26,9 +26,7 @@ export function useTrades(): ApiHookResult<TradesResponse> {
     data,
     isLoading: loading,
     error,
-  } = useQuery<TradesResponse, Error>('trades', getPositions, {
-    refetchInterval: 4 * 1000,
-  });
+  } = useQuery<TradesResponse, Error>('trades', getPositions, options);
 
   return { data, loading, error };
 }

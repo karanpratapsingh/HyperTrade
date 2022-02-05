@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import { PubSub } from '../events/pubsub';
 import { Events } from '../events/types';
-import { ApiHookResult } from './types';
+import { ApiHookResult, options } from './types';
 
 export type Position = {
   Symbol: string;
@@ -24,9 +24,7 @@ export function usePositions(): ApiHookResult<PositionsResponse> {
     data,
     isLoading: loading,
     error,
-  } = useQuery<PositionsResponse, Error>('positions', getPositions, {
-    refetchInterval: 4 * 1000,
-  });
+  } = useQuery<PositionsResponse, Error>('positions', getPositions, options);
 
   return { data, loading, error };
 }

@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import { PubSub } from '../events/pubsub';
 import { Events } from '../events/types';
-import { ApiHookResult } from './types';
+import { ApiHookResult, options } from './types';
 
 export type Balance = {
   asset: string;
@@ -23,9 +23,7 @@ export function useBalance(): ApiHookResult<BalanceResponse> {
     data,
     isLoading: loading,
     error,
-  } = useQuery<BalanceResponse, Error>('balance', getBalance, {
-    refetchInterval: 4 * 1000,
-  });
+  } = useQuery<BalanceResponse, Error>('balance', getBalance, options);
 
   return { data, loading, error };
 }
