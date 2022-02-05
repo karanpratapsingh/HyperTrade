@@ -128,19 +128,17 @@ func (b Binance) Kline(symbol string, interval string) {
 
 		kline := Kline{symbol, time, open, high, low, close, volume, final}
 
-		if kline.Final {
-			log.Info().
-				Str("symbol", symbol).
-				Float64("open", open).
-				Float64("high", high).
-				Float64("low", low).
-				Float64("close", close).
-				Float64("volume", volume).
-				Bool("final", final).
-				Msg(KlineEvent)
+		log.Info().
+			Str("symbol", symbol).
+			Float64("open", open).
+			Float64("high", high).
+			Float64("low", low).
+			Float64("close", close).
+			Float64("volume", volume).
+			Bool("final", final).
+			Msg(KlineEvent)
 
-			b.pubsub.Publish(KlineEvent, KlinePayload{kline})
-		}
+		b.pubsub.Publish(KlineEvent, KlinePayload{kline})
 	}
 
 	errHandler := func(err error) {
@@ -177,4 +175,14 @@ func parseFloat(str string) float64 {
 	}
 
 	return float
+}
+
+func parseInt(str string) int64 {
+	integer, err := strconv.ParseInt(str, 10, 64)
+
+	if err != nil {
+		log.Error().Err(err).Msg("Parser.Int64")
+	}
+
+	return integer
 }
