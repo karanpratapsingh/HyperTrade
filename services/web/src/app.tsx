@@ -24,9 +24,7 @@ function App(): React.ReactElement {
   const [restore, add] = useDataFrame(state => [state.restore, state.add]);
 
   async function init(): Promise<void> {
-    const pubsub = new PubSub();
-    await pubsub.init();
-
+    const pubsub = await PubSub.getInstance();
     await restore();
 
     pubsub.subscribe<DataFrameEventPayload>(Events.DataFrame, payload => {

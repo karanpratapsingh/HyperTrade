@@ -1,6 +1,7 @@
 import create, { GetState, SetState } from 'zustand';
 import { getDataFrame } from '../api/dataframe';
 import { DataFrameEventPayload } from '../events/types';
+import * as Notifications from '../utils/notifications';
 
 type DataFrameStore = {
   data: DataFrameEventPayload[];
@@ -16,8 +17,14 @@ export const useDataFrame = create<DataFrameStore>(
     data: [],
     loading: true,
     restore: async (): Promise<void> => {
-      const { dataframe } = await getDataFrame(MAX_INTERVALS);
-      set({ data: dataframe, loading: false });
+      try {
+        const { dataframe } = await getDataFrame(MAX_INTERVALS);
+        set({ data: dataframe });
+      } catch (err) {
+        Notifications.error(err);
+      } finally {
+        set({ loading: false });
+      }
     },
     add: (frames: DataFrameEventPayload[]): void => {
       const { data } = get();

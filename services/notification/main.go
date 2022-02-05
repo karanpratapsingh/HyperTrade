@@ -19,7 +19,7 @@ func main() {
 	pubsub := internal.NewPubSub(env.NatsUrl, env.NatsUser, env.NatsPass)
 	defer pubsub.Close()
 
-	telegram := internal.NewTelegramBot(env.TelegramApiToken, env.TelegramChatId)
+	telegram := internal.NewTelegramBot(env.TelegramApiToken, env.TelegramChatId, pubsub)
 
 	pubsub.Subscribe(internal.OrderEvent, func(p internal.OrderEventPayload) {
 		message := telegram.FormatOrderMessage(p)

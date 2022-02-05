@@ -16,8 +16,8 @@ export function warning(message: string): void {
   });
 }
 
-export function error(message: string): void {
-  createToast(message, {
+export function error(error: any): void {
+  createToast(error?.message, {
     timeout,
     type: 'error',
   });
