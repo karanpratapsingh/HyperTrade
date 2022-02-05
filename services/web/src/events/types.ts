@@ -1,5 +1,10 @@
 export enum Events {
   DataFrame = 'Event:DataFrame',
+  GetDataFrame = 'Event:DataFrame:Get',
+  GetBalance = 'Event:Balance:Get',
+  GetPositions = 'Event:Positions:Get',
+  GetStats = 'Event:Stats:Get',
+  GetTrades = 'Event:Trades:Get',
 }
 
 export type DataFrameEventPayload = {
