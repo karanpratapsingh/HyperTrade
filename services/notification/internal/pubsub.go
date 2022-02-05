@@ -1,6 +1,8 @@
 package internal
 
 import (
+	"time"
+
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog/log"
 )
@@ -41,6 +43,16 @@ func (p *PubSub) Publish(event string, payload interface{}) {
 	if err != nil {
 		log.Error().Err(err).Str("event", event).Msg("PubSub.Publish")
 	}
+}
+
+func (p PubSub) Request(event string, payload interface{}, response interface{}) error {
+	err := p.conn.Request(event, payload, response, 4*time.Second)
+
+	if err != nil {
+		log.Error().Err(err).Str("event", event).Msg("PubSub.Request")
+	}
+
+	return err
 }
 
 func (p PubSub) Close() {

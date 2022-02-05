@@ -12,6 +12,7 @@ import (
 type Telegram struct {
 	bot    *telegram.BotAPI
 	chatID int64
+	pubsub PubSub
 }
 
 var (
@@ -20,7 +21,7 @@ var (
 	StatsCommand   = "stats"
 )
 
-func NewTelegramBot(token string, chatId int64) Telegram {
+func NewTelegramBot(token string, chatId int64, pubsub PubSub) Telegram {
 	log.Trace().Msg("TelegramBot.Init")
 
 	bot, err := telegram.NewBotAPI(token)
@@ -29,7 +30,7 @@ func NewTelegramBot(token string, chatId int64) Telegram {
 		log.Fatal().Err(err).Msg("TelegramBot.Init")
 	}
 
-	t := Telegram{bot, chatId}
+	t := Telegram{bot, chatId, pubsub}
 	t.SetDefaultCommands()
 
 	return t
@@ -78,18 +79,24 @@ func (t Telegram) ListenForCommands(symbol string) {
 		case PingCommand:
 			message.Text = "Pong"
 		case BalanceCommand:
-			balance, err := GetBalance()
+			var r BalanceResponse
+			err := t.pubsub.Request(GetBalanceEvent, nil, &r)
+
 			if err != nil {
 				message.Text = err.Error()
 			} else {
-				message.Text = t.FormatBalanceMessage(balance)
+				message.Text = t.FormatBalanceMessage(r)
 			}
 		case StatsCommand:
-			stats, err := GetStats(symbol)
+			var r StatsResponse
+
+			req := StatsRequest{symbol}
+			err := t.pubsub.Request(GetStatsEvent, req, &r)
+
 			if err != nil {
 				message.Text = err.Error()
 			} else {
-				message.Text = t.FormatStatsMessage(stats)
+				message.Text = t.FormatStatsMessage(r)
 			}
 		default:
 			message.Text = "Command not defined"
