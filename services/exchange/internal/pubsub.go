@@ -25,10 +25,6 @@ func NewPubSub(addr, user, password string) PubSub {
 	return PubSub{enc}
 }
 
-func (p PubSub) Close() {
-	p.conn.Close()
-}
-
 func (p *PubSub) Subscribe(event string, handler interface{}) *nats.Subscription {
 	sub, err := p.conn.Subscribe(event, handler)
 
@@ -45,4 +41,18 @@ func (p *PubSub) Publish(event string, payload interface{}) {
 	if err != nil {
 		log.Error().Err(err).Str("event", event).Msg("PubSub.Publish")
 	}
+}
+
+func (p PubSub) JetStream() nats.JetStream {
+	js, err := p.conn.Conn.JetStream()
+
+	if err != nil {
+		log.Error().Err(err).Msg("PubSub.JetStream")
+	}
+
+	return js
+}
+
+func (p PubSub) Close() {
+	p.conn.Close()
 }
