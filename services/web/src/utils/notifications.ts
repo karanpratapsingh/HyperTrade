@@ -1,6 +1,6 @@
 import { createToast } from 'vercel-toast';
 
-const timeout = 2000;
+const timeout = 4000;
 
 export function info(message: string): void {
   createToast(message, {
