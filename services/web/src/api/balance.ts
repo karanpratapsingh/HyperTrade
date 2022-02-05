@@ -1,5 +1,6 @@
-import axios, { AxiosResponse } from 'axios';
 import { useQuery } from 'react-query';
+import { PubSub } from '../events/pubsub';
+import { Events } from '../events/types';
 import { ApiHookResult } from './types';
 
 export type Balance = {
@@ -12,15 +13,19 @@ export type BalanceResponse = {
   balance: Balance[];
 };
 
+export const getBalance = async () => {
+  const pubsub = await PubSub.getInstance();
+  return await pubsub.request<BalanceResponse>(Events.GetBalance);
+};
+
 export function useBalance(): ApiHookResult<BalanceResponse> {
-  const fetch = () => axios.get('/exchange/balance');
   const {
     data,
     isLoading: loading,
     error,
-  } = useQuery<AxiosResponse<BalanceResponse, Error>, Error>('balance', fetch, {
+  } = useQuery<BalanceResponse, Error>('balance', getBalance, {
     refetchInterval: 4 * 1000,
   });
 
-  return { data: data?.data, loading, error };
+  return { data, loading, error };
 }

@@ -1,19 +1,19 @@
-import axios from 'axios';
-import { DataFrameEventPayload } from '../events/types';
-import * as Notifications from '../utils/notifications';
+import { PubSub } from '../events/pubsub';
+import { DataFrameEventPayload, Events } from '../events/types';
+
+type DataFrameRequest = {
+  size: number;
+};
 
 type DataFrameResponse = {
   dataframe: DataFrameEventPayload[];
 };
 
 export async function getDataFrame(size: number): Promise<DataFrameResponse> {
-  const { data, status, statusText } = await axios.get(
-    `/exchange/dataframe?size=${size}`
+  const pubsub = await PubSub.getInstance();
+
+  return await pubsub.request<DataFrameResponse, DataFrameRequest>(
+    Events.GetDataFrame,
+    { size }
   );
-
-  if (status !== 200) {
-    Notifications.error(statusText);
-  }
-
-  return data;
 }

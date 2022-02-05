@@ -1,5 +1,6 @@
-import axios, { AxiosResponse } from 'axios';
 import { useQuery } from 'react-query';
+import { PubSub } from '../events/pubsub';
+import { Events } from '../events/types';
 import { ApiHookResult } from './types';
 
 export type Stats = {
@@ -8,19 +9,29 @@ export type Stats = {
   total: number;
 };
 
+export type StatsRequest = {
+  symbol: string;
+};
+
 export type StatsResponse = {
   stats: Stats | null;
 };
 
+export const getStats = async (symbol: string) => {
+  const pubsub = await PubSub.getInstance();
+  return await pubsub.request<StatsResponse, StatsRequest>(Events.GetStats, {
+    symbol,
+  });
+};
+
 export function useStats(symbol: string): ApiHookResult<StatsResponse> {
-  const fetch = () => axios.get(`/exchange/stats?symbol=${symbol}`);
   const {
     data,
     isLoading: loading,
     error,
-  } = useQuery<AxiosResponse<StatsResponse, Error>, Error>('stats', fetch, {
+  } = useQuery<StatsResponse, Error>('stats', () => getStats(symbol), {
     refetchInterval: 4 * 1000,
   });
 
-  return { data: data?.data, loading, error };
+  return { data, loading, error };
 }
