@@ -33,3 +33,31 @@ type TradeEventPayload struct {
 	Quantity float64   `json:"quantity"`
 	Time     time.Time `json:"time"`
 }
+
+var GetBalanceEvent string = "Event:Balance:Get"
+
+type Balance struct {
+	Asset  string  `json:"asset"`
+	Amount float64 `json:"amount"`
+}
+
+type BalanceResponse struct {
+	Test    bool      `json:"test"`
+	Balance []Balance `json:"balance"`
+}
+
+var GetStatsEvent string = "Event:Stats:Get"
+
+type Stats struct {
+	Profit float64 `json:"profit"`
+	Loss   float64 `json:"loss"`
+	Total  float64 `json:"total"`
+}
+
+type StatsRequest struct {
+	Symbol string `json:"symbol"`
+}
+
+type StatsResponse struct {
+	Stats *Stats `json:"stats"`
+}

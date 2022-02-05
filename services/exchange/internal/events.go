@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"exchange/db"
 	"time"
 
 	"github.com/adshao/go-binance/v2"
@@ -47,4 +48,54 @@ type DataFrameEventPayload struct {
 	Kline      Kline      `json:"kline"`
 	Indicators Indicators `json:"indicators"`
 	Signal     Signal     `json:"signal"`
+}
+
+var GetBalanceEvent string = "Event:Balance:Get"
+
+type Balance struct {
+	Asset  string  `json:"asset"`
+	Amount float64 `json:"amount"`
+}
+
+type BalanceResponse struct {
+	Test    bool      `json:"test"`
+	Balance []Balance `json:"balance"`
+}
+
+var GetPositionsEvent string = "Event:Positions:Get"
+
+type PositionsResponse struct {
+	Positions []db.Positions `json:"positions"`
+}
+
+var GetTradesEvent string = "Event:Trades:Get"
+
+type TradesResponse struct {
+	Trades []db.Trades `json:"trades"`
+}
+
+var GetStatsEvent string = "Event:Stats:Get"
+
+type Stats struct {
+	Profit float64 `json:"profit"`
+	Loss   float64 `json:"loss"`
+	Total  float64 `json:"total"`
+}
+
+type StatsRequest struct {
+	Symbol string `json:"symbol"`
+}
+
+type StatsResponse struct {
+	Stats *Stats `json:"stats"`
+}
+
+var GetDataFrameEvent string = "Event:DataFrame:Get"
+
+type DataFrameRequest struct {
+	Size int `json:"size"`
+}
+
+type DataFrameResponse struct {
+	DataFrame []DataFrameEventPayload `json:"dataframe"`
 }
