@@ -8,31 +8,28 @@ import { RiDonutChartFill } from 'react-icons/ri';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import { ErrorBoundary } from './components/misc/error-boundary';
-import { Paths } from './config/routes';
+import { MenuItem, Paths } from './config/routes';
 import { PubSub } from './events/pubsub';
-import { DataFrameEvent, DataFrameEventPayload } from './events/types';
+import { DataFrameEventPayload, Events } from './events/types';
 import { Chart } from './pages/chart';
 import { Portfolio } from './pages/portfolio';
 import { useDataFrame } from './store/dataframe';
 import './styles/app.css';
-
-enum MenuItem {
-  CHARTS = 'charts',
-  PORTFOLIO = 'portfolio',
-}
 
 const client = new QueryClient();
 
 const { Sider } = Layout;
 
 function App(): React.ReactElement {
-  const add = useDataFrame(state => state.add);
+  const [restore, add] = useDataFrame(state => [state.restore, state.add]);
 
   async function init(): Promise<void> {
     const pubsub = new PubSub();
     await pubsub.init();
 
-    pubsub.subscribe<DataFrameEventPayload>(DataFrameEvent, payload => {
+    await restore();
+
+    pubsub.subscribe<DataFrameEventPayload>(Events.DataFrame, payload => {
       add([payload]);
     });
   }

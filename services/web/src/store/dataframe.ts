@@ -17,7 +17,7 @@ export const useDataFrame = create<DataFrameStore>(
     loading: true,
     restore: async (): Promise<void> => {
       const { dataframe } = await getDataFrame(MAX_INTERVALS);
-      set({ data: dataframe });
+      set({ data: dataframe, loading: false });
     },
     add: (frames: DataFrameEventPayload[]): void => {
       const { data } = get();
