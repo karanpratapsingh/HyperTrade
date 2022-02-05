@@ -26,3 +26,7 @@ class PubSub:
         self.log.info(f"Publish event={event}")
         data = str.encode(json.dumps(payload), "utf-8")
         return await self.instance.publish(event, data)
+
+    async def jetstream(self, config):
+        js = self.instance.jetstream()
+        await js.add_stream(**config)
