@@ -3,192 +3,175 @@ package internal
 import (
 	"encoding/json"
 	"exchange/db"
-	"net/http"
+	"exchange/utils"
 
-	"github.com/gorilla/mux"
+	"github.com/adshao/go-binance/v2"
+	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog/log"
 )
 
-type Api struct {
-	db       db.DB
-	exchange Binance
-	pubsub   PubSub
-}
+func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
+	wait := make(chan bool)
 
-func NewApi(db db.DB, exchange Binance, pubsub PubSub) error {
-	port := ":80"
+	log.Trace().Msg("Internal.AsyncApi.Init")
 
-	log.Trace().Str("port", port).Msg("Internal.Api.Init")
+	pubsub.Subscribe(DataFrameEvent, func(p DataFrameEventPayload) {
+		ListenTrade(db, pubsub, p.Kline, p.Signal)
+	})
 
-	router := mux.NewRouter()
-	api := Api{db, exchange, pubsub}
+	pubsub.Subscribe(GetBalanceEvent, func(m *nats.Msg) {
+		response := BalanceResponse{
+			Test:    exchange.test,
+			Balance: exchange.GetBalance(),
+		}
 
-	router.HandleFunc("/healthz", api.healthcheck).Methods(http.MethodGet)
-	router.HandleFunc("/dataframe", api.dataframe).Methods(http.MethodGet)
-	router.HandleFunc("/balance", api.balance).Methods(http.MethodGet)
-	router.HandleFunc("/trades", api.trades).Methods(http.MethodGet)
-	router.HandleFunc("/positions", api.positions).Methods(http.MethodGet)
-	router.HandleFunc("/stats", api.stats).Methods(http.MethodGet)
+		pubsub.Publish(m.Reply, response)
+	})
 
-	err := http.ListenAndServe(port, router)
-	return err
-}
+	pubsub.Subscribe(GetPositionsEvent, func(m *nats.Msg) {
+		response := PositionsResponse{
+			Positions: db.GetPositions(),
+		}
 
-type HealthzResponse struct {
-	Status  int    `json:"status"`
-	Message string `json:"message"`
-}
+		pubsub.Publish(m.Reply, response)
+	})
 
-func (Api) healthcheck(w http.ResponseWriter, r *http.Request) {
-	response := HealthzResponse{
-		Status:  200,
-		Message: "Healthy",
-	}
+	pubsub.Subscribe(GetTradesEvent, func(m *nats.Msg) {
+		response := TradesResponse{
+			Trades: db.GetTrades(),
+		}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
-}
+		pubsub.Publish(m.Reply, response)
+	})
 
-type DataFrameResponse struct {
-	DataFrame []DataFrameEventPayload `json:"dataframe"`
-}
+	pubsub.Subscribe(GetStatsEvent, func(m *nats.Msg) {
+		var response StatsResponse
+		var stats Stats
 
-func (a Api) dataframe(w http.ResponseWriter, r *http.Request) {
-	query := r.URL.Query()
-	size := query.Get("size")
+		var request StatsRequest
+		utils.Unmarshal(m.Data, &request)
 
-	var response DataFrameResponse
-	var data []DataFrameEventPayload
+		trades := db.GetTrades()
+		config := db.GetConfig(request.Symbol)
 
-	if size == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+		if len(trades) != 0 {
+			for _, trade := range trades {
+				percentage := ((trade.Exit - trade.Entry) / trade.Entry) * 100
+				amount := percentage * config.AllowedAmount
 
-	js := a.pubsub.JetStream()
-	sub, err := js.PullSubscribe(DataFrameEvent, "client")
+				if amount > 0 {
+					stats.Profit += amount
+				} else {
+					stats.Loss += -1 * amount
+				}
+			}
 
-	if err != nil {
-		log.Error().Err(err).Msg("Internal.Api.DataFrame.PullSubscribe")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+			stats.Total = stats.Profit + stats.Loss
+			response = StatsResponse{&stats}
+		}
 
-	batch := int(parseInt(size))
-	msgs, err := sub.Fetch(batch)
+		pubsub.Publish(m.Reply, response)
+	})
 
-	if err != nil {
-		log.Error().Err(err).Msg("Internal.Api.DataFrame.Fetch")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	pubsub.Subscribe(GetDataFrameEvent, func(m *nats.Msg) {
+		var request DataFrameRequest
+		utils.Unmarshal(m.Data, &request)
 
-	for _, msg := range msgs {
-		var frame DataFrameEventPayload
+		var response DataFrameResponse
+		var data []DataFrameEventPayload
 
-		if err := json.Unmarshal(msg.Data, &frame); err != nil {
-			log.Error().Err(err).Msg("Internal.Api.DataFrame.Unmarshal")
+		js := pubsub.JetStream()
+		sub, err := js.PullSubscribe(DataFrameEvent, "client")
+
+		if err != nil {
+			log.Error().Err(err).Msg("Internal.DataFrame.PullSubscribe")
 			return
 		}
 
-		data = append(data, frame)
-	}
+		msgs, err := sub.Fetch(request.Size)
 
-	response.DataFrame = data
+		if err != nil {
+			log.Error().Err(err).Msg("Internal.DataFrame.Fetch")
+			return
+		}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
+		for _, msg := range msgs {
+			var frame DataFrameEventPayload
+
+			if err := json.Unmarshal(msg.Data, &frame); err != nil {
+				log.Error().Err(err).Msg("Internal.DataFrame.Unmarshal")
+				return
+			}
+
+			data = append(data, frame)
+		}
+
+		response.DataFrame = data
+
+		pubsub.Publish(m.Reply, response)
+	})
+
+	<-wait
 }
 
-type Balance struct {
-	Asset  string  `json:"asset"`
-	Amount float64 `json:"amount"`
-}
+func ListenTrade(DB db.DB, pubsub PubSub, kline Kline, signal Signal) {
+	side := getSide(signal)
 
-type BalanceResponse struct {
-	Test    bool      `json:"test"`
-	Balance []Balance `json:"balance"`
-}
-
-func (a Api) balance(w http.ResponseWriter, r *http.Request) {
-	response := BalanceResponse{
-		Test:    a.exchange.test,
-		Balance: a.exchange.GetBalance(),
-	}
-
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
-}
-
-type TradesResponse struct {
-	Trades []db.Trades `json:"trades"`
-}
-
-func (a Api) trades(w http.ResponseWriter, r *http.Request) {
-	response := TradesResponse{
-		Trades: a.db.GetTrades(),
-	}
-
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
-}
-
-type PositionsResponse struct {
-	Positions []db.Positions `json:"positions"`
-}
-
-func (a Api) positions(w http.ResponseWriter, r *http.Request) {
-	response := PositionsResponse{
-		Positions: a.db.GetPositions(),
-	}
-
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
-}
-
-type Stats struct {
-	Profit float64 `json:"profit"`
-	Loss   float64 `json:"loss"`
-	Total  float64 `json:"total"`
-}
-
-type StatsResponse struct {
-	Stats *Stats `json:"stats"`
-}
-
-func (a Api) stats(w http.ResponseWriter, r *http.Request) {
-	enc := json.NewEncoder(w)
-	query := r.URL.Query()
-	symbol := query.Get("symbol")
-
-	var response StatsResponse
-	var stats Stats
-
-	trades := a.db.GetTrades()
-	config := a.db.GetConfig(symbol)
-
-	if symbol == "" || config.Symbol == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		enc.Encode(response)
+	if side == "" {
 		return
 	}
 
-	if len(trades) != 0 {
-		for _, trade := range trades {
-			percentage := ((trade.Exit - trade.Entry) / trade.Entry) * 100
-			amount := percentage * config.AllowedAmount
+	symbol := kline.Symbol
 
-			if amount > 0 {
-				stats.Profit += amount
-			} else {
-				stats.Loss += -1 * amount
-			}
+	log.Trace().Str("symbol", symbol).Interface("side", side).Msg("Trade.Listen")
+
+	position := DB.GetPosition(symbol)
+	var holding bool = position.Symbol != ""
+
+	config := DB.GetConfig(symbol)
+
+	allowedAmt := config.AllowedAmount
+	closePrice := kline.Close
+	quantity := utils.GetMinQuantity(allowedAmt, closePrice)
+
+	switch side {
+	case binance.SideTypeBuy:
+		if holding {
+			log.Warn().Bool("holding", holding).Msg("Trade.Buy.Skip")
+			return
 		}
 
-		stats.Total = stats.Profit + stats.Loss
-		response = StatsResponse{&stats}
+		// TODO: Execute Buy
+		DB.CreatePosition(symbol, closePrice, quantity)
+		log.Trace().Float64("price", closePrice).Float64("quantity", quantity).Msg("Trade.Buy.Complete")
+
+	case binance.SideTypeSell:
+		if !holding {
+			log.Warn().Bool("holding", holding).Msg("Trade.Sell.Skip")
+			return
+		}
+
+		// TODO: Execute Sell
+		entry := position.Price
+		DB.DeletePosition(symbol)
+		trade := DB.CreateTrade(symbol, entry, closePrice, quantity)
+
+		payload := TradeEventPayload{trade.ID, trade.Symbol, trade.Entry, trade.Exit, trade.Quantity, trade.Time}
+		pubsub.Publish(TradeEvent, payload)
+
+		log.Trace().Float64("price", closePrice).Float64("quantity", quantity).Msg("Trade.Sell.Complete")
+	default:
+	}
+}
+
+func getSide(signal Signal) binance.SideType {
+	var side binance.SideType
+
+	if signal.Buy && !signal.Sell {
+		side = binance.SideTypeBuy
+	} else if signal.Sell && !signal.Buy {
+		side = binance.SideTypeSell
 	}
 
-	w.WriteHeader(http.StatusOK)
-	enc.Encode(response)
+	return side
 }
