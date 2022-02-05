@@ -11,8 +11,6 @@ import (
 )
 
 func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
-	wait := make(chan bool)
-
 	log.Trace().Msg("Internal.AsyncApi.Init")
 
 	pubsub.Subscribe(DataFrameEvent, func(p DataFrameEventPayload) {
@@ -110,8 +108,6 @@ func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
 
 		pubsub.Publish(m.Reply, response)
 	})
-
-	<-wait
 }
 
 func ListenTrade(DB db.DB, pubsub PubSub, kline Kline, signal Signal) {

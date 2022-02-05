@@ -18,6 +18,8 @@ func init() {
 var interval string = "1m"
 
 func main() {
+	wait := make(chan bool)
+
 	env := utils.GetEnv()
 	symbol := env.Symbol
 
@@ -33,4 +35,6 @@ func main() {
 	go bex.Kline(symbol, interval)
 
 	internal.RunAsyncApi(DB, bex, pubsub)
+
+	<-wait
 }
