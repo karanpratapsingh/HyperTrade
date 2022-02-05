@@ -1,9 +1,11 @@
 import asyncio
+import json
 
+from internal.events import Events
+from internal.pubsub import PubSub
 from internal.strategy import Strategy
+from internal.streams import Streams
 from utils.env import Env
-from utils.events import Events
-from utils.pubsub import PubSub
 
 
 async def main():
@@ -13,10 +15,11 @@ async def main():
         url=Env.NATS_URL
     )
 
+    strat = Strategy()
+
     instance = await PubSub.init(url)
     pubsub = PubSub(instance)
-
-    strat = Strategy()
+    await pubsub.jetstream(Streams.DataFrame)
 
     async def handler(data):
         strat.populate(data)
