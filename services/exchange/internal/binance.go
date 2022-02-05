@@ -2,9 +2,8 @@ package internal
 
 import (
 	"context"
+	"exchange/utils"
 	"fmt"
-	"math"
-	"strconv"
 	"strings"
 	"time"
 
@@ -58,7 +57,7 @@ func (b Binance) GetBalance() []Balance {
 
 	for _, balance := range acc.Balances {
 		asset := balance.Asset
-		amt := parseFloat(balance.Free)
+		amt := utils.ParseFloat(balance.Free)
 
 		if amt > ZeroBalance {
 			b := Balance{asset, amt}
@@ -119,11 +118,11 @@ func (b Binance) Kline(symbol string, interval string) {
 	wsKlineHandler := func(event *binance.WsKlineEvent) {
 		symbol := event.Kline.Symbol
 		time := time.Now().Unix() * 1000
-		open := parseFloat(event.Kline.Open)
-		high := parseFloat(event.Kline.High)
-		low := parseFloat(event.Kline.Low)
-		close := parseFloat(event.Kline.Close)
-		volume := parseFloat(event.Kline.Volume)
+		open := utils.ParseFloat(event.Kline.Open)
+		high := utils.ParseFloat(event.Kline.High)
+		low := utils.ParseFloat(event.Kline.Low)
+		close := utils.ParseFloat(event.Kline.Close)
+		volume := utils.ParseFloat(event.Kline.Volume)
 		final := event.Kline.IsFinal
 
 		kline := Kline{symbol, time, open, high, low, close, volume, final}
@@ -150,39 +149,4 @@ func (b Binance) Kline(symbol string, interval string) {
 	}
 
 	binance.WsKlineServe(symbol, interval, wsKlineHandler, errHandler)
-}
-
-// Ref: https://www.binance.com/api/v3/exchangeInfo?symbol=$SYMBOL
-func GetMinQuantity(min float64, price float64) float64 {
-	quantity := toFixed((1/price)*min, 5)
-	return quantity
-}
-
-func round(num float64) int {
-	return int(num + math.Copysign(0.5, num))
-}
-
-func toFixed(num float64, precision int) float64 {
-	output := math.Pow(10, float64(precision))
-	return float64(round(num*output)) / output
-}
-
-func parseFloat(str string) float64 {
-	float, err := strconv.ParseFloat(str, 64)
-
-	if err != nil {
-		log.Error().Err(err).Msg("Parser.Float64")
-	}
-
-	return float
-}
-
-func parseInt(str string) int64 {
-	integer, err := strconv.ParseInt(str, 10, 64)
-
-	if err != nil {
-		log.Error().Err(err).Msg("Parser.Int64")
-	}
-
-	return integer
 }
