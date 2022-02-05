@@ -12,17 +12,19 @@ import (
 type Api struct {
 	db       db.DB
 	exchange Binance
+	pubsub   PubSub
 }
 
-func NewApi(db db.DB, exchange Binance) error {
+func NewApi(db db.DB, exchange Binance, pubsub PubSub) error {
 	port := ":80"
 
 	log.Trace().Str("port", port).Msg("Internal.Api.Init")
 
 	router := mux.NewRouter()
-	api := Api{db, exchange}
+	api := Api{db, exchange, pubsub}
 
 	router.HandleFunc("/healthz", api.healthcheck).Methods(http.MethodGet)
+	router.HandleFunc("/dataframe", api.dataframe).Methods(http.MethodGet)
 	router.HandleFunc("/balance", api.balance).Methods(http.MethodGet)
 	router.HandleFunc("/trades", api.trades).Methods(http.MethodGet)
 	router.HandleFunc("/positions", api.positions).Methods(http.MethodGet)
@@ -42,6 +44,57 @@ func (Api) healthcheck(w http.ResponseWriter, r *http.Request) {
 		Status:  200,
 		Message: "Healthy",
 	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response)
+}
+
+type DataFrameResponse struct {
+	DataFrame []DataFrameEventPayload `json:"dataframe"`
+}
+
+func (a Api) dataframe(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query()
+	size := query.Get("size")
+
+	var response DataFrameResponse
+	var data []DataFrameEventPayload
+
+	if size == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	js := a.pubsub.JetStream()
+	sub, err := js.PullSubscribe(DataFrameEvent, "client")
+
+	if err != nil {
+		log.Error().Err(err).Msg("Internal.Api.DataFrame.PullSubscribe")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	batch := int(parseInt(size))
+	msgs, err := sub.Fetch(batch)
+
+	if err != nil {
+		log.Error().Err(err).Msg("Internal.Api.DataFrame.Fetch")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	for _, msg := range msgs {
+		var frame DataFrameEventPayload
+
+		if err := json.Unmarshal(msg.Data, &frame); err != nil {
+			log.Error().Err(err).Msg("Internal.Api.DataFrame.Unmarshal")
+			return
+		}
+
+		data = append(data, frame)
+	}
+
+	response.DataFrame = data
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
