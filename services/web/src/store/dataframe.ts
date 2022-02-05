@@ -1,8 +1,11 @@
 import create, { GetState, SetState } from 'zustand';
+import { getDataFrame } from '../api/dataframe';
 import { DataFrameEventPayload } from '../events/types';
 
 type DataFrameStore = {
   data: DataFrameEventPayload[];
+  loading: boolean;
+  restore(): Promise<void>;
   add(frames: DataFrameEventPayload[]): void;
 };
 
@@ -11,6 +14,11 @@ const MAX_INTERVALS = 120;
 export const useDataFrame = create<DataFrameStore>(
   (set: SetState<DataFrameStore>, get: GetState<DataFrameStore>) => ({
     data: [],
+    loading: true,
+    restore: async (): Promise<void> => {
+      const { dataframe } = await getDataFrame(MAX_INTERVALS);
+      set({ data: dataframe });
+    },
     add: (frames: DataFrameEventPayload[]): void => {
       const { data } = get();
 
