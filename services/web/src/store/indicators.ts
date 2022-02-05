@@ -15,9 +15,9 @@ type IndicatorsStore = {
 
 export const useIndicatorsStore = create<IndicatorsStore>(
   (set: SetState<IndicatorsStore>) => ({
-    type: ChartType.CANDLE,
+    type: ChartType.AREA,
     axis: AxisType.NORMAL,
-    primary: [],
+    primary: [Indicators.EMA],
     secondary: [Indicators.VOL],
     setPrimary: (primary: TechnicalIndicators[]): void => {
       set({ primary });

@@ -42,18 +42,18 @@ export function Chart(): React.ReactElement {
   );
 
   const typeIcon: Record<ChartType, React.ReactNode> = {
-    [ChartType.CANDLE]: (
-      <AiOutlineAreaChart
-        size={25}
-        color={Colors.black}
-        onClick={() => setType(ChartType.AREA)}
-      />
-    ),
     [ChartType.AREA]: (
       <BiBarChart
         size={25}
         color={Colors.black}
         onClick={() => setType(ChartType.CANDLE)}
+      />
+    ),
+    [ChartType.CANDLE]: (
+      <AiOutlineAreaChart
+        size={25}
+        color={Colors.black}
+        onClick={() => setType(ChartType.AREA)}
       />
     ),
   };
