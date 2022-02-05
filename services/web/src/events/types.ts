@@ -1,7 +1,11 @@
-export const KlineEvent = 'Event:Kline';
+export enum Events {
+  DataFrame = 'Event:DataFrame',
+}
 
-export type KlineEventPayload = {
+export type DataFrameEventPayload = {
   kline: Kline;
+  indicators: Indicators;
+  signal: Signal;
 };
 
 export type Kline = {
@@ -13,14 +17,6 @@ export type Kline = {
   close: number;
   volume: number;
   final: boolean;
-};
-
-export const DataFrameEvent = 'Event:DataFrame';
-
-export type DataFrameEventPayload = {
-  kline: Kline;
-  indicators: Indicators;
-  signal: Signal;
 };
 
 export type Indicators = {

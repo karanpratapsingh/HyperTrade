@@ -10,6 +10,7 @@ import {
 import { API_HOST } from '../config/api';
 import Env from '../utils/env';
 import * as Notifications from '../utils/notifications';
+import { Events } from './types';
 
 const SERVER_URL = `ws://${API_HOST}/nats`;
 
@@ -40,7 +41,7 @@ export class PubSub {
   };
 
   subscribe = <T>(
-    event: string,
+    event: Events,
     cb: (data: T) => void
   ): Subscription | undefined => {
     const callback = (err: NatsError | null, msg: Msg): void => {
