@@ -1,14 +1,10 @@
 terraform {
   required_providers {
-    vultr = {
-      source  = "vultr/vultr"
-      version = "2.8.1"
+    digitalocean = {
+      source  = "digitalocean/digitalocean"
+      version = "~> 2.0"
     }
   }
 }
 
-provider "vultr" {
-  api_key     = var.vultr_api_key
-  rate_limit  = 700
-  retry_limit = 3
-}
+provider "digitalocean" {}
