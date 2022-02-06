@@ -4,9 +4,18 @@ set -e
 ENVIRONMENT=$1
 
 if [[ -z "$ENVIRONMENT" ]]; then
-  echo "error: environment is required...exiting"
+  echo "[x] Error: environment is required...exiting"
   exit 1
 fi
+
+function error() {
+  TOOL=$1
+  URL=$2
+
+  echo "[x] Error: $TOOL is not installed."
+  echo "Please install it from $URL"
+  exit 1
+}
 
 echo "--- Preparing environment for $ENVIRONMENT ---"
 
@@ -14,28 +23,24 @@ echo "[?] checking for required tools"
 
 if [[ "$ENVIRONMENT" == "development" ]]; then
   if ! [ -x "$(command -v minikube)" ]; then
-    echo "[x] Error: minikube is not installed."
-    echo "Please install it from https://minikube.sigs.k8s.io/docs/start/"
-    exit 1
+    error "minikube" "https://minikube.sigs.k8s.io/docs/start"
   fi
 fi
 
 if ! [ -x "$(command -v yq)" ]; then
-  echo "Error: yq is not installed."
-  echo "Please install it from https://github.com/mikefarah/yq"
-  exit 1
+  error "yq" "https://github.com/mikefarah/yq"
 fi
 
 if ! [ -x "$(command -v skaffold)" ]; then
-  echo "[x] Error: skaffold is not installed."
-  echo "Please install it from https://skaffold.dev/docs/install/"
-  exit 1
+  error "skaffold" "https://skaffold.dev/docs/install"
 fi
 
 if ! [ -x "$(command -v helm)" ]; then
-  echo "[x] Error: helm is not installed."
-  echo "Please install it from https://helm.sh/docs/intro/install/"
-  exit 1
+  error "helm" "https://helm.sh/docs/intro/install"
+fi
+
+if ! [ -x "$(command -v doctl)" ]; then
+  error "doctl" "https://github.com/digitalocean/doctl"
 fi
 
 SECRETS_PATH=infrastructure/k8s/app/env.yaml
