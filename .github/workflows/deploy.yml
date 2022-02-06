@@ -23,7 +23,7 @@ jobs:
       run: doctl registry login --expiry-seconds 720
 
     - name: Save DigitalOcean kubeconfig
-      run: doctl kubernetes cluster kubeconfig save trader
+      run: doctl kubernetes cluster kubeconfig save trader-cluster
 
     - name: Deploy to cluster with Skaffold
       run: skaffold run --profile production
