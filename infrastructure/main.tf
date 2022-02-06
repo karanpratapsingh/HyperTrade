@@ -5,7 +5,7 @@ locals {
 
 resource "digitalocean_container_registry" "registry" {
   name                   = "${local.name}-registry"
-  subscription_tier_slug = "basic"
+  subscription_tier_slug = "professional"
 }
 
 resource "digitalocean_kubernetes_cluster" "cluster" {
@@ -43,10 +43,3 @@ resource "kubernetes_secret" "secret" {
 
   type = "kubernetes.io/dockerconfigjson"
 }
-
-resource "local_file" "kubeconfig" {
-  content         = digitalocean_kubernetes_cluster.cluster.kube_config.0.raw_config
-  filename        = local.kube_config_file
-  file_permission = "600"
-}
-
