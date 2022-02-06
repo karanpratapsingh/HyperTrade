@@ -1,35 +1,36 @@
+# Image registry should be same as created in digitalocean_container_registry (infrastructure/main.tf)
 apiVersion: skaffold/v2beta20
 kind: Config
 profiles:
   - name: production
     build:
       artifacts:
-        - image: proxy
+        - image: registry.digitalocean.com/trader-registry/proxy
           context: ./services/proxy
-        - image: nats
+        - image: registry.digitalocean.com/trader-registry/nats
           context: ./services/nats
-        - image: web
+        - image: registry.digitalocean.com/trader-registry/web
           context: ./services/web
           docker:
             target: production
-        - image: exchange
+        - image: registry.digitalocean.com/trader-registry/exchange
           context: ./services/exchange
           docker:
             target: production
-        - image: notification
+        - image: registry.digitalocean.com/trader-registry/notification
           context: ./services/notification
           docker:
             target: production
-        - image: strategy
+        - image: registry.digitalocean.com/trader-registry/strategy
           context: ./services/strategy
   - name: development
     build:
       artifacts:
-        - image: proxy
+        - image: registry.digitalocean.com/trader-registry/proxy
           context: ./services/proxy
-        - image: nats
+        - image: registry.digitalocean.com/trader-registry/nats
           context: ./services/nats
-        - image: web
+        - image: registry.digitalocean.com/trader-registry/web
           context: ./services/web
           docker:
             target: development
@@ -37,7 +38,7 @@ profiles:
             manual:
               - src: "src/**/*.ts*"
                 dest: .
-        - image: exchange
+        - image: registry.digitalocean.com/trader-registry/exchange
           context: ./services/exchange
           docker:
             target: development
@@ -45,7 +46,7 @@ profiles:
             manual:
               - src: "**/*.go"
                 dest: .
-        - image: notification
+        - image: registry.digitalocean.com/trader-registry/notification
           context: ./services/notification
           docker:
             target: development
@@ -53,7 +54,7 @@ profiles:
             manual:
               - src: "**/*.go"
                 dest: .
-        - image: strategy
+        - image: registry.digitalocean.com/trader-registry/strategy
           context: ./services/strategy
           sync:
             manual:
@@ -68,12 +69,12 @@ deploy:
           - infrastructure/k8s/app/values.yaml
           - infrastructure/k8s/app/env.yaml
         artifactOverrides:
-          images.proxy: proxy
-          images.nats: nats
-          images.exchange: exchange
-          images.notification: notification
-          images.strategy: strategy
-          images.web: web
+          images.proxy: registry.digitalocean.com/trader-registry/proxy
+          images.nats: registry.digitalocean.com/trader-registry/nats
+          images.exchange: registry.digitalocean.com/trader-registry/exchange
+          images.notification: registry.digitalocean.com/trader-registry/notification
+          images.strategy: registry.digitalocean.com/trader-registry/strategy
+          images.web: registry.digitalocean.com/trader-registry/web
 portForward:
   - resourceName: proxy
     resourceType: service
