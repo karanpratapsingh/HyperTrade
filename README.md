@@ -1,7 +1,11 @@
 ## Trader (yet to be named properly!)
+
+**USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHORS AND ALL AFFILIATES ASSUME NO LIABILITY FOR YOUR TRADING OUTCOMES.**
+
 #### Development
 
 **Tools**
+
 -  [Minikube](https://minikube.sigs.k8s.io/docs/start/)
 -  [Skaffold](https://skaffold.dev/docs/install/)
 -  [Helm](https://helm.sh/docs/intro/install/)
@@ -12,6 +16,7 @@
 -  [doctl](https://github.com/digitalocean/doctl)
 
 **Steps**
+
 - Once all the tools are installed, execute `make prepare` to prepare local environment.
 - Create a `infrastructure/k8s/app/env.yaml` file and add your secrets as shown in `infrastructure/k8s/app/env.example.yaml`.
 - Start development with `make dev` command.
@@ -21,13 +26,18 @@
 #### Deployment
 Deployment is handled through a manually dispatched github action `deploy.yml`. But first we need to provision our infrastructure.
 
+_Note: Infrastructure we're about to provision has it's own cost!_
+
 **Tools**
+
 - [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 
 **Steps**
+
 - Get an API token from DigitalOcean [dashboard](https://cloud.digitalocean.com/account/api/tokens).
 
 - Export it temporarily for terraform.
+
 ```
 $ export DIGITALOCEAN_TOKEN=value-of-your-token
 ```
@@ -41,12 +51,19 @@ $ terraform apply
 ```
 
 - Go to Github and add `DIGITALOCEAN_TOKEN` to your repository secrets for github actions.
+- Generate `base64` string of your secrets, and add it as `APP_SECRETS` to your repository secrets for github actions. 
+
+```
+$ cat infrastructure/k8s/app/env.yaml| base64
+```
+
 - Go to the actions tab and run `Build and Deploy` action.
 
 _Note: If you want to change name of the project, make sure to update all the associated kubernetes manifest files, skaffold config etc._
 
 #### Connecting
-Since this application deals with sensitive personal financial data, it is not recommended to expose it via ingress unless we have authorization configured. Hence, it is recommended to connect to it via port-forwarding on your local machine.
+
+Since this application deals with sensitive personal financial data, it is **not recommended** to expose it via ingress unless we have proper authorization in place. Hence, it is recommended to connect to it via port-forwarding on your local machine.
 
 **Steps**
 
