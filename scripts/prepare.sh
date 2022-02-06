@@ -1,18 +1,28 @@
 #/bin/bash
 set -e
 
-echo "--- Preparing environment ---"
+ENVIRONMENT=$1
+
+if [[ -z "$ENVIRONMENT" ]]; then
+  echo "error: environment is required...exiting"
+  exit 1
+fi
+
+echo "--- Preparing environment for $ENVIRONMENT ---"
+
 echo "[?] checking for required tools"
+
+if [[ "$ENVIRONMENT" == "development" ]]; then
+  if ! [ -x "$(command -v minikube)" ]; then
+    echo "[x] Error: minikube is not installed."
+    echo "Please install it from https://minikube.sigs.k8s.io/docs/start/"
+    exit 1
+  fi
+fi
 
 if ! [ -x "$(command -v yq)" ]; then
   echo "Error: yq is not installed."
   echo "Please install it from https://github.com/mikefarah/yq"
-  exit 1
-fi
-
-if ! [ -x "$(command -v minikube)" ]; then
-  echo "[x] Error: minikube is not installed."
-  echo "Please install it from https://minikube.sigs.k8s.io/docs/start/"
   exit 1
 fi
 
@@ -48,11 +58,14 @@ VITE_NATS_USER=$NATS_USER
 VITE_NATS_PASS=$NATS_PASS
 " >>$WEB_ENV_PATH
 
-echo "[*] installing dependencies"
-cd services/exchange && go mod tidy && cd ../..
-cd services/notification && go mod tidy && cd ../..
-cd services/web && npm install && cd ../..
+if [[ "$ENVIRONMENT" == "development" ]]; then
+  echo "[*] installing dependencies"
+  cd services/exchange && go mod tidy && cd ../..
+  cd services/notification && go mod tidy && cd ../..
+  cd services/web && npm install && cd ../..
 
-echo "[*] starting minikube"
-minikube start
+  echo "[*] starting minikube"
+  minikube start
+fi
+
 echo "--- Done ---"
