@@ -19,7 +19,7 @@ function error() {
 
 echo "--- Preparing environment for $ENVIRONMENT ---"
 
-echo "[?] checking for required tools"
+echo "[?] Checking for required tools"
 
 if [[ "$ENVIRONMENT" == "development" ]]; then
   if ! [ -x "$(command -v minikube)" ]; then
@@ -51,10 +51,10 @@ NATS_USER=$(yq ".env.nats.USER" $SECRETS_PATH)
 NATS_PASS=$(yq ".env.nats.PASS" $SECRETS_PATH)
 
 if [ -f "$WEB_ENV_PATH" ]; then
-  echo "[*] updating .env for web"
+  echo "[*] Updating .env for web"
   rm $WEB_ENV_PATH
 else
-  echo "[*] creating .env for web"
+  echo "[*] Creating .env for web"
 fi
 
 echo "
@@ -64,12 +64,12 @@ VITE_NATS_PASS=$NATS_PASS
 " >>$WEB_ENV_PATH
 
 if [[ "$ENVIRONMENT" == "development" ]]; then
-  echo "[*] installing dependencies"
+  echo "[*] Installing dependencies"
   cd services/exchange && go mod tidy && cd ../..
   cd services/notification && go mod tidy && cd ../..
   cd services/web && npm install && cd ../..
 
-  echo "[*] starting minikube"
+  echo "[*] Starting minikube"
   minikube start
 fi
 
