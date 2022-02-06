@@ -29,7 +29,7 @@ interface KlineChartProps {
 const options = {
   candle: {
     tooltip: {
-      labels: ['T: ', 'O: ', 'C: ', 'H: ', 'O: ', 'V: '],
+      labels: ['T: ', 'O: ', 'C: ', 'H: ', 'L: ', 'V: '],
     },
   },
   yAxis: {
