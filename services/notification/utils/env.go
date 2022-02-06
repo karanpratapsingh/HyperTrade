@@ -3,6 +3,7 @@ package utils
 import "github.com/kelseyhightower/envconfig"
 
 type Env struct {
+	Symbol           string `envconfig:"SYMBOL"`
 	TelegramApiToken string `envconfig:"TELEGRAM_API_TOKEN"`
 	TelegramChatId   int64  `envconfig:"TELEGRAM_CHAT_ID"`
 

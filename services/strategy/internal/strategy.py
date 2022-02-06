@@ -86,7 +86,7 @@ class Strategy:
 
     def get_buy_condition(self, index) -> bool:
         rsi = self.df['rsi'][index]
-        condition = rsi <= 40
+        condition = rsi <= 30
 
         return condition
 
@@ -101,7 +101,7 @@ class Strategy:
 
     def get_sell_condition(self, index):
         rsi = self.df['rsi'][index]
-        condition = rsi >= 60
+        condition = rsi >= 70
 
         return condition
 

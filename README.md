@@ -51,3 +51,21 @@ $ helm install k8s/argo --set repository.token=$ARGO_GITHUB_TOKEN --generate-nam
 ```
 
 - Now Argo CD should deploy your manifests in `infrastructure/k8s/app` automatically on commit.
+
+**Running the App**
+
+- Install the following
+  -  [yq](https://github.com/mikefarah/yq)
+  -  [minikube](https://minikube.sigs.k8s.io/docs/start/)
+  -  [skaffold](https://skaffold.dev/docs/install/)
+  -  [helm](https://helm.sh/docs/intro/install/)
+  -  [go 1.17](https://go.dev/doc/install)
+  -  [node 16](https://nodejs.org/en/download/)
+  -  [python 3.8](https://www.python.org/downloads/)
+
+- Check the `infrastructure/k8s/app/env.example.yaml` and add your secrets then save it as `infrastructure/k8s/app/env.yaml`
+- `make prepare` (prepare local environment)
+- `make dev` (for development)
+- `make run` (preview production mode)
+- `make deploy` (deploy to production cluster)
+- `make stop` (stop local minikube cluster)

@@ -1,13 +1,15 @@
-start:
-	minikube start
-
-install:
-	cd services/exchange && go mod tidy && cd ..
-	cd services/notification && go mod tidy && cd ..
-	cd services/web && npm install && cd ..
+prepare:
+	scripts/prepare.sh
 
 dev:
-	skaffold dev --tail
+	make prepare
+	skaffold dev --profile=development --tail
+
+run:
+	skaffold run --profile=production --tail
+
+deploy:
+	echo "TODO: deploy"
 
 stop:
 	minikube stop

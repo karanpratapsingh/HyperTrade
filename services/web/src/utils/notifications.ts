@@ -1,32 +1,24 @@
 import { createToast } from 'vercel-toast';
 
-const timeout = 2000;
+const timeout = 4000;
 
-function info(message: string): void {
+export function info(message: string): void {
   createToast(message, {
     timeout,
     type: 'success',
   });
 }
 
-function warning(message: string): void {
+export function warning(message: string): void {
   createToast(message, {
     timeout,
     type: 'warning',
   });
 }
 
-function error(message: string): void {
-  createToast(message, {
+export function error(error: any): void {
+  createToast(error?.message, {
     timeout,
     type: 'error',
   });
 }
-
-const Notifications = {
-  info,
-  warning,
-  error,
-};
-
-export default Notifications;

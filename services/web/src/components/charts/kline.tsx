@@ -1,8 +1,11 @@
 import { Chart, dispose, init, KLineData } from 'klinecharts';
-import { difference, map } from 'lodash';
-import React, { useEffect } from 'react';
+import difference from 'lodash/difference';
+import map from 'lodash/map';
+import React, { useEffect, useState } from 'react';
 import { Indicators, TechnicalIndicators } from '../../config/indicators';
 import { useDataFrame } from '../../store/dataframe';
+import * as animated from '../ui/animated';
+import { Loader } from '../ui/loader';
 
 const CHART_ID = 'kline-chart';
 
@@ -11,8 +14,14 @@ export enum ChartType {
   AREA = 'area',
 }
 
+export enum AxisType {
+  NORMAL = 'normal',
+  PERCENTAGE = 'percentage',
+}
+
 interface KlineChartProps {
   type: ChartType;
+  axis: AxisType;
   primary: TechnicalIndicators[];
   secondary: TechnicalIndicators[];
 }
@@ -22,6 +31,9 @@ const options = {
     tooltip: {
       labels: ['T: ', 'O: ', 'C: ', 'H: ', 'O: ', 'V: '],
     },
+  },
+  yAxis: {
+    type: 'percentage',
   },
   technicalIndicator: {
     lastValueMark: {
@@ -34,9 +46,10 @@ const options = {
 };
 
 export function KlineChart(props: KlineChartProps): React.ReactElement {
-  const { type, primary, secondary } = props;
+  const { type, axis, primary, secondary } = props;
 
-  const [chart, setChart] = React.useState<Chart | null>(null);
+  const loading = useDataFrame(state => state.loading);
+  const [chart, setChart] = useState<Chart | null>(null);
 
   useEffect(() => {
     const chart = init(CHART_ID, options);
@@ -75,6 +88,16 @@ export function KlineChart(props: KlineChartProps): React.ReactElement {
   }, [chart, type]);
 
   useEffect(() => {
+    const options = {
+      yAxis: {
+        type: axis,
+      },
+    };
+
+    chart?.setStyleOptions(options);
+  }, [chart, axis]);
+
+  useEffect(() => {
     const getSubId = (type: string) => `sub-${type}`;
     const getMainId = () => 'candle_pane';
 
@@ -101,5 +124,14 @@ export function KlineChart(props: KlineChartProps): React.ReactElement {
     });
   }
 
-  return <div id={CHART_ID} className='w-full' style={{ height: '90%' }} />;
+  return (
+    <>
+      <animated.Div
+        id={CHART_ID}
+        className='w-full'
+        style={{ height: '92%' }}
+      />
+      <Loader className='absolute top-0 left-0' visible={loading} />
+    </>
+  );
 }

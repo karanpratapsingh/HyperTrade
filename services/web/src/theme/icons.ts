@@ -1,5 +1,6 @@
-import usdt from 'cryptocurrency-icons/svg/icon/usdt.svg';
+import toLower from 'lodash/toLower';
+import { Balance } from '../api/balance';
 
-export const Icons: Record<string, string> = {
-  usdt,
-};
+export function getCryptoIcon(asset: Balance['asset']): string {
+  return `https://www.cryptofonts.com/img/icons/${toLower(asset)}.svg`;
+}

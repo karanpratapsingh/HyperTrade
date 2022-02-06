@@ -7,38 +7,48 @@ import {
   StringCodec,
   Subscription,
 } from 'nats.ws';
-import Notifications from '../utils/notifications';
+import { API_HOST } from '../config/api';
+import Env from '../utils/env';
+import * as Notifications from '../utils/notifications';
+import { Events } from './types';
 
-const SERVER_URL = 'ws://localhost:8080/nats';
+const SERVER_URL = `ws://${API_HOST}/nats`;
 
 const AUTH = {
-  user: import.meta.env.VITE_NATS_USER,
-  pass: import.meta.env.VITE_NATS_PASS,
+  user: Env.NATS_USER,
+  pass: Env.NATS_PASS,
 };
 
 export class PubSub {
+  private static instance: PubSub;
   private codec: Codec<string>;
-  private conn: NatsConnection | null = null;
+  private conn: NatsConnection;
 
-  constructor() {
+  private constructor(conn: NatsConnection) {
     this.codec = StringCodec();
+    this.conn = conn;
   }
 
-  init = async (): Promise<void> => {
-    try {
-      this.conn = await connect({
-        servers: SERVER_URL,
-        user: AUTH.user,
-        pass: AUTH.pass,
-      });
-    } catch (err) {
-      Notifications.error(err?.message);
-      console.error(err);
+  static getInstance = async (): Promise<PubSub> => {
+    if (!this.instance) {
+      try {
+        const conn = await connect({
+          servers: SERVER_URL,
+          user: AUTH.user,
+          pass: AUTH.pass,
+        });
+
+        this.instance = new PubSub(conn);
+      } catch (err) {
+        Notifications.error(err);
+      }
     }
+
+    return this.instance;
   };
 
   subscribe = <T>(
-    event: string,
+    event: Events,
     cb: (data: T) => void
   ): Subscription | undefined => {
     const callback = (err: NatsError | null, msg: Msg): void => {
@@ -49,7 +59,22 @@ export class PubSub {
       cb(data);
     };
 
-    const subscription = this.conn?.subscribe(event, { callback });
+    const subscription = this.conn.subscribe(event, { callback });
     return subscription;
+  };
+
+  request = async <T, D = unknown>(event: Events, data?: D): Promise<T> => {
+    const msg = await this.conn.request(
+      event,
+      this.codec.encode(JSON.stringify(data))
+    );
+
+    if (!msg) {
+      throw new Error(`error: getting response for ${event}`);
+    }
+
+    const response: T = JSON.parse(this.codec.decode(msg.data));
+
+    return response;
   };
 }

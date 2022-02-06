@@ -1,5 +1,7 @@
+import { Empty } from 'antd';
 import dateFormat from 'dateformat';
-import { concat, map } from 'lodash';
+import concat from 'lodash/concat';
+import map from 'lodash/map';
 import React from 'react';
 import {
   CartesianGrid,
@@ -13,6 +15,7 @@ import {
 import { TradesResponse } from '../../api/trades';
 import { ApiHookResult } from '../../api/types';
 import { Colors, LineColors } from '../../theme/colors';
+import * as animated from '../ui/animated';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
 
@@ -59,39 +62,55 @@ export function TradesChart(props: TradesChartProps): React.ReactElement {
     dot: { r: 0 },
   };
 
-  return (
-    <div className='flex flex-1 flex-col'>
-      <Header title='Chart' subtitle='Trades line chart' />
-      <LineChart
-        className='mt-4'
-        margin={margin}
-        data={data.trades}
-        height={540}
-        width={940}>
-        <Legend />
-        <CartesianGrid style={cartesianStyle} strokeDasharray='3' />
-        <XAxis
-          dy={5}
-          dataKey='time'
-          axisLine={false}
-          tick={tickStyle}
-          tickFormatter={timeFormatter}
-        />
-        <YAxis domain={domain} axisLine={false} tick={tickStyle} />
-        <Tooltip labelFormatter={timeFormatter} />
-        <Line
-          type='monotone'
-          dataKey='entry'
-          stroke={LineColors.entry}
-          {...dotsConfig}
-        />
-        <Line
-          type='monotone'
-          dataKey='exit'
-          stroke={LineColors.exit}
-          {...dotsConfig}
-        />
-      </LineChart>
+  let content: React.ReactNode | null = (
+    <div className='flex flex-1 items-center justify-center'>
+      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
     </div>
+  );
+
+  const { trades } = data;
+
+  if (trades.length) {
+    content = (
+      <>
+        <LineChart
+          className='mt-4'
+          margin={margin}
+          data={trades}
+          height={540}
+          width={940}>
+          <Legend />
+          <CartesianGrid style={cartesianStyle} strokeDasharray='3' />
+          <XAxis
+            dy={5}
+            dataKey='time'
+            axisLine={false}
+            tick={tickStyle}
+            tickFormatter={timeFormatter}
+          />
+          <YAxis domain={domain} axisLine={false} tick={tickStyle} />
+          <Tooltip labelFormatter={timeFormatter} />
+          <Line
+            type='monotone'
+            dataKey='entry'
+            stroke={LineColors.entry}
+            {...dotsConfig}
+          />
+          <Line
+            type='monotone'
+            dataKey='exit'
+            stroke={LineColors.exit}
+            {...dotsConfig}
+          />
+        </LineChart>
+      </>
+    );
+  }
+
+  return (
+    <animated.Div className='flex flex-1 flex-col'>
+      <Header title='Chart' subtitle='Trades line chart' />
+      {content}
+    </animated.Div>
   );
 }

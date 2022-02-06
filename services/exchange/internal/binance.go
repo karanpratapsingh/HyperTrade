@@ -2,9 +2,8 @@ package internal
 
 import (
 	"context"
+	"exchange/utils"
 	"fmt"
-	"math"
-	"strconv"
 	"strings"
 	"time"
 
@@ -16,17 +15,17 @@ var ZeroBalance = 0.00000000
 
 type Binance struct {
 	client *binance.Client
-	pubsub PubSub
 	test   bool
+	pubsub PubSub
 }
 
-func NewBinance(key, secret string, pubsub PubSub, test bool) Binance {
+func NewBinance(key, secret string, test bool, pubsub PubSub) Binance {
 	log.Trace().Str("type", "binance").Bool("test", test).Msg("Binance.Init")
 
 	binance.UseTestnet = test
 	client := binance.NewClient(key, secret)
 
-	return Binance{client, pubsub, test}
+	return Binance{client, test, pubsub}
 }
 
 func (b Binance) GetAccount() *binance.Account {
@@ -40,18 +39,25 @@ func (b Binance) GetAccount() *binance.Account {
 	return account
 }
 
-type Balance struct {
-	Asset  string  `json:"asset"`
-	Amount float64 `json:"amount"`
+func (b Binance) PrintAccountInfo(symbol string) {
+	acc := b.GetAccount()
+
+	fmt.Println("-------- Account Info --------")
+	fmt.Println("Type:", acc.AccountType)
+	fmt.Println("Can Trade:", acc.CanTrade)
+	fmt.Println("Test Mode:", b.test)
+	fmt.Println("Symbol:", symbol)
+	fmt.Println(b.GetBalanceString())
+	fmt.Println("------------------------------")
 }
 
 func (b Binance) GetBalance() []Balance {
-	balances := []Balance{}
 	acc := b.GetAccount()
+	balances := []Balance{}
 
 	for _, balance := range acc.Balances {
 		asset := balance.Asset
-		amt := parseFloat(balance.Free)
+		amt := utils.ParseFloat(balance.Free)
 
 		if amt > ZeroBalance {
 			b := Balance{asset, amt}
@@ -62,18 +68,9 @@ func (b Binance) GetBalance() []Balance {
 	return balances
 }
 
-func (b Binance) PrintAccountInfo() {
-	acc := b.GetAccount()
+func (b Binance) GetBalanceString() string {
+	userBalances := b.GetBalance()
 
-	fmt.Println("-------- Account Info --------")
-	fmt.Println("Type:", acc.AccountType)
-	fmt.Println("Can Trade:", acc.CanTrade)
-	fmt.Println("Test Mode:", b.test)
-	fmt.Println(b.StringifyBalance(acc.Balances))
-	fmt.Println("------------------------------")
-}
-
-func (b Binance) StringifyBalance(userBalances []binance.Balance) string {
 	header := "Balance:"
 
 	if b.test {
@@ -81,16 +78,11 @@ func (b Binance) StringifyBalance(userBalances []binance.Balance) string {
 	}
 
 	var balances = []string{header}
+	var separator rune = '•'
 
 	for _, balance := range userBalances {
-		amt := parseFloat(balance.Free)
-
-		var separator rune = '•'
-
-		if amt > ZeroBalance {
-			b := fmt.Sprintf("%c %v %v", separator, balance.Asset, balance.Free)
-			balances = append(balances, b)
-		}
+		b := fmt.Sprintf("%c %v %v", separator, balance.Asset, balance.Amount)
+		balances = append(balances, b)
 	}
 
 	return strings.Join(balances, "\n")
@@ -126,28 +118,26 @@ func (b Binance) Kline(symbol string, interval string) {
 	wsKlineHandler := func(event *binance.WsKlineEvent) {
 		symbol := event.Kline.Symbol
 		time := time.Now().Unix() * 1000
-		open := parseFloat(event.Kline.Open)
-		high := parseFloat(event.Kline.High)
-		low := parseFloat(event.Kline.Low)
-		close := parseFloat(event.Kline.Close)
-		volume := parseFloat(event.Kline.Volume)
+		open := utils.ParseFloat(event.Kline.Open)
+		high := utils.ParseFloat(event.Kline.High)
+		low := utils.ParseFloat(event.Kline.Low)
+		close := utils.ParseFloat(event.Kline.Close)
+		volume := utils.ParseFloat(event.Kline.Volume)
 		final := event.Kline.IsFinal
 
 		kline := Kline{symbol, time, open, high, low, close, volume, final}
 
-		if kline.Final {
-			log.Info().
-				Str("symbol", symbol).
-				Float64("open", open).
-				Float64("high", high).
-				Float64("low", low).
-				Float64("close", close).
-				Float64("volume", volume).
-				Bool("final", final).
-				Msg(KlineEvent)
+		log.Info().
+			Str("symbol", symbol).
+			Float64("open", open).
+			Float64("high", high).
+			Float64("low", low).
+			Float64("close", close).
+			Float64("volume", volume).
+			Bool("final", final).
+			Msg(KlineEvent)
 
-			b.pubsub.Publish(KlineEvent, KlinePayload{kline})
-		}
+		b.pubsub.Publish(KlineEvent, KlinePayload{kline})
 	}
 
 	errHandler := func(err error) {
@@ -159,29 +149,4 @@ func (b Binance) Kline(symbol string, interval string) {
 	}
 
 	binance.WsKlineServe(symbol, interval, wsKlineHandler, errHandler)
-}
-
-// Ref: https://www.binance.com/api/v3/exchangeInfo?symbol=$SYMBOL
-func GetMinQuantity(min float64, price float64) float64 {
-	quantity := toFixed((1/price)*min, 5)
-	return quantity
-}
-
-func round(num float64) int {
-	return int(num + math.Copysign(0.5, num))
-}
-
-func toFixed(num float64, precision int) float64 {
-	output := math.Pow(10, float64(precision))
-	return float64(round(num*output)) / output
-}
-
-func parseFloat(str string) float64 {
-	float, err := strconv.ParseFloat(str, 64)
-
-	if err != nil {
-		log.Error().Err(err).Msg("Parser.Float64")
-	}
-
-	return float
 }

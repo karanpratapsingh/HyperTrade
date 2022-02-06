@@ -1,6 +1,7 @@
-import { ApiHookResult } from './types';
-import axios, { AxiosResponse } from 'axios';
 import { useQuery } from 'react-query';
+import { PubSub } from '../events/pubsub';
+import { Events } from '../events/types';
+import { ApiHookResult, options } from './types';
 
 export type Trade = {
   id: number;
@@ -15,15 +16,17 @@ export type TradesResponse = {
   trades: Trade[];
 };
 
+export const getPositions = async () => {
+  const pubsub = await PubSub.getInstance();
+  return await pubsub.request<TradesResponse>(Events.GetTrades);
+};
+
 export function useTrades(): ApiHookResult<TradesResponse> {
-  const fetch = () => axios.get('/exchange/trades');
   const {
     data,
     isLoading: loading,
     error,
-  } = useQuery<AxiosResponse<TradesResponse, Error>, Error>('trades', fetch, {
-    refetchInterval: 4 * 1000,
-  });
+  } = useQuery<TradesResponse, Error>('trades', getPositions, options);
 
-  return { data: data?.data, loading, error };
+  return { data, loading, error };
 }

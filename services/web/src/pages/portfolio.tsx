@@ -12,13 +12,15 @@ export function Portfolio(): React.ReactElement {
   const trades = useTrades();
 
   return (
-    <Content className='flex pl-6 pt-6 p-4 bg-white'>
+    <Content className='flex p-6 bg-white'>
       <div className='flex flex-col' style={{ flex: 3 }}>
-        <StatsChart {...trades} />
+        <StatsChart />
         <TradesChart {...trades} />
       </div>
       <Divider className='min-h-full mx-8' type='vertical' />
-      <div className='flex flex-col' style={{ flex: 2 }}>
+      <div
+        className='flex flex-col h-full overflow-y-scroll'
+        style={{ flex: 2 }}>
         <BalanceTable />
         <PositionsTable />
         <TradesTable {...trades} />

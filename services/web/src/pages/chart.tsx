@@ -1,11 +1,16 @@
-import { Button, Input, Layout, Modal, PageHeader } from 'antd';
-import Checkbox from 'antd/lib/checkbox/Checkbox';
-import { includes, toLower } from 'lodash';
+import { Button, Checkbox, Input, Layout, Modal, PageHeader } from 'antd';
+import includes from 'lodash/includes';
+import toLower from 'lodash/toLower';
 import React, { useState } from 'react';
-import { AiOutlineAreaChart, AiOutlineFunction } from 'react-icons/ai';
+import {
+  AiOutlineAreaChart,
+  AiOutlineFieldNumber,
+  AiOutlineFunction,
+  AiOutlinePercentage,
+} from 'react-icons/ai';
 import { BiBarChart } from 'react-icons/bi';
 import { IoSearchOutline } from 'react-icons/io5';
-import { ChartType, KlineChart } from '../components/charts/kline';
+import { AxisType, ChartType, KlineChart } from '../components/charts/kline';
 import { Header } from '../components/ui/header';
 import {
   PrimaryIndicators,
@@ -18,34 +23,61 @@ import { Colors } from '../theme/colors';
 const { Content } = Layout;
 
 export function Chart(): React.ReactElement {
-  const { primary, secondary, setPrimary, setSecondary } = useIndicatorsStore();
+  const {
+    type,
+    axis,
+    primary,
+    secondary,
+    setPrimary,
+    setSecondary,
+    setType,
+    setAxis,
+  } = useIndicatorsStore();
+
   const [showIndicators, setShowIndicators] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
-  const [type, setType] = useState<ChartType>(ChartType.CANDLE);
 
   const title: React.ReactNode = (
     <Header className='pb-4' title='Charts' subtitle='Live data charts' />
   );
 
   const typeIcon: Record<ChartType, React.ReactNode> = {
-    [ChartType.CANDLE]: (
-      <BiBarChart
-        size={25}
-        color={Colors.black}
-        onClick={() => setType(ChartType.AREA)}
-      />
-    ),
     [ChartType.AREA]: (
-      <AiOutlineAreaChart
+      <BiBarChart
         size={25}
         color={Colors.black}
         onClick={() => setType(ChartType.CANDLE)}
       />
     ),
+    [ChartType.CANDLE]: (
+      <AiOutlineAreaChart
+        size={25}
+        color={Colors.black}
+        onClick={() => setType(ChartType.AREA)}
+      />
+    ),
   };
 
-  const extras = [
+  const axisIcon: Record<AxisType, React.ReactNode> = {
+    [AxisType.NORMAL]: (
+      <AiOutlinePercentage
+        size={22}
+        color={Colors.black}
+        onClick={() => setAxis(AxisType.PERCENTAGE)}
+      />
+    ),
+    [AxisType.PERCENTAGE]: (
+      <AiOutlineFieldNumber
+        size={25}
+        color={Colors.black}
+        onClick={() => setAxis(AxisType.NORMAL)}
+      />
+    ),
+  };
+
+  const extras: React.ReactNode[] = React.Children.toArray([
     <Button type='link' icon={typeIcon[type]} />,
+    <Button type='link' icon={axisIcon[axis]} />,
     <Button
       type='link'
       icon={
@@ -56,12 +88,17 @@ export function Chart(): React.ReactElement {
         />
       }
     />,
-  ];
+  ]);
 
   return (
-    <Content className='p-4 bg-white'>
-      <PageHeader className='p-0 pl-2 pr-12' title={title} extra={extras} />
-      <KlineChart type={type} primary={primary} secondary={secondary} />
+    <Content className='p-6 bg-white'>
+      <PageHeader className='p-0 pr-12' title={title} extra={extras} />
+      <KlineChart
+        type={type}
+        axis={axis}
+        primary={primary}
+        secondary={secondary}
+      />
       <Modal
         className='mt-24'
         title={<Header title='Indicators' subtitle='Select indicators' />}
@@ -69,19 +106,21 @@ export function Chart(): React.ReactElement {
         footer={null}
         onCancel={() => setShowIndicators(false)}>
         <Input
+          autoFocus
+          size='large'
           value={search}
           onChange={({ target }) => setSearch(target.value)}
           prefix={<IoSearchOutline />}
         />
-        <div className='flex flex-col h-96 mt-3 overflow-y-scroll'>
-          <ListItem
+        <div className='flex flex-col h-96 mt-2 overflow-y-scroll'>
+          <IndicatorsList
             title='Primary'
             search={search}
             all={PrimaryIndicators}
             indicators={primary}
             onUpdate={(update: TechnicalIndicators[]) => setPrimary(update)}
           />
-          <ListItem
+          <IndicatorsList
             title='Secondary'
             search={search}
             all={SecondaryIndicators}
@@ -94,7 +133,7 @@ export function Chart(): React.ReactElement {
   );
 }
 
-interface ListProps {
+interface IndicatorsListProps {
   title: string;
   search: string;
   all: TechnicalIndicators[];
@@ -102,7 +141,7 @@ interface ListProps {
   onUpdate: (update: TechnicalIndicators[]) => void;
 }
 
-function ListItem(props: ListProps): React.ReactElement {
+function IndicatorsList(props: IndicatorsListProps): React.ReactElement {
   const { title, all, search, indicators, onUpdate } = props;
 
   const filtered = searchFilter(all, search);

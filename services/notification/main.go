@@ -2,6 +2,7 @@ package main
 
 import (
 	"notification/internal"
+	"notification/utils"
 	"os"
 
 	"github.com/rs/zerolog"
@@ -18,22 +19,8 @@ func main() {
 	pubsub := internal.NewPubSub(env.NatsUrl, env.NatsUser, env.NatsPass)
 	defer pubsub.Close()
 
-	telegram := internal.NewTelegramBot(env.TelegramApiToken, env.TelegramChatId)
+	telegram := internal.NewTelegramBot(env.TelegramApiToken, env.TelegramChatId, pubsub)
 
-	pubsub.Subscribe(internal.OrderEvent, func(p internal.OrderEventPayload) {
-		message := telegram.FormatOrderMessage(p)
-		telegram.SendMessage(internal.OrderEvent, message)
-	})
-
-	pubsub.Subscribe(internal.TradeEvent, func(p internal.TradeEventPayload) {
-		message := telegram.FormatTradeMessage(p)
-		telegram.SendMessage(internal.TradeEvent, message)
-	})
-
-	pubsub.Subscribe(internal.CriticalErrorEvent, func(p internal.CriticalErrorEventPayload) {
-		message := telegram.FormatErrorMessage(p)
-		telegram.SendMessage(internal.CriticalErrorEvent, message)
-	})
-
-	telegram.ListenForCommands()
+	internal.RunAsyncApi(telegram, pubsub)
+	telegram.ListenForCommands(env.Symbol)
 }

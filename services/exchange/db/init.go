@@ -1,8 +1,6 @@
 package db
 
 import (
-	"exchange/utils"
-
 	"github.com/rs/zerolog/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -13,12 +11,10 @@ type DB struct {
 	conn *gorm.DB
 }
 
-func New() DB {
-	env := utils.GetEnv()
-
+func New(dbURL string) DB {
 	log.Trace().Msg("Database.Init")
 
-	dialect := postgres.Open(env.DatabaseUrl)
+	dialect := postgres.Open(dbURL)
 
 	config := &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
@@ -40,10 +36,5 @@ func New() DB {
 		log.Panic().Err(err).Msg("Database.Migrate.Error")
 	}
 
-	db := DB{conn}
-
-	Seed(db)
-
-	return db
-
+	return DB{conn}
 }

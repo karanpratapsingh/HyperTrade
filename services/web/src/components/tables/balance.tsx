@@ -1,9 +1,10 @@
-import { Table } from 'antd';
-import Avatar from 'antd/lib/avatar/avatar';
+import { Avatar, Table } from 'antd';
 import { Balance, useBalance } from '../../api/balance';
-import { Icons } from '../../theme/icons';
-import { Loader } from '../ui/loader';
+import { getCryptoIcon } from '../../theme/icons';
+import { paginationProps } from '../../utils/pagination';
+import * as animated from '../ui/animated';
 import { Header } from '../ui/header';
+import { Loader } from '../ui/loader';
 
 export function BalanceTable(): React.ReactElement {
   const { data, loading } = useBalance();
@@ -19,7 +20,7 @@ export function BalanceTable(): React.ReactElement {
       key: 'asset',
       render: (asset: Balance['asset']) => (
         <div className='flex items-center'>
-          <Avatar src={Icons[asset.toLowerCase()]} />
+          <Avatar src={getCryptoIcon(asset)} />
           <span className='ml-4'>{asset}</span>
         </div>
       ),
@@ -28,18 +29,19 @@ export function BalanceTable(): React.ReactElement {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
+      render: (amount: Balance['amount']) => <span>{amount.toFixed(4)}</span>,
     },
   ];
 
   return (
-    <div className='w-full flex flex-1 flex-col'>
+    <animated.Div className='w-full flex flex-1 flex-col table'>
       <Header title='Balance' subtitle='Current balance' />
       <Table
         className='mt-4 text-xs font-light'
         columns={columns}
-        pagination={false}
+        pagination={paginationProps(data.balance.length)}
         dataSource={data.balance}
       />
-    </div>
+    </animated.Div>
   );
 }

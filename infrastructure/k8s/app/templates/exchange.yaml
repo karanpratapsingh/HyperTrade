@@ -29,6 +29,8 @@ spec:
           ports:
             - containerPort: 80
           env:
+            - name: SYMBOL
+              value: "{{ .Values.env.global.SYMBOL }}"
             - name: BINANCE_TESTNET
               value: "{{ .Values.env.exchange.BINANCE_TESTNET }}"
             - name: BINANCE_API_KEY
