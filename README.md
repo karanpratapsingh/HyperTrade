@@ -1,71 +1,57 @@
-### Installation
+## Trader (yet to be named properly!)
+#### Development
 
-- Install [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli), [kubectl](https://kubernetes.io/docs/tasks/tools/) [helm](https://helm.sh/docs/intro/install/) CLI
+**Tools**
+-  [Minikube](https://minikube.sigs.k8s.io/docs/start/)
+-  [Skaffold](https://skaffold.dev/docs/install/)
+-  [Helm](https://helm.sh/docs/intro/install/)
+-  [Go >= 1.17](https://go.dev/doc/install)
+-  [Node >= 16](https://nodejs.org/en/download/)
+-  [Python >= 3.8](https://www.python.org/downloads/)
+-  [yq](https://github.com/mikefarah/yq)
+-  [doctl](https://github.com/digitalocean/doctl)
 
-- Create Kubernetes cluster and installs [Argo CD](https://argo-cd.readthedocs.io/en/stable/getting_started/)
+**Steps**
+- Once all the tools are installed, execute `make prepare` to prepare local environment.
+- Create a `infrastructure/k8s/app/env.yaml` file and add your secrets as shown in `infrastructure/k8s/app/env.example.yaml`.
+- Start development with `make dev` command.
+- Use `make stop` to stop the local minikube cluster.
 
-_Note: You'll need to `export VULTR_API_KEY=value-from-console`_
+
+#### Deployment
+Deployment is handled through a manually dispatched github action `deploy.yml`. But first we need to provision our infrastructure.
+
+**Tools**
+- [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+
+**Steps**
+- Get an API token from DigitalOcean [dashboard](https://cloud.digitalocean.com/account/api/tokens).
+
+- Export it temporarily for terraform.
+```
+$ export DIGITALOCEAN_TOKEN=value-of-your-token
+```
+
+- Apply terraform configuration.
 
 ```
 $ cd infrastructure
 $ terraform init
-$ terraform apply -var vultr_api_key=$VULTR_API_KEY
-$ cd ..
+$ terraform apply
 ```
 
-_Note: If fails with `Error: Post "http://localhost/api/v1/namespaces"` just re-apply._
+- Go to Github and add `DIGITALOCEAN_TOKEN` to your repository secrets for github actions.
+- Go to the actions tab and run `Build and Deploy` action.
 
-This should create a `infrastructure/k8s/kubeconfig.yaml` file that we can use with `kubectl` and `helm`
+_Note: If you want to change name of the project, make sure to update all the associated kubernetes manifest files, skaffold config etc._
 
-```
-$ chmod 600 ./infrastructure/k8s/kubeconfig.yaml
-$ export KUBECONFIG=./infrastructure/k8s/kubeconfig.yaml
-```
+#### Connecting
+Since this application deals with sensitive personal financial data, it is not recommended to expose it via ingress unless we have authorization configured. Hence, it is recommended to connect to it via port-forwarding on your local machine.
 
-- Get default Argo CD password
+**Steps**
 
-```
-$ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
-```
+- Connect via port-forwarding using `make connect` command.
 
-- Connect to argo using `make connect-argo` then going over to `localhost:8080`
+_Note: Make sure `doctl` is authenticated, and we're using correct k8s cluster name._
 
-- Use the default password and change it. **important**
-
-- Delete the default password secret.
-
-```
-$ kubectl -n argocd delete secret argocd-initial-admin-secret
-```
-
-- Create a [github token](https://github.com/settings/tokens) and export it.
-
-```
-$ export ARGO_GITHUB_TOKEN=your_github_token
-```
-
-- Apply with Helm.
-
-```
-$ helm install k8s/argo --set repository.token=$ARGO_GITHUB_TOKEN --generate-name
-```
-
-- Now Argo CD should deploy your manifests in `infrastructure/k8s/app` automatically on commit.
-
-**Running the App**
-
-- Install the following
-  -  [yq](https://github.com/mikefarah/yq)
-  -  [minikube](https://minikube.sigs.k8s.io/docs/start/)
-  -  [skaffold](https://skaffold.dev/docs/install/)
-  -  [helm](https://helm.sh/docs/intro/install/)
-  -  [go 1.17](https://go.dev/doc/install)
-  -  [node 16](https://nodejs.org/en/download/)
-  -  [python 3.8](https://www.python.org/downloads/)
-
-- Check the `infrastructure/k8s/app/env.example.yaml` and add your secrets then save it as `infrastructure/k8s/app/env.yaml`
-- `make prepare` (prepare local environment)
-- `make dev` (for development)
-- `make run` (preview production mode)
-- `make deploy` (deploy to production cluster)
-- `make stop` (stop local minikube cluster)
+- Open `localhost:8080` to see the web interface.

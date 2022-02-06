@@ -23,6 +23,8 @@ spec:
       labels:
         app: exchange
     spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
       containers:
         - name: exchange
           image: {{ .Values.images.exchange }}

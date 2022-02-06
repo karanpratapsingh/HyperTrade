@@ -1,40 +1,45 @@
 locals {
-  label            = "tf"
+  name             = "trader"
   kube_config_file = "${path.module}/k8s/kubeconfig.yaml"
-  namespace        = "argocd"
 }
 
-resource "vultr_kubernetes" "cluster" {
-  label   = local.label
-  region  = "lax"
-  version = "v1.21.7+2"
+resource "digitalocean_container_registry" "registry" {
+  name                   = "${local.name}-registry"
+  subscription_tier_slug = "professional"
+}
 
-  node_pools {
-    node_quantity = 1
-    plan          = "vc2-1c-2gb"
-    label         = "${local.label}-node"
+resource "digitalocean_kubernetes_cluster" "cluster" {
+  name    = "${local.name}-cluster"
+  region  = "nyc1"
+  version = "1.21.9-do.0"
+
+  node_pool {
+    name       = "${local.name}-node-pool"
+    size       = "s-1vcpu-2gb"
+    node_count = 2
   }
 }
 
-resource "local_file" "kubeconfig" {
-  content  = base64decode(vultr_kubernetes.cluster.kube_config)
-  filename = local.kube_config_file
+resource "digitalocean_container_registry_docker_credentials" "credentials" {
+  registry_name = digitalocean_container_registry.registry.name
 }
 
 provider "kubernetes" {
-  config_path = local.kube_config_file
+  host  = digitalocean_kubernetes_cluster.cluster.endpoint
+  token = digitalocean_kubernetes_cluster.cluster.kube_config.0.token
+  cluster_ca_certificate = base64decode(
+    digitalocean_kubernetes_cluster.cluster.kube_config.0.cluster_ca_certificate
+  )
 }
 
-resource "kubernetes_namespace" "argo_namespace" {
-  depends_on = [local_file.kubeconfig]
+resource "kubernetes_secret" "secret" {
   metadata {
-    name = local.namespace
+    name = "${local.name}-docker-config"
   }
-}
 
-resource "null_resource" "argo_install" {
-  depends_on = [kubernetes_namespace.argo_namespace]
-  provisioner "local-exec" {
-    command = "KUBECONFIG=${local.kube_config_file} kubectl apply -n ${local.namespace} -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml"
+  data = {
+    ".dockerconfigjson" = digitalocean_container_registry_docker_credentials.credentials.docker_credentials
   }
+
+  type = "kubernetes.io/dockerconfigjson"
 }

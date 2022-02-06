@@ -23,6 +23,8 @@ spec:
       labels:
         app: strategy
     spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
       containers:
         - name: strategy
           image: {{ .Values.images.strategy }}
