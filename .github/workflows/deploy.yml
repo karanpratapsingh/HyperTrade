@@ -12,7 +12,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Configure secrets
-      run: echo "${{ env.APP_SECRETS }}" > infrastructure/k8s/app/env.yaml
+      run: echo "${{ env.APP_SECRETS }}" | base64 --decode > infrastructure/k8s/app/env.yaml
 
     - name: Install skaffold
       run: curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && sudo install skaffold /usr/local/bin/
