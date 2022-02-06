@@ -26,6 +26,8 @@ spec:
       labels:
         app: nats
     spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
       containers:
         - name: nats
           image: {{ .Values.images.nats }}

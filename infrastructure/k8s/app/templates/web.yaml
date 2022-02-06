@@ -23,8 +23,10 @@ spec:
       labels:
         app: web
     spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
       containers:
         - name: web
-          image: {{ .Values.images.web }}          
+          image: {{ .Values.images.web }}
           ports:
             - containerPort: 8080

@@ -23,6 +23,8 @@ spec:
       labels:
         app: notification
     spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
       containers:
         - name: notification
           image: {{ .Values.images.notification }}

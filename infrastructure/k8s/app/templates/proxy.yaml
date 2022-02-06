@@ -23,6 +23,8 @@ spec:
       labels:
         app: proxy
     spec:
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
       containers:
         - name: proxy
           image: {{ .Values.images.proxy }}
