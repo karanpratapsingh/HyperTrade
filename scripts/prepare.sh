@@ -43,7 +43,7 @@ if ! [ -x "$(command -v doctl)" ]; then
   error "doctl" "https://github.com/digitalocean/doctl"
 fi
 
-SECRETS_PATH=infrastructure/k8s/app/env.yaml
+SECRETS_PATH=infrastructure/k8s/env.yaml
 WEB_ENV_PATH=services/web/.env
 
 SYMBOL=$(yq ".env.global.SYMBOL" $SECRETS_PATH)

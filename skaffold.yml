@@ -64,10 +64,10 @@ deploy:
   helm:
     releases:
       - name: app
-        chartPath: infrastructure/k8s/app
+        chartPath: infrastructure/k8s
         valuesFiles:
-          - infrastructure/k8s/app/values.yaml
-          - infrastructure/k8s/app/env.yaml
+          - infrastructure/k8s/values.yaml
+          - infrastructure/k8s/env.yaml
         artifactOverrides:
           images.proxy: registry.digitalocean.com/trader-registry/proxy
           images.nats: registry.digitalocean.com/trader-registry/nats
