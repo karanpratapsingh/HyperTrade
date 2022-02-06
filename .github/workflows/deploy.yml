@@ -31,5 +31,8 @@ jobs:
     - name: Save DigitalOcean kubeconfig
       run: doctl kubernetes cluster kubeconfig save trader-cluster
 
+    - name: Prepare
+      run: scripts/prepare.sh production
+
     - name: Deploy to cluster with Skaffold
       run: skaffold run --profile production
