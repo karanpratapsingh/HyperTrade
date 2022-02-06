@@ -40,8 +40,8 @@ func (t Telegram) SetDefaultCommands() {
 	log.Trace().Msg("TelegramBot.SetMyCommands")
 
 	ping := telegram.BotCommand{PingCommand, "Ping"}
-	balance := telegram.BotCommand{BalanceCommand, "Get available balance"}
-	stats := telegram.BotCommand{StatsCommand, "Get trade statistics"}
+	balance := telegram.BotCommand{BalanceCommand, "Get balance"}
+	stats := telegram.BotCommand{StatsCommand, "Get statistics"}
 
 	config := telegram.NewSetMyCommands(ping, balance, stats)
 
@@ -70,6 +70,7 @@ func (t Telegram) ListenForCommands(symbol string) {
 		}
 
 		message := telegram.NewMessage(update.Message.Chat.ID, "")
+		message.ParseMode = telegram.ModeMarkdownV2
 
 		command := update.Message.Command()
 
@@ -80,6 +81,7 @@ func (t Telegram) ListenForCommands(symbol string) {
 			message.Text = "Pong"
 		case BalanceCommand:
 			var r BalanceResponse
+
 			err := t.pubsub.Request(GetBalanceEvent, nil, &r)
 
 			if err != nil {
@@ -123,6 +125,8 @@ func (t Telegram) SendMessage(event string, msg string) {
 	log.Info().Str("event", event).Msg("TelegramBot.SendMessage")
 
 	message := telegram.NewMessage(t.chatID, msg)
+	message.ParseMode = telegram.ModeMarkdownV2
+
 	_, err := t.bot.Send(message)
 
 	if err != nil {
@@ -132,12 +136,12 @@ func (t Telegram) SendMessage(event string, msg string) {
 
 func (t Telegram) FormatOrderMessage(p OrderEventPayload) string {
 	message := fmt.Sprintf(
-		"Created %v Order:\n\n"+
-			"ID: %v\n"+
+		"*Created %v Order*\n\n"+
+			"`ID: %v\n"+
 			"Type: %v\n"+
 			"Symbol: %v\n"+
 			"Last Price: %v\n"+
-			"Quantity: %v",
+			"Quantity: %v`",
 		p.Side, p.ID, p.Type, p.Symbol, p.Price, p.Quantity)
 
 	return message
@@ -147,30 +151,30 @@ func (t Telegram) FormatTradeMessage(p TradeEventPayload) string {
 	time := p.Time.Format(time.RFC822)
 
 	message := fmt.Sprintf(
-		"Executed Trade:\n\n"+
-			"ID: %v\n"+
+		"*Executed Trade*\n\n"+
+			"`ID: %v\n"+
 			"Symbol: %v\n"+
 			"Entry: %v\n"+
 			"Exit: %v\n"+
 			"Quantity: %v\n"+
-			"Time: %v",
+			"Time: %v`",
 		p.ID, p.Symbol, p.Entry, p.Exit, p.Quantity, time)
 
 	return message
 }
 
 func (t Telegram) FormatBalanceMessage(r BalanceResponse) string {
-	header := "Balance:\n"
+	header := "*Balance*\n"
 
 	if r.Test {
-		header = fmt.Sprintln("Test", header)
+		header = fmt.Sprintln("*Test*", header)
 	}
 
 	var balances = []string{header}
 	var separator rune = '•'
 
 	for _, balance := range r.Balance {
-		b := fmt.Sprintf("%c %v %v", separator, balance.Asset, balance.Amount)
+		b := fmt.Sprintf("`%c %v %v`", separator, balance.Asset, balance.Amount)
 		balances = append(balances, b)
 	}
 
@@ -181,16 +185,16 @@ func (t Telegram) FormatStatsMessage(r StatsResponse) string {
 	var message string
 
 	if r.Stats == nil {
-		message = "Stats:\n\nNo data available yet"
+		message = "*Stats*\n\n`No data available yet`"
 	} else {
-		message = fmt.Sprintf("Stats:\n\nProfit: %.4f\nLoss: %.4f", r.Stats.Profit, r.Stats.Loss)
+		message = fmt.Sprintf("*Stats*\n\n`Profit: %.4f\nLoss: %.4f`", r.Stats.Profit, r.Stats.Loss)
 	}
 
 	return message
 }
 
 func (t Telegram) FormatErrorMessage(p CriticalErrorEventPayload) string {
-	message := fmt.Sprintf("Critical Error\n\n%v", p.Error)
+	message := fmt.Sprintf("*Critical Error*\n\n`%v`", p.Error)
 
 	return message
 }
