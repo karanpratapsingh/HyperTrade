@@ -10,11 +10,21 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
+func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	log.Trace().Msg("Internal.AsyncApi.Init")
 
+	pubsub.Subscribe(UpdateTradingEvent, func(m *nats.Msg) {
+		var request UpdateTradingRequest
+		utils.Unmarshal(m.Data, &request)
+
+		DB.UpdateTrading(request.Symbol, request.Enabled)
+
+		var payload interface{}
+		pubsub.Publish(m.Reply, payload)
+	})
+
 	pubsub.Subscribe(DataFrameEvent, func(p DataFrameEventPayload) {
-		ListenTrade(db, pubsub, exchange, p.Kline, p.Signal)
+		ListenTrade(DB, pubsub, exchange, p.Kline, p.Signal)
 	})
 
 	pubsub.Subscribe(GetBalanceEvent, func(m *nats.Msg) {
@@ -28,7 +38,7 @@ func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
 
 	pubsub.Subscribe(GetPositionsEvent, func(m *nats.Msg) {
 		response := PositionsResponse{
-			Positions: db.GetPositions(),
+			Positions: DB.GetPositions(),
 		}
 
 		pubsub.Publish(m.Reply, response)
@@ -36,7 +46,7 @@ func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
 
 	pubsub.Subscribe(GetTradesEvent, func(m *nats.Msg) {
 		response := TradesResponse{
-			Trades: db.GetTrades(),
+			Trades: DB.GetTrades(),
 		}
 
 		pubsub.Publish(m.Reply, response)
@@ -49,8 +59,8 @@ func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
 		var request StatsRequest
 		utils.Unmarshal(m.Data, &request)
 
-		trades := db.GetTrades()
-		config := db.GetConfig(request.Symbol)
+		trades := DB.GetTrades()
+		config := DB.GetConfig(request.Symbol)
 
 		if len(trades) != 0 {
 			for _, trade := range trades {
@@ -111,20 +121,25 @@ func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
 }
 
 func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal Signal) {
+	symbol := kline.Symbol
+
+	config := DB.GetConfig(symbol)
+
+	if !config.TradingEnabled {
+		log.Warn().Str("symbol", symbol).Msg("Trade.NotEnabled")
+		return
+	}
+
 	side := getSide(signal)
 
 	if side == "" {
 		return
 	}
 
-	symbol := kline.Symbol
-
 	log.Trace().Str("symbol", symbol).Interface("side", side).Msg("Trade.Listen")
 
 	position := DB.GetPosition(symbol)
 	var holding bool = position.Symbol != ""
-
-	config := DB.GetConfig(symbol)
 
 	allowedAmt := config.AllowedAmount
 	closePrice := kline.Close

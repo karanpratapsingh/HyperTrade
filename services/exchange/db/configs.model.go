@@ -40,15 +40,13 @@ func (db DB) CreateConfig(symbol string, minimum, allowedAmt float64, tradingEna
 
 func (db DB) UpdateTrading(symbol string, enabled bool) error {
 	config := Configs{
-		Symbol:        symbol,
-		Minimum:       minimum,
-		AllowedAmount: allowedAmt,
+		Symbol: symbol,
 	}
 
-	result := db.conn.Create(&config)
+	result := db.conn.Model(&config).Update("TradingEnabled", enabled)
 
 	if result.Error != nil {
-		log.Error().Err(result.Error).Msg("DB.Config.CreateConfig")
+		log.Error().Err(result.Error).Msg("DB.Config.UpdateTrading")
 	}
 
 	return result.Error
