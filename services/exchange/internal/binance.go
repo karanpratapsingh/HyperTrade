@@ -125,19 +125,21 @@ func (b Binance) Kline(symbol string, interval string) {
 		volume := utils.ParseFloat(event.Kline.Volume)
 		final := event.Kline.IsFinal
 
-		kline := Kline{symbol, time, open, high, low, close, volume, final}
+		if final {
+			kline := Kline{symbol, time, open, high, low, close, volume, final}
 
-		log.Info().
-			Str("symbol", symbol).
-			Float64("open", open).
-			Float64("high", high).
-			Float64("low", low).
-			Float64("close", close).
-			Float64("volume", volume).
-			Bool("final", final).
-			Msg(KlineEvent)
+			log.Info().
+				Str("symbol", symbol).
+				Float64("open", open).
+				Float64("high", high).
+				Float64("low", low).
+				Float64("close", close).
+				Float64("volume", volume).
+				Bool("final", final).
+				Msg(KlineEvent)
 
-		b.pubsub.Publish(KlineEvent, KlinePayload{kline})
+			b.pubsub.Publish(KlineEvent, KlinePayload{kline})
+		}
 	}
 
 	errHandler := func(err error) {
