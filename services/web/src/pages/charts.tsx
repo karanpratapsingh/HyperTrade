@@ -22,7 +22,7 @@ import { Colors } from '../theme/colors';
 
 const { Content } = Layout;
 
-export function Chart(): React.ReactElement {
+export function Charts(): React.ReactElement {
   const {
     type,
     axis,
