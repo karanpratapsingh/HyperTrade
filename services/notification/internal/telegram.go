@@ -225,7 +225,7 @@ func (t Telegram) UpdateTradingMessage(symbol string, enable bool) string {
 		case false:
 			status = "disabled"
 		}
-		message = fmt.Sprintf("Trading %v", status)
+		message = fmt.Sprintf("*Message*\n\n`Trading has been %v`", status)
 	}
 
 	return message
