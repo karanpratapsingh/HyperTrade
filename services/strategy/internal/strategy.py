@@ -3,6 +3,7 @@ import json
 import pandas as pd
 import talib as ta
 from utils.log import Logger
+from internal.events import Signal
 
 
 class Strategy:
@@ -41,6 +42,16 @@ class Strategy:
         index = self.last_index()
         data = json.loads(self.df.loc[index].to_json())
 
+        buy = data['buy']
+        sell = data['sell']
+
+        signal = Signal.NONE
+
+        if buy and not sell:
+            signal = Signal.BUY
+        elif sell and not buy:
+            signal = Signal.SELL
+
         payload = {
             'kline': {
                 'symbol': data['symbol'],
@@ -59,10 +70,7 @@ class Strategy:
                 'macd_signal': data['macd_signal'],
                 'macd_hist': data['macd_hist']
             },
-            'signal': {
-                'buy': data['buy'],
-                'sell': data['sell']
-            }
+            'signal': signal
         }
 
         return payload

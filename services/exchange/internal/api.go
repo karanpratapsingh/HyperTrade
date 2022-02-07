@@ -130,13 +130,11 @@ func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal 
 		return
 	}
 
-	side := getSide(signal)
-
-	if side == "" {
+	if signal == "NONE" {
 		return
 	}
 
-	log.Trace().Str("symbol", symbol).Interface("side", side).Msg("Trade.Listen")
+	log.Trace().Str("symbol", symbol).Interface("signal", signal).Msg("Trade.Listen")
 
 	position := DB.GetPosition(symbol)
 	var holding bool = position.Symbol != ""
@@ -144,8 +142,8 @@ func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal 
 	allowedAmt := config.AllowedAmount
 	closePrice := kline.Close
 
-	switch side {
-	case binance.SideTypeBuy:
+	switch signal {
+	case Signal(binance.SideTypeBuy):
 		if holding {
 			log.Warn().Bool("holding", holding).Msg("Trade.Buy.Skip")
 			return
@@ -161,7 +159,7 @@ func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal 
 		DB.CreatePosition(symbol, closePrice, quantity)
 		log.Trace().Float64("price", closePrice).Float64("quantity", quantity).Msg("Trade.Buy.Complete")
 
-	case binance.SideTypeSell:
+	case Signal(binance.SideTypeSell):
 		if !holding {
 			log.Warn().Bool("holding", holding).Msg("Trade.Sell.Skip")
 			return
@@ -189,16 +187,4 @@ func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal 
 		log.Trace().Float64("price", closePrice).Float64("quantity", quantity).Msg("Trade.Sell.Complete")
 	default:
 	}
-}
-
-func getSide(signal Signal) binance.SideType {
-	var side binance.SideType
-
-	if signal.Buy && !signal.Sell {
-		side = binance.SideTypeBuy
-	} else if signal.Sell && !signal.Buy {
-		side = binance.SideTypeSell
-	}
-
-	return side
 }

@@ -33,7 +33,8 @@ export type Indicators = {
   macd_hist: number;
 };
 
-export type Signal = {
-  buy: boolean;
-  sell: boolean;
-};
+export enum Signal {
+  BUY = 'BUY',
+  SELL = 'SELL',
+  NONE = 'NONE',
+}
