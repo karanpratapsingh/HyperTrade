@@ -61,3 +61,10 @@ type StatsRequest struct {
 type StatsResponse struct {
 	Stats *Stats `json:"stats"`
 }
+
+var UpdateTradingEvent string = "Event:Trading:Update"
+
+type UpdateTradingRequest struct {
+	Symbol  string `json:"symbol"`
+	Enabled bool   `json:"enabled"`
+}

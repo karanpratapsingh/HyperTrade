@@ -73,4 +73,4 @@ _Note: Make sure `doctl` is authenticated, and we're using correct k8s cluster n
 
 - Open `localhost:8080` to see the web interface.
 
-_Note: It is recommended to use the telegram bot over user interface on non-secure systems_
+_Note: It is recommended to use the telegram bot over user interface on non-secure systems._
