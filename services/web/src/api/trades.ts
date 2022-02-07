@@ -16,10 +16,10 @@ export type TradesResponse = {
   trades: Trade[];
 };
 
-export const getPositions = async () => {
+export async function getPositions(): Promise<TradesResponse> {
   const pubsub = await PubSub.getInstance();
   return await pubsub.request<TradesResponse>(Events.GetTrades);
-};
+}
 
 export function useTrades(): ApiHookResult<TradesResponse> {
   const {

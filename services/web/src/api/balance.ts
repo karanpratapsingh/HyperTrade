@@ -13,10 +13,10 @@ export type BalanceResponse = {
   balance: Balance[];
 };
 
-export const getBalance = async () => {
+export async function getBalance(): Promise<BalanceResponse> {
   const pubsub = await PubSub.getInstance();
   return await pubsub.request<BalanceResponse>(Events.GetBalance);
-};
+}
 
 export function useBalance(): ApiHookResult<BalanceResponse> {
   const {
