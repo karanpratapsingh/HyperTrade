@@ -4,7 +4,7 @@ import { Layout, Menu } from 'antd';
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { BiBarChart } from 'react-icons/bi';
-import { RiDonutChartFill } from 'react-icons/ri';
+import { RiDonutChartFill, RiTableFill } from 'react-icons/ri';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import { ErrorBoundary } from './components/misc/error-boundary';
@@ -12,6 +12,7 @@ import { MenuItem, Paths } from './config/routes';
 import { PubSub } from './events/pubsub';
 import { DataFrameEventPayload, Events } from './events/types';
 import { Chart } from './pages/chart';
+import { DataFrame } from './pages/dataframe';
 import { Portfolio } from './pages/portfolio';
 import { useDataFrame } from './store/dataframe';
 import './styles/app.css';
@@ -43,9 +44,14 @@ function App(): React.ReactElement {
           className='bg-gray-100 mt-2'
           theme='light'
           mode='inline'
-          defaultSelectedKeys={[MenuItem.CHARTS]}>
-          <Menu.Item key={MenuItem.CHARTS} icon={<BiBarChart size={25} />}>
+          defaultSelectedKeys={[MenuItem.CHART]}>
+          <Menu.Item key={MenuItem.CHART} icon={<BiBarChart size={25} />}>
             <Link to={Paths.HOME}>Charts</Link>
+          </Menu.Item>
+          <Menu.Item
+            key={MenuItem.DATAFRAME}
+            icon={<RiTableFill size={20} />}>
+            <Link to={Paths.DATAFRAME}>DataFrames</Link>
           </Menu.Item>
           <Menu.Item
             key={MenuItem.PORTFOLIO}
@@ -57,6 +63,7 @@ function App(): React.ReactElement {
       <Layout>
         <Routes>
           <Route path={Paths.HOME} element={<Chart />} />
+          <Route path={Paths.DATAFRAME} element={<DataFrame />} />
           <Route path={Paths.PORTFOLIO} element={<Portfolio />} />
         </Routes>
       </Layout>
