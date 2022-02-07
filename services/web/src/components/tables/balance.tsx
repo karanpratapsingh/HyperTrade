@@ -37,7 +37,7 @@ export function BalanceTable(): React.ReactElement {
     <animated.Div className='w-full flex flex-1 flex-col table'>
       <Header title='Balance' subtitle='Current balance' />
       <Table
-        className='mt-4 text-xs font-light'
+        className='text-xs font-light'
         columns={columns}
         pagination={paginationProps(data.balance.length)}
         dataSource={data.balance}

@@ -41,7 +41,7 @@ export function PositionsTable(): React.ReactElement {
     <animated.Div className='mt-4 w-full flex flex-1 flex-col table'>
       <Header title='Positions' subtitle='Positions currently holding' />
       <Table
-        className='mt-4 text-xs font-light'
+        className='text-xs font-light'
         columns={columns}
         pagination={paginationProps(data.positions.length)}
         dataSource={data.positions}

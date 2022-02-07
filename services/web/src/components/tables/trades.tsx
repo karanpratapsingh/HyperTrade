@@ -49,7 +49,7 @@ export function TradesTable(props: TradesTableProps): React.ReactElement {
     <animated.Div className='mt-4 w-full flex flex-1 flex-col table'>
       <Header title='Trades' subtitle='Trades executed so far' />
       <Table
-        className='mt-4 text-xs font-light'
+        className='text-xs font-light'
         pagination={paginationProps(data.trades.length)}
         columns={columns}
         dataSource={data.trades}
