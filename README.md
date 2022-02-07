@@ -72,3 +72,5 @@ Since this application deals with sensitive personal financial data, it is **not
 _Note: Make sure `doctl` is authenticated, and we're using correct k8s cluster name._
 
 - Open `localhost:8080` to see the web interface.
+
+_Note: It is recommended to use the telegram bot over user interface on non-secure systems_
