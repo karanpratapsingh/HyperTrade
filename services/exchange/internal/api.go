@@ -126,7 +126,7 @@ func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal 
 	config := DB.GetConfig(symbol)
 
 	if !config.TradingEnabled {
-		log.Warn().Str("symbol", symbol).Msg("Trade.NotEnabled")
+		log.Warn().Str("symbol", symbol).Msg("Trade.Disabled")
 		return
 	}
 

@@ -118,7 +118,7 @@ func (b Binance) GetBalanceQuantity(symbol string) (float64, error) {
 func (b Binance) Trade(side binance.SideType, symbol string, price, quantity float64) error {
 	log.Info().Interface("side", side).Str("symbol", symbol).Float64("quantity", quantity).Msg("Binance.Trade.Init")
 
-	// FIXME: why is Sprintf rounding float64 values?
+	// Ref: https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html
 	orderQuantity := fmt.Sprintf("%.8f", quantity)[0:6]
 
 	order, err := b.client.NewCreateOrderService().
