@@ -38,7 +38,7 @@ export function Chart(): React.ReactElement {
   const [search, setSearch] = useState<string>('');
 
   const title: React.ReactNode = (
-    <Header className='pb-4' title='Charts' subtitle='Live data charts' />
+    <Header title='Charts' subtitle='Live data charts' />
   );
 
   const typeIcon: Record<ChartType, React.ReactNode> = {
@@ -101,7 +101,7 @@ export function Chart(): React.ReactElement {
       />
       <Modal
         className='mt-24'
-        title={<Header title='Indicators' subtitle='Select indicators' />}
+        title={<Header className='mb-0' title='Indicators' subtitle='Select indicators' />}
         visible={showIndicators}
         footer={null}
         onCancel={() => setShowIndicators(false)}>
