@@ -1,5 +1,5 @@
 export enum MenuItem {
-  CHARTS = 'charts',
+  CHART = 'chart',
   DATAFRAME = 'dataframe',
   PORTFOLIO = 'portfolio',
 }
