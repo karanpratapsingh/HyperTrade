@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"errors"
 	"exchange/utils"
 	"fmt"
 	"strings"
@@ -18,6 +19,8 @@ type Binance struct {
 	test   bool
 	pubsub PubSub
 }
+
+var ErrBaseAsset = errors.New("base asset for symbol not found")
 
 func NewBinance(key, secret string, test bool, pubsub PubSub) Binance {
 	log.Trace().Str("type", "binance").Bool("test", test).Msg("Binance.Init")
@@ -88,14 +91,41 @@ func (b Binance) GetBalanceString() string {
 	return strings.Join(balances, "\n")
 }
 
+func (b Binance) GetBalanceQuantity(symbol string) (float64, error) {
+	info, err := b.client.NewExchangeInfoService().Symbol(symbol).Do(context.Background())
+
+	if err != nil {
+		log.Error().Str("symbol", symbol).Err(err).Msg("Binance.GetBalanceQuantity")
+		return 0, err
+	}
+
+	balances := b.GetBalance()
+
+	asset := info.Symbols[0].BaseAsset
+
+	for _, balance := range balances {
+		if balance.Asset == asset {
+			return balance.Amount, nil
+		}
+	}
+
+	log.Error().Str("symbol", symbol).Err(ErrBaseAsset).Msg("Binance.GetBalanceQuantity")
+	b.pubsub.Publish(CriticalErrorEvent, CriticalErrorEventPayload{ErrBaseAsset.Error()})
+
+	return 0, ErrBaseAsset
+}
+
 func (b Binance) Trade(side binance.SideType, symbol string, price, quantity float64) error {
 	log.Info().Interface("side", side).Str("symbol", symbol).Float64("quantity", quantity).Msg("Binance.Trade.Init")
+
+	// FIXME: why is Sprintf rounding float64 values?
+	orderQuantity := fmt.Sprintf("%.8f", quantity)[0:6]
 
 	order, err := b.client.NewCreateOrderService().
 		Symbol(symbol).
 		Side(side).
 		Type(binance.OrderTypeMarket).
-		Quantity(fmt.Sprintf("%f", quantity)).
+		Quantity(orderQuantity).
 		Do(context.Background())
 
 	if err != nil {

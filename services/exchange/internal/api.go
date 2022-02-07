@@ -14,7 +14,7 @@ func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
 	log.Trace().Msg("Internal.AsyncApi.Init")
 
 	pubsub.Subscribe(DataFrameEvent, func(p DataFrameEventPayload) {
-		ListenTrade(db, pubsub, p.Kline, p.Signal)
+		ListenTrade(db, pubsub, exchange, p.Kline, p.Signal)
 	})
 
 	pubsub.Subscribe(GetBalanceEvent, func(m *nats.Msg) {
@@ -55,7 +55,7 @@ func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
 		if len(trades) != 0 {
 			for _, trade := range trades {
 				percentage := ((trade.Exit - trade.Entry) / trade.Entry) * 100
-				amount := percentage * config.AllowedAmount
+				amount := (percentage * config.AllowedAmount) / 100
 
 				if amount > 0 {
 					stats.Profit += amount
@@ -110,7 +110,7 @@ func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
 	})
 }
 
-func ListenTrade(DB db.DB, pubsub PubSub, kline Kline, signal Signal) {
+func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal Signal) {
 	side := getSide(signal)
 
 	if side == "" {
@@ -128,7 +128,6 @@ func ListenTrade(DB db.DB, pubsub PubSub, kline Kline, signal Signal) {
 
 	allowedAmt := config.AllowedAmount
 	closePrice := kline.Close
-	quantity := utils.GetMinQuantity(allowedAmt, closePrice)
 
 	switch side {
 	case binance.SideTypeBuy:
@@ -137,7 +136,13 @@ func ListenTrade(DB db.DB, pubsub PubSub, kline Kline, signal Signal) {
 			return
 		}
 
-		// TODO: Execute Buy
+		quantity := utils.GetMinQuantity(allowedAmt, closePrice)
+
+		err := exchange.Trade(binance.SideTypeBuy, symbol, closePrice, quantity)
+		if err != nil {
+			return
+		}
+
 		DB.CreatePosition(symbol, closePrice, quantity)
 		log.Trace().Float64("price", closePrice).Float64("quantity", quantity).Msg("Trade.Buy.Complete")
 
@@ -147,7 +152,18 @@ func ListenTrade(DB db.DB, pubsub PubSub, kline Kline, signal Signal) {
 			return
 		}
 
-		// TODO: Execute Sell
+		quantity, err := exchange.GetBalanceQuantity(symbol)
+
+		if err != nil {
+			return
+		}
+
+		err = exchange.Trade(binance.SideTypeSell, symbol, closePrice, quantity)
+
+		if err != nil {
+			return
+		}
+
 		entry := position.Price
 		DB.DeletePosition(symbol)
 		trade := DB.CreateTrade(symbol, entry, closePrice, quantity)
