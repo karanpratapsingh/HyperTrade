@@ -45,13 +45,13 @@ function App(): React.ReactElement {
           theme='light'
           mode='inline'
           defaultSelectedKeys={[MenuItem.CHART]}>
-          <Menu.Item key={MenuItem.CHART} icon={<BiBarChart size={25} />}>
-            <Link to={Paths.HOME}>Charts</Link>
+          <Menu.Item key={MenuItem.CHART} icon={<BiBarChart size={26} />}>
+            <Link to={Paths.HOME}>Chart</Link>
           </Menu.Item>
           <Menu.Item
             key={MenuItem.DATAFRAME}
             icon={<RiTableFill size={20} />}>
-            <Link to={Paths.DATAFRAME}>DataFrames</Link>
+            <Link to={Paths.DATAFRAME}>Dataframe</Link>
           </Menu.Item>
           <Menu.Item
             key={MenuItem.PORTFOLIO}
