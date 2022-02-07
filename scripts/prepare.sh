@@ -71,6 +71,7 @@ if [[ "$ENVIRONMENT" == "development" ]]; then
 
   echo "[*] Starting minikube"
   minikube start
+ 	kubectl config use-context minikube
 fi
 
 echo "--- Done ---"
