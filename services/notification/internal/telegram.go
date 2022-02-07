@@ -140,7 +140,7 @@ func (t Telegram) FormatOrderMessage(p OrderEventPayload) string {
 			"`ID: %v\n"+
 			"Type: %v\n"+
 			"Symbol: %v\n"+
-			"Last Price: %v\n"+
+			"Price: %v\n"+
 			"Quantity: %v`",
 		p.Side, p.ID, p.Type, p.Symbol, p.Price, p.Quantity)
 
