@@ -91,11 +91,72 @@ func (b Binance) GetBalanceString() string {
 	return strings.Join(balances, "\n")
 }
 
+func (b Binance) GetBalanceQuantity(symbol string) (float64, error) {
+	info, err := b.client.NewExchangeInfoService().Symbol(symbol).Do(context.Background())
+
+	if err != nil {
+		log.Error().Str("symbol", symbol).Err(err).Msg("Binance.GetBalanceQuantity")
+		return 0, err
+	}
+
+	balances := b.GetBalance()
+
+	asset := info.Symbols[0].BaseAsset
+
+	for _, balance := range balances {
+		if balance.Asset == asset {
+			return balance.Amount, nil
+		}
+	}
+
+	log.Error().Str("symbol", symbol).Err(ErrBaseAsset).Msg("Binance.GetBalanceQuantity")
+	b.pubsub.Publish(CriticalErrorEvent, CriticalErrorEventPayload{ErrBaseAsset.Error()})
+
+	return 0, ErrBaseAsset
+}
+
+func GetOrderQuantity(quantity float64) string {
+	return fmt.Sprintf("%.8f", quantity)[0:6]
+}
+
+func (b Binance) Dump(symbol string) (dump DumpResponse, err error) {
+	log.Info().Str("symbol", symbol).Msg("Binance.Dump")
+
+	quantity, err := b.GetBalanceQuantity(symbol)
+
+	if err != nil {
+		log.Error().Err(err).Msg("Binance.Dump.Skip")
+		return dump, err
+	}
+
+	orderQuantity := GetOrderQuantity(quantity)
+
+	order, err := b.client.NewCreateOrderService().
+		Symbol(symbol).
+		Side(binance.SideTypeSell).
+		Type(binance.OrderTypeMarket).
+		Quantity(orderQuantity).
+		Do(context.Background())
+
+	if err != nil {
+		log.Error().Float64("quantity", quantity).Err(err).Msg("Binance.Dump.Error")
+		b.pubsub.Publish(CriticalErrorEvent, CriticalErrorEventPayload{err.Error()})
+		return dump, err
+	}
+
+	log.Info().Float64("quantity", quantity).Msg("Binance.Dump.Complete")
+
+	dump.ID = order.OrderID
+	dump.Quantity = quantity
+
+	return dump, nil
+}
+
 func (b Binance) Trade(side binance.SideType, symbol string, price, quantity float64) error {
 	log.Info().Interface("side", side).Str("symbol", symbol).Float64("quantity", quantity).Msg("Binance.Trade.Init")
 
 	// Ref: https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html
-	orderQuantity := fmt.Sprintf("%.8f", quantity)[0:6]
+	orderQuantity := GetOrderQuantity(quantity)
 
 	order, err := b.client.NewCreateOrderService().
 		Symbol(symbol).

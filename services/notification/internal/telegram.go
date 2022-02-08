@@ -21,6 +21,7 @@ var (
 	StatsCommand          = "stats"
 	EnableTradingCommand  = "enable"
 	DisableTradingCommand = "disable"
+	DumpCommand           = "dump"
 )
 
 func NewTelegramBot(token string, chatId int64, pubsub PubSub) Telegram {
@@ -46,8 +47,9 @@ func (t Telegram) SetDefaultCommands() {
 	stats := telegram.BotCommand{StatsCommand, "Get statistics"}
 	enableTrading := telegram.BotCommand{EnableTradingCommand, "Enable trading"}
 	disableTrading := telegram.BotCommand{DisableTradingCommand, "Disable trading"}
+	dump := telegram.BotCommand{DumpCommand, "Dump asset"}
 
-	config := telegram.NewSetMyCommands(ping, balance, stats, enableTrading, disableTrading)
+	config := telegram.NewSetMyCommands(ping, balance, stats, enableTrading, disableTrading, dump)
 
 	_, err := t.bot.Request(config)
 
@@ -108,6 +110,17 @@ func (t Telegram) ListenForCommands(symbol string) {
 			message.Text = t.UpdateTradingMessage(symbol, true)
 		case DisableTradingCommand:
 			message.Text = t.UpdateTradingMessage(symbol, false)
+		case DumpCommand:
+			var r DumpResponse
+
+			req := DumpRequest{symbol}
+			err := t.pubsub.Request(DumpEvent, req, &r)
+
+			if err != nil {
+				message.Text = err.Error()
+			} else {
+				message.Text = t.FormatDumpMessage(symbol, r)
+			}
 		default:
 			message.Text = "Command not defined"
 		}
@@ -197,6 +210,12 @@ func (t Telegram) FormatStatsMessage(r StatsResponse) string {
 	} else {
 		message = fmt.Sprintf("*Stats*\n\n`Profit: %.4f\nLoss: %.4f`", r.Stats.Profit, r.Stats.Loss)
 	}
+
+	return message
+}
+
+func (t Telegram) FormatDumpMessage(symbol string, r DumpResponse) string {
+	message := fmt.Sprintf("*Dump*\n\n`ID: %v\nSymbol: %v\nQuantity: %v`", r.ID, symbol, r.Quantity)
 
 	return message
 }

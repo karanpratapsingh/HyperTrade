@@ -13,6 +13,26 @@ import (
 func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	log.Trace().Msg("Internal.AsyncApi.Init")
 
+	pubsub.Subscribe(DumpEvent, func(m *nats.Msg) {
+		var request DumpRequest
+		utils.Unmarshal(m.Data, &request)
+
+		log.Warn().Str("symbol", request.Symbol).Bool("enabled", false).Msg("Internal.Dump.Trading")
+		DB.UpdateTrading(request.Symbol, false)
+		log.Warn().Str("symbol", request.Symbol).Msg("Internal.Dump.Positions")
+		DB.DeletePosition(request.Symbol)
+		payload, err := exchange.Dump(request.Symbol)
+		DB.UpdateTrading(request.Symbol, true)
+		log.Warn().Str("symbol", request.Symbol).Bool("enabled", true).Msg("Internal.Dump.Trading")
+
+		if err != nil {
+			return
+		}
+
+		log.Trace().Str("symbol", request.Symbol).Int64("ID", payload.ID).Float64("quantity", payload.Quantity).Msg("Internal.Dump")
+		pubsub.Publish(m.Reply, payload)
+	})
+
 	pubsub.Subscribe(UpdateTradingEvent, func(m *nats.Msg) {
 		var request UpdateTradingRequest
 		utils.Unmarshal(m.Data, &request)
@@ -131,7 +151,7 @@ func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal 
 	config := DB.GetConfig(symbol)
 
 	if !config.TradingEnabled {
-		log.Warn().Str("symbol", symbol).Interface("signal", signal).Msg("Trade.Disabled")
+		log.Warn().Str("symbol", symbol).Bool("enabled", config.TradingEnabled).Interface("signal", signal).Msg("Trade.Skip")
 		return
 	}
 
