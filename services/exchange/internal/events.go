@@ -106,3 +106,14 @@ type UpdateTradingRequest struct {
 	Symbol  string `json:"symbol"`
 	Enabled bool   `json:"enabled"`
 }
+
+var DumpEvent string = "Event:Dump"
+
+type DumpRequest struct {
+	Symbol string `json:"symbol"`
+}
+
+type DumpResponse struct {
+	ID       int64   `json:"id"`
+	Quantity float64 `json:"quantity"`
+}
