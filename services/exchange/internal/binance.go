@@ -139,7 +139,7 @@ func (b Binance) Dump(symbol string) (dump DumpResponse, err error) {
 		Do(context.Background())
 
 	if err != nil {
-		log.Error().Float64("quantity", quantity).Err(err).Msg("Binance.Dump.Error")
+		log.Error().Str("quantity", orderQuantity).Err(err).Msg("Binance.Dump.Error")
 		b.pubsub.Publish(CriticalErrorEvent, CriticalErrorEventPayload{err.Error()})
 		return dump, err
 	}
