@@ -140,8 +140,6 @@ func (b Binance) Dump(symbol string) (dump DumpResponse, err error) {
 		return dump, err
 	}
 
-	log.Info().Float64("quantity", quantity).Msg("Binance.Dump.Complete")
-
 	dump.ID = order.OrderID
 	dump.Quantity = utils.ParseFloat(orderQuantity)
 
