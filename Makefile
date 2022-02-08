@@ -12,5 +12,9 @@ connect:
 	doctl kubernetes cluster kubeconfig save trader-cluster
 	kubectl port-forward svc/proxy 8080:8080
 
+disconnect:
+	doctl kubernetes cluster kubeconfig remove trader-cluster
+
 delete:
 	kubectl delete --all deployments
+	minikube delete
