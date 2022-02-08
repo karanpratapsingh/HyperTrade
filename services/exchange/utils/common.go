@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"math"
 	"strconv"
 
@@ -18,9 +19,14 @@ func Unmarshal(data []byte, ptr interface{}) error {
 	return err
 }
 
+// Ref: https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html
+func ParseOrderQuantity(quantity float64) string {
+	return fmt.Sprintf("%.8f", quantity)[0:6]
+}
+
 // Ref: https://www.binance.com/api/v3/exchangeInfo?symbol=$SYMBOL
 func GetMinQuantity(min float64, price float64) float64 {
-	quantity := (1/price)*min
+	quantity := (1 / price) * min
 	return quantity
 }
 

@@ -115,10 +115,6 @@ func (b Binance) GetBalanceQuantity(symbol string) (float64, error) {
 	return 0, ErrBaseAsset
 }
 
-func GetOrderQuantity(quantity float64) string {
-	return fmt.Sprintf("%.8f", quantity)[0:6]
-}
-
 func (b Binance) Dump(symbol string) (dump DumpResponse, err error) {
 	log.Info().Str("symbol", symbol).Msg("Binance.Dump")
 
@@ -129,7 +125,7 @@ func (b Binance) Dump(symbol string) (dump DumpResponse, err error) {
 		return dump, err
 	}
 
-	orderQuantity := GetOrderQuantity(quantity)
+	orderQuantity := utils.ParseOrderQuantity(quantity)
 
 	order, err := b.client.NewCreateOrderService().
 		Symbol(symbol).
@@ -147,7 +143,7 @@ func (b Binance) Dump(symbol string) (dump DumpResponse, err error) {
 	log.Info().Float64("quantity", quantity).Msg("Binance.Dump.Complete")
 
 	dump.ID = order.OrderID
-	dump.Quantity = quantity
+	dump.Quantity = utils.ParseFloat(orderQuantity)
 
 	return dump, nil
 }
@@ -155,8 +151,7 @@ func (b Binance) Dump(symbol string) (dump DumpResponse, err error) {
 func (b Binance) Trade(side binance.SideType, symbol string, price, quantity float64) error {
 	log.Info().Interface("side", side).Str("symbol", symbol).Float64("quantity", quantity).Msg("Binance.Trade.Init")
 
-	// Ref: https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html
-	orderQuantity := GetOrderQuantity(quantity)
+	orderQuantity := utils.ParseOrderQuantity(quantity)
 
 	order, err := b.client.NewCreateOrderService().
 		Symbol(symbol).
@@ -171,9 +166,11 @@ func (b Binance) Trade(side binance.SideType, symbol string, price, quantity flo
 		return err
 	}
 
-	log.Info().Interface("side", side).Float64("price", price).Float64("quantity", quantity).Msg("Binance.Trade.Order")
+	finalQuantity := utils.ParseFloat(orderQuantity)
 
-	payload := OrderEventPayload{order.OrderID, order.Side, order.Type, symbol, price, quantity}
+	log.Info().Interface("side", side).Float64("price", price).Float64("quantity", finalQuantity).Msg("Binance.Trade.Order")
+
+	payload := OrderEventPayload{order.OrderID, order.Side, order.Type, symbol, price, finalQuantity}
 	b.pubsub.Publish(OrderEvent, payload)
 
 	return nil
