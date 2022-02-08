@@ -1,6 +1,5 @@
 locals {
-  name             = "trader"
-  kube_config_file = "${path.module}/k8s/kubeconfig.yaml"
+  name = "trader"
 }
 
 resource "digitalocean_container_registry" "registry" {

@@ -10,11 +10,22 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
+func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	log.Trace().Msg("Internal.AsyncApi.Init")
 
+	pubsub.Subscribe(UpdateTradingEvent, func(m *nats.Msg) {
+		var request UpdateTradingRequest
+		utils.Unmarshal(m.Data, &request)
+
+		DB.UpdateTrading(request.Symbol, request.Enabled)
+
+		log.Trace().Str("symbol", request.Symbol).Bool("enabled", request.Enabled).Msg("Internal.Config.Trading")
+		var payload interface{}
+		pubsub.Publish(m.Reply, payload)
+	})
+
 	pubsub.Subscribe(DataFrameEvent, func(p DataFrameEventPayload) {
-		ListenTrade(db, pubsub, p.Kline, p.Signal)
+		ListenTrade(DB, pubsub, exchange, p.Kline, p.Signal)
 	})
 
 	pubsub.Subscribe(GetBalanceEvent, func(m *nats.Msg) {
@@ -28,7 +39,7 @@ func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
 
 	pubsub.Subscribe(GetPositionsEvent, func(m *nats.Msg) {
 		response := PositionsResponse{
-			Positions: db.GetPositions(),
+			Positions: DB.GetPositions(),
 		}
 
 		pubsub.Publish(m.Reply, response)
@@ -36,7 +47,7 @@ func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
 
 	pubsub.Subscribe(GetTradesEvent, func(m *nats.Msg) {
 		response := TradesResponse{
-			Trades: db.GetTrades(),
+			Trades: DB.GetTrades(),
 		}
 
 		pubsub.Publish(m.Reply, response)
@@ -49,13 +60,13 @@ func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
 		var request StatsRequest
 		utils.Unmarshal(m.Data, &request)
 
-		trades := db.GetTrades()
-		config := db.GetConfig(request.Symbol)
+		trades := DB.GetTrades()
+		config := DB.GetConfig(request.Symbol)
 
 		if len(trades) != 0 {
 			for _, trade := range trades {
 				percentage := ((trade.Exit - trade.Entry) / trade.Entry) * 100
-				amount := percentage * config.AllowedAmount
+				amount := (percentage * config.AllowedAmount) / 100
 
 				if amount > 0 {
 					stats.Profit += amount
@@ -110,44 +121,59 @@ func RunAsyncApi(db db.DB, exchange Binance, pubsub PubSub) {
 	})
 }
 
-func ListenTrade(DB db.DB, pubsub PubSub, kline Kline, signal Signal) {
-	side := getSide(signal)
-
-	if side == "" {
+func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal Signal) {
+	if signal == "NONE" {
 		return
 	}
 
 	symbol := kline.Symbol
 
-	log.Trace().Str("symbol", symbol).Interface("side", side).Msg("Trade.Listen")
+	config := DB.GetConfig(symbol)
+
+	if !config.TradingEnabled {
+		log.Warn().Str("symbol", symbol).Interface("signal", signal).Msg("Trade.Disabled")
+		return
+	}
+
+	log.Trace().Str("symbol", symbol).Interface("signal", signal).Msg("Trade.Listen")
 
 	position := DB.GetPosition(symbol)
 	var holding bool = position.Symbol != ""
 
-	config := DB.GetConfig(symbol)
-
 	allowedAmt := config.AllowedAmount
 	closePrice := kline.Close
-	quantity := utils.GetMinQuantity(allowedAmt, closePrice)
 
-	switch side {
-	case binance.SideTypeBuy:
+	switch signal {
+	case Signal(binance.SideTypeBuy):
 		if holding {
 			log.Warn().Bool("holding", holding).Msg("Trade.Buy.Skip")
 			return
 		}
 
-		// TODO: Execute Buy
+		quantity := utils.GetMinQuantity(allowedAmt, closePrice)
+
+		err := exchange.Trade(binance.SideTypeBuy, symbol, closePrice, quantity)
+		if err != nil {
+			return
+		}
+
 		DB.CreatePosition(symbol, closePrice, quantity)
 		log.Trace().Float64("price", closePrice).Float64("quantity", quantity).Msg("Trade.Buy.Complete")
 
-	case binance.SideTypeSell:
+	case Signal(binance.SideTypeSell):
 		if !holding {
 			log.Warn().Bool("holding", holding).Msg("Trade.Sell.Skip")
 			return
 		}
 
-		// TODO: Execute Sell
+		quantity := position.Quantity
+
+		err := exchange.Trade(binance.SideTypeSell, symbol, closePrice, quantity)
+
+		if err != nil {
+			return
+		}
+
 		entry := position.Price
 		DB.DeletePosition(symbol)
 		trade := DB.CreateTrade(symbol, entry, closePrice, quantity)
@@ -158,16 +184,4 @@ func ListenTrade(DB db.DB, pubsub PubSub, kline Kline, signal Signal) {
 		log.Trace().Float64("price", closePrice).Float64("quantity", quantity).Msg("Trade.Sell.Complete")
 	default:
 	}
-}
-
-func getSide(signal Signal) binance.SideType {
-	var side binance.SideType
-
-	if signal.Buy && !signal.Sell {
-		side = binance.SideTypeBuy
-	} else if signal.Sell && !signal.Buy {
-		side = binance.SideTypeSell
-	}
-
-	return side
 }

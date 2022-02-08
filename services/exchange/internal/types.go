@@ -12,7 +12,6 @@ type Kline struct {
 }
 
 type Indicators struct {
-	// Move to types
 	Adx         *float64 `json:"adx"`
 	Rsi         *float64 `json:"rsi"`
 	Macd        *float64 `json:"macd"`
@@ -20,7 +19,4 @@ type Indicators struct {
 	MacdHistory *float64 `json:"macd_hist"`
 }
 
-type Signal struct {
-	Buy  bool `json:"buy"`
-	Sell bool `json:"sell"`
-}
+type Signal string

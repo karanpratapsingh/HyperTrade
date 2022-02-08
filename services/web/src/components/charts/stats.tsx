@@ -88,7 +88,7 @@ export function StatsChart(): React.ReactElement {
   return (
     <animated.Div className='flex flex-col'>
       <Header title='Portfolio' subtitle='Portfolio statistics' />
-      <div className='flex items-center my-2 mb-4'>{content}</div>
+      <div className='flex items-center my-2'>{content}</div>
     </animated.Div>
   );
 }

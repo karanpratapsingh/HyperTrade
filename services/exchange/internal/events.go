@@ -99,3 +99,10 @@ type DataFrameRequest struct {
 type DataFrameResponse struct {
 	DataFrame []DataFrameEventPayload `json:"dataframe"`
 }
+
+var UpdateTradingEvent string = "Event:Trading:Update"
+
+type UpdateTradingRequest struct {
+	Symbol  string `json:"symbol"`
+	Enabled bool   `json:"enabled"`
+}

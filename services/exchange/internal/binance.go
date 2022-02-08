@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"errors"
 	"exchange/utils"
 	"fmt"
 	"strings"
@@ -18,6 +19,8 @@ type Binance struct {
 	test   bool
 	pubsub PubSub
 }
+
+var ErrBaseAsset = errors.New("base asset for symbol not found")
 
 func NewBinance(key, secret string, test bool, pubsub PubSub) Binance {
 	log.Trace().Str("type", "binance").Bool("test", test).Msg("Binance.Init")
@@ -91,11 +94,14 @@ func (b Binance) GetBalanceString() string {
 func (b Binance) Trade(side binance.SideType, symbol string, price, quantity float64) error {
 	log.Info().Interface("side", side).Str("symbol", symbol).Float64("quantity", quantity).Msg("Binance.Trade.Init")
 
+	// Ref: https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html
+	orderQuantity := fmt.Sprintf("%.8f", quantity)[0:6]
+
 	order, err := b.client.NewCreateOrderService().
 		Symbol(symbol).
 		Side(side).
 		Type(binance.OrderTypeMarket).
-		Quantity(fmt.Sprintf("%f", quantity)).
+		Quantity(orderQuantity).
 		Do(context.Background())
 
 	if err != nil {

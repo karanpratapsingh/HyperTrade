@@ -22,7 +22,7 @@ func (db DB) Seed(symbol string) {
 			Name: fmt.Sprintf("create config for %v", symbol),
 			Type: &Configs{},
 			Fn: func() error {
-				return db.CreateConfig(symbol, 12, 12)
+				return db.CreateConfig(symbol, 15, 15, false)
 			},
 		},
 	}

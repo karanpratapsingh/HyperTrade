@@ -8,9 +8,10 @@ import (
 )
 
 type Configs struct {
-	Symbol        string  `gorm:"primaryKey" json:"symbol"`
-	Minimum       float64 `gorm:"not null" json:"minimum"`
-	AllowedAmount float64 `gorm:"not null" json:"allowedAmount"`
+	Symbol         string  `gorm:"primaryKey" json:"symbol"`
+	Minimum        float64 `gorm:"not null" json:"minimum"`
+	AllowedAmount  float64 `gorm:"not null" json:"allowedAmount"`
+	TradingEnabled bool    `gorm:"not null" json:"TradingEnabled"`
 }
 
 func (db DB) GetConfig(symbol string) Configs {
@@ -25,17 +26,27 @@ func (db DB) GetConfig(symbol string) Configs {
 	return config
 }
 
-func (db DB) CreateConfig(symbol string, minimum, allowedAmt float64) error {
-	config := Configs{
-		Symbol:        symbol,
-		Minimum:       minimum,
-		AllowedAmount: allowedAmt,
-	}
+func (db DB) CreateConfig(symbol string, minimum, allowedAmt float64, tradingEnabled bool) error {
+	config := Configs{symbol, minimum, allowedAmt, tradingEnabled}
 
 	result := db.conn.Create(&config)
 
 	if result.Error != nil {
 		log.Error().Err(result.Error).Msg("DB.Config.CreateConfig")
+	}
+
+	return result.Error
+}
+
+func (db DB) UpdateTrading(symbol string, enabled bool) error {
+	config := Configs{
+		Symbol: symbol,
+	}
+
+	result := db.conn.Model(&config).Update("TradingEnabled", enabled)
+
+	if result.Error != nil {
+		log.Error().Err(result.Error).Msg("DB.Config.UpdateTrading")
 	}
 
 	return result.Error

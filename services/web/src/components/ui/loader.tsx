@@ -13,7 +13,7 @@ export function Loader(props: LoaderProps): React.ReactElement {
   return (
     <Oval
       wrapperClass={clsx(
-        'h-full w-full items-center justify-center',
+        'h-full w-full flex items-center justify-center',
         className
       )}
       height={30}

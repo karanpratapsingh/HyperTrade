@@ -72,38 +72,31 @@ export function TradesChart(props: TradesChartProps): React.ReactElement {
 
   if (trades.length) {
     content = (
-      <>
-        <LineChart
-          className='mt-4'
-          margin={margin}
-          data={trades}
-          height={540}
-          width={940}>
-          <Legend />
-          <CartesianGrid style={cartesianStyle} strokeDasharray='3' />
-          <XAxis
-            dy={5}
-            dataKey='time'
-            axisLine={false}
-            tick={tickStyle}
-            tickFormatter={timeFormatter}
-          />
-          <YAxis domain={domain} axisLine={false} tick={tickStyle} />
-          <Tooltip labelFormatter={timeFormatter} />
-          <Line
-            type='monotone'
-            dataKey='entry'
-            stroke={LineColors.entry}
-            {...dotsConfig}
-          />
-          <Line
-            type='monotone'
-            dataKey='exit'
-            stroke={LineColors.exit}
-            {...dotsConfig}
-          />
-        </LineChart>
-      </>
+      <LineChart margin={margin} data={trades} height={540} width={940}>
+        <Legend />
+        <CartesianGrid style={cartesianStyle} strokeDasharray='3' />
+        <XAxis
+          dy={5}
+          dataKey='time'
+          axisLine={false}
+          tick={tickStyle}
+          tickFormatter={timeFormatter}
+        />
+        <YAxis domain={domain} axisLine={false} tick={tickStyle} />
+        <Tooltip labelFormatter={timeFormatter} />
+        <Line
+          type='monotone'
+          dataKey='entry'
+          stroke={LineColors.entry}
+          {...dotsConfig}
+        />
+        <Line
+          type='monotone'
+          dataKey='exit'
+          stroke={LineColors.exit}
+          {...dotsConfig}
+        />
+      </LineChart>
     );
   }
 

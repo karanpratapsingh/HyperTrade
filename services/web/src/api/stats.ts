@@ -17,12 +17,12 @@ export type StatsResponse = {
   stats: Stats | null;
 };
 
-export const getStats = async (symbol: string) => {
+export async function getStats(symbol: string): Promise<StatsResponse> {
   const pubsub = await PubSub.getInstance();
   return await pubsub.request<StatsResponse, StatsRequest>(Events.GetStats, {
     symbol,
   });
-};
+}
 
 export function useStats(symbol: string): ApiHookResult<StatsResponse> {
   const {

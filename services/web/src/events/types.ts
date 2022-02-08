@@ -5,6 +5,7 @@ export enum Events {
   GetPositions = 'Event:Positions:Get',
   GetStats = 'Event:Stats:Get',
   GetTrades = 'Event:Trades:Get',
+  UpdateTrading = 'Event:Trading:Update',
 }
 
 export type DataFrameEventPayload = {
@@ -32,7 +33,8 @@ export type Indicators = {
   macd_hist: number;
 };
 
-export type Signal = {
-  buy: boolean;
-  sell: boolean;
-};
+export enum Signal {
+  BUY = 'BUY',
+  SELL = 'SELL',
+  NONE = 'NONE',
+}

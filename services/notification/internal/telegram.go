@@ -16,9 +16,11 @@ type Telegram struct {
 }
 
 var (
-	PingCommand    = "ping"
-	BalanceCommand = "balance"
-	StatsCommand   = "stats"
+	PingCommand           = "ping"
+	BalanceCommand        = "balance"
+	StatsCommand          = "stats"
+	EnableTradingCommand  = "enable"
+	DisableTradingCommand = "disable"
 )
 
 func NewTelegramBot(token string, chatId int64, pubsub PubSub) Telegram {
@@ -42,8 +44,10 @@ func (t Telegram) SetDefaultCommands() {
 	ping := telegram.BotCommand{PingCommand, "Ping"}
 	balance := telegram.BotCommand{BalanceCommand, "Get balance"}
 	stats := telegram.BotCommand{StatsCommand, "Get statistics"}
+	enableTrading := telegram.BotCommand{EnableTradingCommand, "Enable trading"}
+	disableTrading := telegram.BotCommand{DisableTradingCommand, "Disable trading"}
 
-	config := telegram.NewSetMyCommands(ping, balance, stats)
+	config := telegram.NewSetMyCommands(ping, balance, stats, enableTrading, disableTrading)
 
 	_, err := t.bot.Request(config)
 
@@ -100,6 +104,10 @@ func (t Telegram) ListenForCommands(symbol string) {
 			} else {
 				message.Text = t.FormatStatsMessage(r)
 			}
+		case EnableTradingCommand:
+			message.Text = t.UpdateTradingMessage(symbol, true)
+		case DisableTradingCommand:
+			message.Text = t.UpdateTradingMessage(symbol, false)
 		default:
 			message.Text = "Command not defined"
 		}
@@ -140,7 +148,7 @@ func (t Telegram) FormatOrderMessage(p OrderEventPayload) string {
 			"`ID: %v\n"+
 			"Type: %v\n"+
 			"Symbol: %v\n"+
-			"Last Price: %v\n"+
+			"Price: %v\n"+
 			"Quantity: %v`",
 		p.Side, p.ID, p.Type, p.Symbol, p.Price, p.Quantity)
 
@@ -195,6 +203,30 @@ func (t Telegram) FormatStatsMessage(r StatsResponse) string {
 
 func (t Telegram) FormatErrorMessage(p CriticalErrorEventPayload) string {
 	message := fmt.Sprintf("*Critical Error*\n\n`%v`", p.Error)
+
+	return message
+}
+
+func (t Telegram) UpdateTradingMessage(symbol string, enable bool) string {
+	var message string
+
+	var payload interface{}
+	req := UpdateTradingRequest{symbol, enable}
+	err := t.pubsub.Request(UpdateTradingEvent, req, &payload)
+
+	if err != nil {
+		message = err.Error()
+	} else {
+		var status string
+
+		switch enable {
+		case true:
+			status = "enabled"
+		case false:
+			status = "disabled"
+		}
+		message = fmt.Sprintf("*Message*\n\n`Trading has been %v`", status)
+	}
 
 	return message
 }

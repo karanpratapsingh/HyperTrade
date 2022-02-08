@@ -14,10 +14,10 @@ export type PositionsResponse = {
   positions: Position[];
 };
 
-export const getPositions = async () => {
+export async function getPositions(): Promise<PositionsResponse> {
   const pubsub = await PubSub.getInstance();
   return await pubsub.request<PositionsResponse>(Events.GetPositions);
-};
+}
 
 export function usePositions(): ApiHookResult<PositionsResponse> {
   const {
