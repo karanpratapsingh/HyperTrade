@@ -25,19 +25,28 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 		var request DumpRequest
 		utils.Unmarshal(m.Data, &request)
 
-		log.Warn().Str("symbol", request.Symbol).Bool("enabled", false).Msg("Internal.Dump.Trading")
-		DB.UpdateTrading(request.Symbol, false)
-		log.Warn().Str("symbol", request.Symbol).Msg("Internal.Dump.Positions")
-		DB.DeletePosition(request.Symbol)
-		payload, err := exchange.Dump(request.Symbol)
-		DB.UpdateTrading(request.Symbol, true)
-		log.Warn().Str("symbol", request.Symbol).Bool("enabled", true).Msg("Internal.Dump.Trading")
+		symbol := request.Symbol
+
+		config := DB.GetConfig(symbol)
+
+		log.Warn().Str("symbol", symbol).Bool("enabled", false).Msg("Internal.Dump.Trading")
+		DB.UpdateTrading(symbol, false)
+
+		DB.DeletePosition(symbol)
+		log.Warn().Str("symbol", symbol).Msg("Internal.Dump.Positions")
+
+		payload, err := exchange.Dump(symbol)
+
+		if config.TradingEnabled {
+			DB.UpdateTrading(symbol, true)
+			log.Warn().Str("symbol", symbol).Bool("enabled", true).Msg("Internal.Dump.Trading")
+		}
 
 		if err != nil {
 			return
 		}
 
-		log.Trace().Str("symbol", request.Symbol).Int64("ID", payload.ID).Float64("quantity", payload.Quantity).Msg("Internal.Dump")
+		log.Trace().Str("symbol", symbol).Int64("ID", payload.ID).Float64("quantity", payload.Quantity).Msg("Internal.Dump")
 		pubsub.Publish(m.Reply, payload)
 	})
 
