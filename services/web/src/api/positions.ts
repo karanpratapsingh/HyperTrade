@@ -4,9 +4,9 @@ import { Events } from '../events/types';
 import { ApiHookResult, options } from './types';
 
 export type Position = {
-  Symbol: string;
-  Price: number;
-  Quantity: number;
+  symbol: string;
+  price: number;
+  quantity: number;
   time: Date;
 };
 
