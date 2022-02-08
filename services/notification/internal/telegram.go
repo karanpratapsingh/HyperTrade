@@ -16,6 +16,7 @@ type Telegram struct {
 var (
 	ConfigsCommand        = "configs"
 	BalanceCommand        = "balance"
+	PositionsCommand      = "positions"
 	StatsCommand          = "stats"
 	EnableTradingCommand  = "enable"
 	DisableTradingCommand = "disable"
@@ -42,12 +43,13 @@ func (t Telegram) SetDefaultCommands() {
 
 	configs := telegram.BotCommand{ConfigsCommand, "Get configs"}
 	balance := telegram.BotCommand{BalanceCommand, "Get balance"}
+	positions := telegram.BotCommand{PositionsCommand, "Get positions"}
 	stats := telegram.BotCommand{StatsCommand, "Get statistics"}
 	enableTrading := telegram.BotCommand{EnableTradingCommand, "Enable trading"}
 	disableTrading := telegram.BotCommand{DisableTradingCommand, "Disable trading"}
 	dump := telegram.BotCommand{DumpCommand, "Dump asset"}
 
-	config := telegram.NewSetMyCommands(configs, balance, stats, enableTrading, disableTrading, dump)
+	config := telegram.NewSetMyCommands(configs, balance, positions, stats, enableTrading, disableTrading, dump)
 
 	_, err := t.bot.Request(config)
 
@@ -100,6 +102,16 @@ func (t Telegram) ListenForCommands(symbol string) {
 				message.Text = err.Error()
 			} else {
 				message.Text = t.FormatBalanceMessage(r)
+			}
+		case PositionsCommand:
+			var r PositionsResponse
+
+			err := t.pubsub.Request(GetPositionsEvent, nil, &r)
+
+			if err != nil {
+				message.Text = err.Error()
+			} else {
+				message.Text = t.FormatPostionsMessage(r)
 			}
 		case StatsCommand:
 			var r StatsResponse

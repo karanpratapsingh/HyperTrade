@@ -46,6 +46,19 @@ type BalanceResponse struct {
 	Balance []Balance `json:"balance"`
 }
 
+var GetPositionsEvent string = "Event:Positions:Get"
+
+type Positions struct {
+	Symbol   string    `json:"symbol"`
+	Price    float64   `json:"price"`
+	Quantity float64   `json:"quantity"`
+	Time     time.Time `json:"time"`
+}
+
+type PositionsResponse struct {
+	Positions []Positions `json:"positions"`
+}
+
 var GetStatsEvent string = "Event:Stats:Get"
 
 type Stats struct {

@@ -13,20 +13,55 @@ func (t Telegram) FormatConfigsMessage(r ConfigsResponse) string {
 
 	for i, config := range r.Configs {
 		index := i + 1
-		b := fmt.Sprintf(
-			"`\n#%v\nSymbol: %v\n"+
+		c := fmt.Sprintf(
+			"`\n#%v\n"+
+				"Symbol: %v\n"+
 				"Minimum: %v\n"+
 				"Allowed: %v\n"+
 				"Enabled: %v`",
-			index, config.Symbol,
+			index,
+			config.Symbol,
 			config.Minimum,
 			config.AllowedAmount,
 			config.TradingEnabled,
 		)
-		configs = append(configs, b)
+		configs = append(configs, c)
 	}
 
 	return strings.Join(configs, "\n")
+}
+
+func (t Telegram) FormatPostionsMessage(r PositionsResponse) string {
+	header := "*Positions*"
+
+	var positions = []string{header}
+
+	if len(r.Positions) == 0 {
+		p := "`\nNo positions yet`"
+
+		positions = append(positions, p)
+	}
+
+	for i, position := range r.Positions {
+		index := i + 1
+		time := position.Time.Format(time.RFC822)
+
+		p := fmt.Sprintf(
+			"`\n#%v\n"+
+				"Symbol: %v\n"+
+				"Price: %v\n"+
+				"Quantity: %v\n"+
+				"Time: %v`",
+			index,
+			position.Symbol,
+			position.Price,
+			position.Quantity,
+			time,
+		)
+		positions = append(positions, p)
+	}
+
+	return strings.Join(positions, "\n")
 }
 
 func (t Telegram) FormatOrderMessage(p OrderEventPayload) string {
