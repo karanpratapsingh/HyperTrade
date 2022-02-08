@@ -20,7 +20,7 @@ func Unmarshal(data []byte, ptr interface{}) error {
 
 // Ref: https://www.binance.com/api/v3/exchangeInfo?symbol=$SYMBOL
 func GetMinQuantity(min float64, price float64) float64 {
-	quantity := ToFixed((1/price)*min, 5)
+	quantity := (1/price)*min
 	return quantity
 }
 
