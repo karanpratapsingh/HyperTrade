@@ -1,6 +1,7 @@
 import { Layout, Table, Tag } from 'antd';
 import dateFormat from 'dateformat';
 import reverse from 'lodash/reverse';
+import * as animated from '../components/ui/animated';
 import { Header } from '../components/ui/header';
 import { Loader } from '../components/ui/loader';
 import { Kline, Signal } from '../events/types';
@@ -39,68 +40,74 @@ export function DataFrame(): React.ReactElement {
 
   if (!loading) {
     content = (
-      <Table
-        className='text-xs font-light'
-        dataSource={reverse(dataframe)}
-        pagination={paginationProps(dataframe.length, 11)}>
-        <ColumnGroup title='Kline' key='kline'>
+      <animated.Div>
+        <Table
+          className='text-xs font-light'
+          dataSource={reverse(dataframe)}
+          pagination={paginationProps(dataframe.length, 11)}>
+          <ColumnGroup title='Kline' key='kline'>
+            <Column
+              title='Time'
+              dataIndex={['kline', 'time']}
+              key='time'
+              render={renderTime}
+            />
+            <Column title='Open' dataIndex={['kline', 'open']} key='open' />
+            <Column title='High' dataIndex={['kline', 'high']} key='high' />
+            <Column title='Low' dataIndex={['kline', 'low']} key='low' />
+            <Column title='Close' dataIndex={['kline', 'close']} key='close' />
+            <Column
+              title='Volume'
+              dataIndex={['kline', 'volume']}
+              key='volume'
+            />
+            <Column
+              title='Final'
+              dataIndex={['kline', 'final']}
+              key='final'
+              render={renderFinal}
+            />
+          </ColumnGroup>
+          <ColumnGroup title='Indicators' key='indicators'>
+            <Column
+              title='ADX'
+              dataIndex={['indicators', 'adx']}
+              key='adx'
+              render={renderIndicators}
+            />
+            <Column
+              title='RSI'
+              dataIndex={['indicators', 'rsi']}
+              key='rsi'
+              render={renderIndicators}
+            />
+            <Column
+              title='MACD'
+              dataIndex={['indicators', 'macd']}
+              key='macd'
+              render={renderIndicators}
+            />
+            <Column
+              title='MACD Signal'
+              dataIndex={['indicators', 'macd_signal']}
+              key='macd_signal'
+              render={renderIndicators}
+            />
+            <Column
+              title='MACD History'
+              dataIndex={['indicators', 'macd_hist']}
+              key='macd_hist'
+              render={renderIndicators}
+            />
+          </ColumnGroup>
           <Column
-            title='Time'
-            dataIndex={['kline', 'time']}
-            key='time'
-            render={renderTime}
+            title='Signal'
+            dataIndex={'signal'}
+            key='signal'
+            render={renderSignal}
           />
-          <Column title='Open' dataIndex={['kline', 'open']} key='open' />
-          <Column title='High' dataIndex={['kline', 'high']} key='high' />
-          <Column title='Low' dataIndex={['kline', 'low']} key='low' />
-          <Column title='Close' dataIndex={['kline', 'close']} key='close' />
-          <Column title='Volume' dataIndex={['kline', 'volume']} key='volume' />
-          <Column
-            title='Final'
-            dataIndex={['kline', 'final']}
-            key='final'
-            render={renderFinal}
-          />
-        </ColumnGroup>
-        <ColumnGroup title='Indicators' key='indicators'>
-          <Column
-            title='ADX'
-            dataIndex={['indicators', 'adx']}
-            key='adx'
-            render={renderIndicators}
-          />
-          <Column
-            title='RSI'
-            dataIndex={['indicators', 'rsi']}
-            key='rsi'
-            render={renderIndicators}
-          />
-          <Column
-            title='MACD'
-            dataIndex={['indicators', 'macd']}
-            key='macd'
-            render={renderIndicators}
-          />
-          <Column
-            title='MACD Signal'
-            dataIndex={['indicators', 'macd_signal']}
-            key='macd_signal'
-            render={renderIndicators}
-          />
-          <Column
-            title='MACD History'
-            dataIndex={['indicators', 'macd_hist']}
-            key='macd_hist'
-            render={renderIndicators}
-          />
-        </ColumnGroup>
-        <Column
-          title='Signal'
-          dataIndex={'signal'}
-          key='signal'
-          render={renderSignal}
-        />
-      </Table>
+        </Table>
+      </animated.Div>
     );
   }
 
