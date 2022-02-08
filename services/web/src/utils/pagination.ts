@@ -4,9 +4,9 @@ const PAGE_SIZE = 4;
 
 export function paginationProps(
   length: number,
-  pageSize?: number
+  pageSize: number = PAGE_SIZE
 ): TablePaginationConfig | false {
-  if (length > PAGE_SIZE) {
+  if (length > pageSize) {
     return { pageSize: pageSize || PAGE_SIZE };
   }
 
