@@ -19,6 +19,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 
 		DB.UpdateTrading(request.Symbol, request.Enabled)
 
+		log.Trace().Str("symbol", request.Symbol).Bool("enabled", request.Enabled).Msg("Internal.Config.Trading")
 		var payload interface{}
 		pubsub.Publish(m.Reply, payload)
 	})
