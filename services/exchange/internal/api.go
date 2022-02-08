@@ -121,16 +121,16 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 }
 
 func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal Signal) {
+	if signal == "NONE" {
+		return
+	}
+
 	symbol := kline.Symbol
 
 	config := DB.GetConfig(symbol)
 
 	if !config.TradingEnabled {
-		log.Warn().Str("symbol", symbol).Msg("Trade.Disabled")
-		return
-	}
-
-	if signal == "NONE" {
+		log.Warn().Str("symbol", symbol).Interface("signal", signal).Msg("Trade.Disabled")
 		return
 	}
 
@@ -165,13 +165,9 @@ func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal 
 			return
 		}
 
-		quantity, err := exchange.GetBalanceQuantity(symbol)
+		quantity := position.Quantity
 
-		if err != nil {
-			return
-		}
-
-		err = exchange.Trade(binance.SideTypeSell, symbol, closePrice, quantity)
+		err := exchange.Trade(binance.SideTypeSell, symbol, closePrice, quantity)
 
 		if err != nil {
 			return

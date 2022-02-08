@@ -91,30 +91,6 @@ func (b Binance) GetBalanceString() string {
 	return strings.Join(balances, "\n")
 }
 
-func (b Binance) GetBalanceQuantity(symbol string) (float64, error) {
-	info, err := b.client.NewExchangeInfoService().Symbol(symbol).Do(context.Background())
-
-	if err != nil {
-		log.Error().Str("symbol", symbol).Err(err).Msg("Binance.GetBalanceQuantity")
-		return 0, err
-	}
-
-	balances := b.GetBalance()
-
-	asset := info.Symbols[0].BaseAsset
-
-	for _, balance := range balances {
-		if balance.Asset == asset {
-			return balance.Amount, nil
-		}
-	}
-
-	log.Error().Str("symbol", symbol).Err(ErrBaseAsset).Msg("Binance.GetBalanceQuantity")
-	b.pubsub.Publish(CriticalErrorEvent, CriticalErrorEventPayload{ErrBaseAsset.Error()})
-
-	return 0, ErrBaseAsset
-}
-
 func (b Binance) Trade(side binance.SideType, symbol string, price, quantity float64) error {
 	log.Info().Interface("side", side).Str("symbol", symbol).Float64("quantity", quantity).Msg("Binance.Trade.Init")
 
