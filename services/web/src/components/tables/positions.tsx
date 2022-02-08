@@ -28,6 +28,7 @@ export function PositionsTable(): React.ReactElement {
       title: 'Quantity',
       dataIndex: 'quantity',
       key: 'quantity',
+      render: (quantity: Position['quantity']) => quantity.toFixed(4),
     },
     {
       title: 'Time',

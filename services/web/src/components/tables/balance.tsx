@@ -29,7 +29,7 @@ export function BalanceTable(): React.ReactElement {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
-      render: (amount: Balance['amount']) => <span>{amount.toFixed(8)}</span>,
+      render: (amount: Balance['amount']) => amount.toFixed(8),
     },
   ];
 

@@ -38,6 +38,12 @@ export function TradesTable(props: TradesTableProps): React.ReactElement {
       key: 'exit',
     },
     {
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
+      render: (quantity: Trade['quantity']) => quantity.toFixed(4),
+    },
+    {
       title: 'Time',
       dataIndex: 'time',
       key: 'time',
