@@ -66,14 +66,15 @@ func (t Telegram) FormatPostionsMessage(r PositionsResponse) string {
 
 func (t Telegram) FormatOrderMessage(p OrderEventPayload) string {
 	message := fmt.Sprintf(
-		"*Created %v Order*\n\n"+
+		"*Created Order*\n\n"+
 			"`ID: %v\n"+
+			"Side: %v\n"+
 			"Type: %v\n"+
 			"Symbol: %v\n"+
 			"Price: %v\n"+
 			"Quantity: %v`",
-		p.Side,
 		p.ID,
+		p.Side,
 		p.Type,
 		p.Symbol,
 		p.Price,
