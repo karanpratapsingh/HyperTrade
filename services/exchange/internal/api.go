@@ -194,7 +194,7 @@ func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal 
 			return
 		}
 
-		DB.CreatePosition(symbol, closePrice, quantity)
+		DB.CreatePosition(symbol, closePrice, utils.ToFixed(quantity, 6))
 		log.Trace().Float64("price", closePrice).Float64("quantity", quantity).Msg("Trade.Buy.Complete")
 
 	case Signal(binance.SideTypeSell):
