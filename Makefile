@@ -11,3 +11,6 @@ prod:
 connect:
 	doctl kubernetes cluster kubeconfig save trader-cluster
 	kubectl port-forward svc/proxy 8080:8080
+
+delete:
+	kubectl delete --all deployments
