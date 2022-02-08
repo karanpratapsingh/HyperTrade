@@ -16,7 +16,7 @@ type Telegram struct {
 }
 
 var (
-	PingCommand           = "ping"
+	ConfigsCommand        = "configs"
 	BalanceCommand        = "balance"
 	StatsCommand          = "stats"
 	EnableTradingCommand  = "enable"
@@ -42,14 +42,14 @@ func NewTelegramBot(token string, chatId int64, pubsub PubSub) Telegram {
 func (t Telegram) SetDefaultCommands() {
 	log.Trace().Msg("TelegramBot.SetMyCommands")
 
-	ping := telegram.BotCommand{PingCommand, "Ping"}
+	configs := telegram.BotCommand{ConfigsCommand, "Get configs"}
 	balance := telegram.BotCommand{BalanceCommand, "Get balance"}
 	stats := telegram.BotCommand{StatsCommand, "Get statistics"}
 	enableTrading := telegram.BotCommand{EnableTradingCommand, "Enable trading"}
 	disableTrading := telegram.BotCommand{DisableTradingCommand, "Disable trading"}
 	dump := telegram.BotCommand{DumpCommand, "Dump asset"}
 
-	config := telegram.NewSetMyCommands(ping, balance, stats, enableTrading, disableTrading, dump)
+	config := telegram.NewSetMyCommands(configs, balance, stats, enableTrading, disableTrading, dump)
 
 	_, err := t.bot.Request(config)
 
@@ -83,8 +83,16 @@ func (t Telegram) ListenForCommands(symbol string) {
 		log.Info().Str("command", command).Msg("TelegramBot.ListenForCommands")
 
 		switch command {
-		case PingCommand:
-			message.Text = "Pong"
+		case ConfigsCommand:
+			var r ConfigsResponse
+
+			err := t.pubsub.Request(GetConfigsEvent, nil, &r)
+
+			if err != nil {
+				message.Text = err.Error()
+			} else {
+				message.Text = t.FormatConfigsMessage(r)
+			}
 		case BalanceCommand:
 			var r BalanceResponse
 
@@ -155,6 +163,29 @@ func (t Telegram) SendMessage(event string, msg string) {
 	}
 }
 
+func (t Telegram) FormatConfigsMessage(r ConfigsResponse) string {
+	header := "*Configs*"
+
+	var configs = []string{header}
+
+	for i, config := range r.Configs {
+		index := i + 1
+		b := fmt.Sprintf(
+			"`\n#%v\nSymbol: %v\n"+
+				"Minimum: %v\n"+
+				"Allowed: %v\n"+
+				"Enabled: %v`",
+			index, config.Symbol,
+			config.Minimum,
+			config.AllowedAmount,
+			config.TradingEnabled,
+		)
+		configs = append(configs, b)
+	}
+
+	return strings.Join(configs, "\n")
+}
+
 func (t Telegram) FormatOrderMessage(p OrderEventPayload) string {
 	message := fmt.Sprintf(
 		"*Created %v Order*\n\n"+
@@ -163,7 +194,13 @@ func (t Telegram) FormatOrderMessage(p OrderEventPayload) string {
 			"Symbol: %v\n"+
 			"Price: %v\n"+
 			"Quantity: %v`",
-		p.Side, p.ID, p.Type, p.Symbol, p.Price, p.Quantity)
+		p.Side,
+		p.ID,
+		p.Type,
+		p.Symbol,
+		p.Price,
+		p.Quantity,
+	)
 
 	return message
 }
@@ -179,7 +216,13 @@ func (t Telegram) FormatTradeMessage(p TradeEventPayload) string {
 			"Exit: %v\n"+
 			"Quantity: %v\n"+
 			"Time: %v`",
-		p.ID, p.Symbol, p.Entry, p.Exit, p.Quantity, time)
+		p.ID,
+		p.Symbol,
+		p.Entry,
+		p.Exit,
+		p.Quantity,
+		time,
+	)
 
 	return message
 }

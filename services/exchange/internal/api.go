@@ -13,6 +13,14 @@ import (
 func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	log.Trace().Msg("Internal.AsyncApi.Init")
 
+	pubsub.Subscribe(GetConfigsEvent, func(m *nats.Msg) {
+		payload := ConfigsResponse{
+			Configs: DB.GetConfigs(),
+		}
+
+		pubsub.Publish(m.Reply, payload)
+	})
+
 	pubsub.Subscribe(DumpEvent, func(m *nats.Msg) {
 		var request DumpRequest
 		utils.Unmarshal(m.Data, &request)
