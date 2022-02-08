@@ -1,6 +1,9 @@
 name: Build and Deploy
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 env:
   APP_SECRETS: ${{ secrets.APP_SECRETS }}
   DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
