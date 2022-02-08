@@ -187,14 +187,14 @@ func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal 
 			return
 		}
 
-		quantity := utils.GetMinQuantity(allowedAmt, closePrice)
+		quantity := utils.ToFixed(utils.GetMinQuantity(allowedAmt, closePrice), 4)
 
 		err := exchange.Trade(binance.SideTypeBuy, symbol, closePrice, quantity)
 		if err != nil {
 			return
 		}
 
-		DB.CreatePosition(symbol, closePrice, utils.ToFixed(quantity, 6))
+		DB.CreatePosition(symbol, closePrice, quantity)
 		log.Trace().Float64("price", closePrice).Float64("quantity", quantity).Msg("Trade.Buy.Complete")
 
 	case Signal(binance.SideTypeSell):

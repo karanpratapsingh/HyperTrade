@@ -30,13 +30,9 @@ func GetMinQuantity(min float64, price float64) float64 {
 	return quantity
 }
 
-func Round(num float64) int {
-	return int(num + math.Copysign(0.5, num))
-}
-
 func ToFixed(num float64, precision int) float64 {
 	output := math.Pow(10, float64(precision))
-	return float64(Round(num*output)) / output
+	return float64(int(num*output)) / output
 }
 
 func ParseFloat(str string) float64 {
