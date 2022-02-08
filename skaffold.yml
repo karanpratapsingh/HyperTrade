@@ -80,3 +80,7 @@ portForward:
     resourceType: service
     port: 8080
     localPort: 8080
+  - resourceName: db
+    resourceType: service
+    port: 5432
+    localPort: 5432
