@@ -14,6 +14,19 @@ type Configs struct {
 	TradingEnabled bool    `gorm:"not null" json:"TradingEnabled"`
 }
 
+func (db DB) GetConfigs() []Configs {
+	var configs []Configs
+
+	result := db.conn.Find(&configs)
+
+	if result.Error != nil {
+		log.Error().Err(result.Error).
+			Msg("DB.Configs.GetConfigs")
+	}
+
+	return configs
+}
+
 func (db DB) GetConfig(symbol string) Configs {
 	var config Configs
 
