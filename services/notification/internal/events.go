@@ -79,3 +79,16 @@ type DumpResponse struct {
 	ID       int64   `json:"id"`
 	Quantity float64 `json:"quantity"`
 }
+
+var GetConfigsEvent string = "Event:Configs:Get"
+
+type Configs struct {
+	Symbol         string  `json:"symbol"`
+	Minimum        float64 `json:"minimum"`
+	AllowedAmount  float64 `json:"allowedAmount"`
+	TradingEnabled bool    `json:"TradingEnabled"`
+}
+
+type ConfigsResponse struct {
+	Configs []Configs `json:"configs"`
+}

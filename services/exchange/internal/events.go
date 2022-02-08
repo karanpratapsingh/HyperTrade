@@ -117,3 +117,9 @@ type DumpResponse struct {
 	ID       int64   `json:"id"`
 	Quantity float64 `json:"quantity"`
 }
+
+var GetConfigsEvent string = "Event:Configs:Get"
+
+type ConfigsResponse struct {
+	Configs []db.Configs `json:"configs"`
+}

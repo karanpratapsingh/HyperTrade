@@ -6,6 +6,7 @@ export enum Events {
   GetStats = 'Event:Stats:Get',
   GetTrades = 'Event:Trades:Get',
   UpdateTrading = 'Event:Trading:Update',
+  GetConfigs = 'Event:Configs:Get',
 }
 
 export type DataFrameEventPayload = {
