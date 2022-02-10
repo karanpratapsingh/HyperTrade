@@ -2,7 +2,7 @@
 
 **USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHORS AND ALL AFFILIATES ASSUME NO LIABILITY FOR YOUR TRADING OUTCOMES.**
 
-#### Development
+### Development
 
 **Tools**
 
@@ -23,8 +23,9 @@
 - Use `make stop` to stop the local minikube cluster.
 
 
-#### Deployment
-Deployment is handled through a manually dispatched github action `deploy.yml`. But first we need to provision our infrastructure.
+### Deployment
+
+Deployments are done automatically via `deploy.yml` github actions on merge with `main` branch. It also supports manual deployment as well. But first we need to provision our infrastructure.
 
 _Note: Infrastructure we're about to provision has it's own cost!_
 
@@ -61,7 +62,7 @@ $ cat infrastructure/k8s/env.yaml| base64
 
 _Note: If you want to change name of the project, make sure to update all the associated kubernetes manifest files, skaffold config etc._
 
-#### Connecting
+### Connecting
 
 Since this application deals with sensitive personal financial data, it is **not recommended** to expose it via ingress unless we have proper authorization in place. Hence, it is recommended to connect to it via port-forwarding on your local machine.
 
