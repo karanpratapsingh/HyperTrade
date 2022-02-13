@@ -117,7 +117,7 @@ func (t Telegram) FormatBalanceMessage(r BalanceResponse) string {
 	var separator rune = '•'
 
 	for _, balance := range r.Balance {
-		b := fmt.Sprintf("%c %v %v", separator, balance.Asset, balance.Amount)
+		b := fmt.Sprintf("\\%c %v %v", separator, balance.Asset, balance.Amount)
 		balances = append(balances, b)
 	}
 
