@@ -14,7 +14,7 @@ func (t Telegram) FormatConfigsMessage(r ConfigsResponse) string {
 	for i, config := range r.Configs {
 		index := i + 1
 		c := fmt.Sprintf(
-			"\n#%v\n"+
+			"\n\\#%v\n"+
 				"Symbol: %v\n"+
 				"Minimum: %v\n"+
 				"Allowed: %v\n"+
@@ -47,7 +47,7 @@ func (t Telegram) FormatPostionsMessage(r PositionsResponse) string {
 		time := position.Time.Format(time.RFC822)
 
 		p := fmt.Sprintf(
-			"\n#%v\n"+
+			"\n\\#%v\n"+
 				"Symbol: %v\n"+
 				"Price: %v\n"+
 				"Quantity: %v\n"+
