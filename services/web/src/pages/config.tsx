@@ -1,16 +1,8 @@
-import {
-  Avatar,
-  Button,
-  Card,
-  Col,
-  InputNumber,
-  Layout,
-  Row,
-  Switch
-} from 'antd';
+import { Avatar, Card, Col, InputNumber, Layout, Row } from 'antd';
 import sortBy from 'lodash/sortBy';
 import React from 'react';
-import { RiSettings3Line } from 'react-icons/ri';
+import { RiSettings3Fill } from 'react-icons/ri';
+import Switch from 'react-switch';
 import {
   Configs,
   UpdateAllowedAmountRequest,
@@ -19,8 +11,11 @@ import {
   useUpdateAllowedAmount,
   useUpdateTradingEnabled
 } from '../api/configs';
+import * as animated from '../components/ui/animated';
 import { Header } from '../components/ui/header';
 import { Loader } from '../components/ui/loader';
+import { ContentRow } from '../components/ui/row';
+import { Colors } from '../theme/colors';
 import { getCryptoIcon } from '../theme/icons';
 
 const { Content } = Layout;
@@ -36,6 +31,10 @@ export function Config(): React.ReactElement {
     const { symbol, base, quote, minimum, allowed_amount, trading_enabled } =
       config;
 
+    function onSettings(): void {
+      // TODO: open strategy settings
+    }
+
     async function onUpdateTradingEnable(
       enabled: UpdateTradingEnabledRequest['enabled']
     ): Promise<void> {
@@ -48,41 +47,56 @@ export function Config(): React.ReactElement {
       mutateAllowedAmount({ symbol, amount });
     }
 
-    const actions = React.Children.toArray([
-      <Button type='link' icon={<RiSettings3Line size={22} />} />,
-    ]);
-
     const symbolAvatar = <Avatar size='large' src={getCryptoIcon(base)} />;
     const baseAvatar = <Avatar size='small' src={getCryptoIcon(base)} />;
     const quoteAvatar = <Avatar size='small' src={getCryptoIcon(quote)} />;
 
+    const settings = (
+      <RiSettings3Fill
+        className='cursor-pointer'
+        color={Colors.lightGray}
+        size={25}
+        onClick={onSettings}
+      />
+    );
+
+    const tradingSwitch = (
+      <Switch
+        height={18}
+        width={30}
+        handleDiameter={12}
+        checked={trading_enabled}
+        onColor={Colors.primary}
+        offColor={Colors.lightGray}
+        disabled={loadingTradingEnabled}
+        uncheckedIcon={false}
+        checkedIcon={false}
+        onChange={onUpdateTradingEnable}
+      />
+    );
+
     return (
       <Col span={6}>
-        <Card className='w-min-full' actions={actions}>
+        <Card className='w-min-full'>
           <Meta
             avatar={symbolAvatar}
-            title={symbol}
+            title={
+              <ContentRow
+                label={symbol}
+                content={settings}
+                suffix={tradingSwitch}
+              />
+            }
             description={
               <div className='flex flex-col'>
-                <Column
-                  label='Enabled'
-                  content={
-                    <Switch
-                      loading={loadingTradingEnabled}
-                      checked={trading_enabled}
-                      size='small'
-                      onChange={onUpdateTradingEnable}
-                    />
-                  }
-                />
-                <Column label='Base' content={baseAvatar} />
-                <Column label='Quote' content={quoteAvatar} />
-                <Column
+                <ContentRow label='Base' content={baseAvatar} />
+                <ContentRow label='Quote' content={quoteAvatar} />
+                <ContentRow
                   label='Minimum'
                   content={minimum}
                   suffix={quoteAvatar}
                 />
-                <Column
+                <ContentRow
                   label='Allowed'
                   content={
                     <InputNumber
@@ -109,9 +123,11 @@ export function Config(): React.ReactElement {
   } else {
     const { configs } = data;
     content = (
-      <Row gutter={[16, 16]}>
-        {React.Children.toArray(sortBy(configs, 'symbol').map(renderConfig))}
-      </Row>
+      <animated.Div>
+        <Row gutter={[16, 16]}>
+          {React.Children.toArray(sortBy(configs, 'symbol').map(renderConfig))}
+        </Row>
+      </animated.Div>
     );
   }
 
@@ -120,25 +136,5 @@ export function Config(): React.ReactElement {
       <Header title='Config' subtitle='Configure your assets' />
       {content}
     </Content>
-  );
-}
-
-interface ColumnProps {
-  label: string;
-  content: React.ReactNode;
-  suffix?: React.ReactNode;
-}
-
-function Column(props: ColumnProps): React.ReactElement {
-  const { label, content, suffix } = props;
-
-  return (
-    <div className='mb-2 flex items-center justify-between min-w-full'>
-      <span>{label}</span>
-      <div className='flex items-center'>
-        {content}
-        {suffix && <div className='ml-2'>{suffix}</div>}
-      </div>
-    </div>
   );
 }
