@@ -8,12 +8,37 @@ export enum Events {
   UpdateTradingEnabled = 'Event:Config:Update:TradingEnabled',
   GetConfigs = 'Event:Configs:Get',
   UpdateAllowedAmount = 'Event:Config:Update:AllowedAmount',
+  CriticalError = 'Event:CriticalError',
+  Order = 'Event:Order',
+  Trade = 'Event:Trade',
 }
 
 export type DataFrameEventPayload = {
   kline: Kline;
   indicators: Indicators;
   signal: Signal;
+};
+
+export type CriticalErrorEventPayload = {
+  error: string;
+};
+
+export type OrderEventPayload = {
+  id: number;
+  side: Signal;
+  type: string;
+  symbol: string;
+  price: number;
+  quantity: number;
+};
+
+export type TradeEventPayload = {
+  id: number;
+  symbol: string;
+  entry: number;
+  exit: number;
+  quantity: number;
+  time: Date;
 };
 
 export type Kline = {
