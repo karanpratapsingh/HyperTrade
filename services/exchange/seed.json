@@ -1,0 +1,28 @@
+{
+  "configs": [
+    {
+      "symbol": "BTCUSDT",
+      "base": "BTC",
+      "quote": "USDT",
+      "minimum": 20,
+      "allowed_amount": 25,
+      "trading_enabled": false
+    },
+    {
+      "symbol": "ETHUSDT",
+      "base": "ETH",
+      "quote": "USDT",
+      "minimum": 20,
+      "allowed_amount": 25,
+      "trading_enabled": false
+    },
+    {
+      "symbol": "SOLUSDT",
+      "base": "SOL",
+      "quote": "USDT",
+      "minimum": 20,
+      "allowed_amount": 25,
+      "trading_enabled": false
+    }
+  ]
+}

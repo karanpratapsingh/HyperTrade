@@ -75,9 +75,9 @@ type StatsResponse struct {
 	Stats *Stats `json:"stats"`
 }
 
-var UpdateTradingEvent string = "Event:Trading:Update"
+var UpdateTradingEnabledEvent string = "Event:Config:Update:TradingEnabled"
 
-type UpdateTradingRequest struct {
+type UpdateTradingEnabledRequest struct {
 	Symbol  string `json:"symbol"`
 	Enabled bool   `json:"enabled"`
 }
@@ -97,6 +97,8 @@ var GetConfigsEvent string = "Event:Configs:Get"
 
 type Configs struct {
 	Symbol         string  `json:"symbol"`
+	Base           string  `json:"base"`
+	Quote          string  `json:"quote"`
 	Minimum        float64 `json:"minimum"`
 	AllowedAmount  float64 `json:"allowed_amount"`
 	TradingEnabled bool    `json:"trading_enabled"`
