@@ -100,9 +100,9 @@ type DataFrameResponse struct {
 	DataFrame []DataFrameEventPayload `json:"dataframe"`
 }
 
-var UpdateTradingEvent string = "Event:Trading:Update"
+var UpdateTradingEnabledEvent string = "Event:Config:Update:TradingEnabled"
 
-type UpdateTradingRequest struct {
+type UpdateTradingEnabledRequest struct {
 	Symbol  string `json:"symbol"`
 	Enabled bool   `json:"enabled"`
 }
@@ -122,4 +122,11 @@ var GetConfigsEvent string = "Event:Configs:Get"
 
 type ConfigsResponse struct {
 	Configs []db.Configs `json:"configs"`
+}
+
+var UpdateAllowedAmountEvent string = "Event:Config:Update:AllowedAmount"
+
+type UpdateAllowedAmountRequest struct {
+	Symbol string  `json:"symbol"`
+	Amount float64 `json:"amount"`
 }
