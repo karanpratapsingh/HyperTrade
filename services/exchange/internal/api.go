@@ -30,7 +30,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 		config := DB.GetConfig(symbol)
 
 		log.Warn().Str("symbol", symbol).Msg("Internal.Dump.Trading.Disable")
-		DB.UpdateTrading(symbol, false)
+		DB.UpdateConfigTradingEnabled(symbol, false)
 
 		DB.DeletePosition(symbol)
 		log.Warn().Str("symbol", symbol).Msg("Internal.Dump.Positions")
@@ -38,7 +38,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 		payload, err := exchange.Dump(symbol)
 
 		if config.TradingEnabled {
-			DB.UpdateTrading(symbol, true)
+			DB.UpdateConfigTradingEnabled(symbol, true)
 			log.Warn().Str("symbol", symbol).Msg("Internal.Dump.Trading.Enable")
 		}
 
@@ -54,7 +54,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 		var request UpdateTradingRequest
 		utils.Unmarshal(m.Data, &request)
 
-		DB.UpdateTrading(request.Symbol, request.Enabled)
+		DB.UpdateConfigTradingEnabled(request.Symbol, request.Enabled)
 
 		log.Trace().Str("symbol", request.Symbol).Bool("enabled", request.Enabled).Msg("Internal.Config.Trading")
 		var payload interface{}

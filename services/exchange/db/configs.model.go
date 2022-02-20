@@ -10,8 +10,8 @@ import (
 type Configs struct {
 	Symbol         string  `gorm:"primaryKey" json:"symbol"`
 	Minimum        float64 `gorm:"not null" json:"minimum"`
-	AllowedAmount  float64 `gorm:"not null" json:"allowedAmount"`
-	TradingEnabled bool    `gorm:"not null" json:"TradingEnabled"`
+	AllowedAmount  float64 `gorm:"not null" json:"allowed_amount"`
+	TradingEnabled bool    `gorm:"not null" json:"trading_enabled"`
 }
 
 func (db DB) GetConfigs() []Configs {
@@ -51,7 +51,7 @@ func (db DB) CreateConfig(symbol string, minimum, allowedAmt float64, tradingEna
 	return result.Error
 }
 
-func (db DB) UpdateTrading(symbol string, enabled bool) error {
+func (db DB) UpdateConfigTradingEnabled(symbol string, enabled bool) error {
 	config := Configs{
 		Symbol: symbol,
 	}

@@ -98,8 +98,8 @@ var GetConfigsEvent string = "Event:Configs:Get"
 type Configs struct {
 	Symbol         string  `json:"symbol"`
 	Minimum        float64 `json:"minimum"`
-	AllowedAmount  float64 `json:"allowedAmount"`
-	TradingEnabled bool    `json:"TradingEnabled"`
+	AllowedAmount  float64 `json:"allowed_amount"`
+	TradingEnabled bool    `json:"trading_enabled"`
 }
 
 type ConfigsResponse struct {
