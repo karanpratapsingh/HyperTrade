@@ -16,13 +16,17 @@ func (t Telegram) FormatConfigsMessage(r ConfigsResponse) string {
 		c := fmt.Sprintf(
 			"\n`#%v\n"+
 				"Symbol: %v\n"+
-				"Minimum: %v\n"+
-				"Allowed: %v\n"+
+				"Base: %v\n"+
+				"Quote: %v\n"+
+				"Minimum: %v %v\n"+
+				"Allowed: %v %v\n"+
 				"Enabled: %v`",
 			index,
 			config.Symbol,
-			config.Minimum,
-			config.AllowedAmount,
+			config.Base,
+			config.Quote,
+			config.Minimum, config.Quote,
+			config.AllowedAmount, config.Quote,
 			config.TradingEnabled,
 		)
 		configs = append(configs, c)
@@ -152,8 +156,8 @@ func (t Telegram) FormatUpdateTradingMessage(symbol string, enable bool) string 
 	var message string
 
 	var payload interface{}
-	req := UpdateTradingRequest{symbol, enable}
-	err := t.pubsub.Request(UpdateTradingEvent, req, &payload)
+	req := UpdateTradingEnabledRequest{symbol, enable}
+	err := t.pubsub.Request(UpdateTradingEnabledEvent, req, &payload)
 
 	if err != nil {
 		message = err.Error()

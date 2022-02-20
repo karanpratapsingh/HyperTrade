@@ -24,7 +24,7 @@ func main() {
 	symbol := env.Symbol
 
 	DB := db.New(env.DatabaseUrl)
-	DB.Seed(symbol)
+	DB.Seed()
 
 	pubsub := internal.NewPubSub(env.NatsUrl, env.NatsUser, env.NatsPass)
 	defer pubsub.Close()
