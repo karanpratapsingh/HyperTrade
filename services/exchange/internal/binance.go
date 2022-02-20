@@ -158,13 +158,13 @@ func (b Binance) Trade(side binance.SideType, symbol string, price, quantity flo
 		Quantity(orderQuantity).
 		Do(context.Background())
 
+	finalQuantity := utils.ParseFloat(orderQuantity)
+
 	if err != nil {
-		log.Error().Interface("side", side).Float64("price", price).Float64("quantity", quantity).Err(err).Msg("Binance.Trade")
+		log.Error().Interface("side", side).Float64("price", price).Float64("quantity", finalQuantity).Err(err).Msg("Binance.Trade")
 		b.pubsub.Publish(CriticalErrorEvent, CriticalErrorEventPayload{err.Error()})
 		return err
 	}
-
-	finalQuantity := utils.ParseFloat(orderQuantity)
 
 	log.Info().Interface("side", side).Float64("price", price).Float64("quantity", finalQuantity).Msg("Binance.Trade.Order")
 
