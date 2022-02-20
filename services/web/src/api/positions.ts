@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import { PubSub } from '../events/pubsub';
 import { Events } from '../events/types';
-import { ApiHookResult, options } from './types';
+import { ApiQueryResult, options } from './types';
 
 export type Position = {
   symbol: string;
@@ -19,7 +19,7 @@ export async function getPositions(): Promise<PositionsResponse> {
   return await pubsub.request<PositionsResponse>(Events.GetPositions);
 }
 
-export function usePositions(): ApiHookResult<PositionsResponse> {
+export function usePositions(): ApiQueryResult<PositionsResponse> {
   const {
     data,
     isLoading: loading,

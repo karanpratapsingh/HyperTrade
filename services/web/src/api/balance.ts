@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import { PubSub } from '../events/pubsub';
 import { Events } from '../events/types';
-import { ApiHookResult, options } from './types';
+import { ApiQueryResult, options } from './types';
 
 export type Balance = {
   asset: string;
@@ -18,7 +18,7 @@ export async function getBalance(): Promise<BalanceResponse> {
   return await pubsub.request<BalanceResponse>(Events.GetBalance);
 }
 
-export function useBalance(): ApiHookResult<BalanceResponse> {
+export function useBalance(): ApiQueryResult<BalanceResponse> {
   const {
     data,
     isLoading: loading,

@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import { PubSub } from '../events/pubsub';
 import { Events } from '../events/types';
-import { ApiHookResult, options } from './types';
+import { ApiQueryResult, options } from './types';
 
 export type Trade = {
   id: number;
@@ -21,7 +21,7 @@ export async function getPositions(): Promise<TradesResponse> {
   return await pubsub.request<TradesResponse>(Events.GetTrades);
 }
 
-export function useTrades(): ApiHookResult<TradesResponse> {
+export function useTrades(): ApiQueryResult<TradesResponse> {
   const {
     data,
     isLoading: loading,
