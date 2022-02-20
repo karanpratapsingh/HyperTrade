@@ -50,13 +50,24 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 		pubsub.Publish(m.Reply, payload)
 	})
 
-	pubsub.Subscribe(UpdateTradingEvent, func(m *nats.Msg) {
-		var request UpdateTradingRequest
+	pubsub.Subscribe(UpdateTradingEnabledEvent, func(m *nats.Msg) {
+		var request UpdateTradingEnabledRequest
 		utils.Unmarshal(m.Data, &request)
 
 		DB.UpdateConfigTradingEnabled(request.Symbol, request.Enabled)
 
-		log.Trace().Str("symbol", request.Symbol).Bool("enabled", request.Enabled).Msg("Internal.Config.Trading")
+		log.Trace().Str("symbol", request.Symbol).Bool("enabled", request.Enabled).Msg("Internal.Config.TradingEnabled")
+		var payload interface{}
+		pubsub.Publish(m.Reply, payload)
+	})
+
+	pubsub.Subscribe(UpdateAllowedAmountEvent, func(m *nats.Msg) {
+		var request UpdateAllowedAmountRequest
+		utils.Unmarshal(m.Data, &request)
+
+		DB.UpdateConfigAllowedAmount(request.Symbol, request.Amount)
+
+		log.Trace().Str("symbol", request.Symbol).Float64("amount", request.Amount).Msg("Internal.Config.AllowedAmount")
 		var payload interface{}
 		pubsub.Publish(m.Reply, payload)
 	})
