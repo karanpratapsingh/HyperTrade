@@ -63,7 +63,7 @@ export class PubSub {
     return subscription;
   };
 
-  request = async <T, D = unknown>(event: Events, data?: D): Promise<T> => {
+  request = async <T = unknown, D = unknown>(event: Events, data?: D): Promise<T> => {
     const msg = await this.conn.request(
       event,
       this.codec.encode(JSON.stringify(data))
