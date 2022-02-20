@@ -208,6 +208,7 @@ func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal 
 		err := exchange.Trade(binance.SideTypeSell, symbol, closePrice, quantity)
 
 		if err != nil {
+			exchange.Dump(symbol)
 			return
 		}
 
