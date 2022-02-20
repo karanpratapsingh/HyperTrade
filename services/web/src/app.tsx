@@ -1,6 +1,5 @@
-import 'antd/dist/antd.css';
-import 'vercel-toast/dist/vercel-toast.css';
 import { Layout, Menu } from 'antd';
+import 'antd/dist/antd.css';
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { BiBarChart } from 'react-icons/bi';
@@ -17,6 +16,7 @@ import { DataFrame } from './pages/dataframe';
 import { Portfolio } from './pages/portfolio';
 import { useDataFrame } from './store/dataframe';
 import './styles/app.css';
+import { mountNotifications } from './utils/notifications';
 
 const client = new QueryClient();
 
@@ -29,6 +29,7 @@ function App(): React.ReactElement {
     const pubsub = await PubSub.getInstance();
     await restore();
 
+    mountNotifications(pubsub)
     pubsub.subscribe<DataFrameEventPayload>(Events.DataFrame, payload => {
       add([payload]);
     });
