@@ -101,7 +101,7 @@ export function Chart(): React.ReactElement {
       />
       <Modal
         className='mt-24'
-        title={<Header className='mb-0' title='Indicators' subtitle='Select indicators' />}
+        title={<Header className='!mb-0' title='Indicators' subtitle='Select indicators' />}
         visible={showIndicators}
         footer={null}
         onCancel={() => setShowIndicators(false)}>
