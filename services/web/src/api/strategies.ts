@@ -1,7 +1,7 @@
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { PubSub } from '../events/pubsub';
 import { Events } from '../events/types';
-import { ApiQueryResult } from './types';
+import { ApiMutationResult, ApiQueryResult } from './types';
 
 export type Rsi = {
   enabled: boolean;
@@ -53,4 +53,17 @@ export async function updateStrategy(
 ): Promise<boolean> {
   const pubsub = await PubSub.getInstance();
   return await pubsub.request(Events.UpdateStrategies, data);
+}
+
+export function useUpdateStrategy(): ApiMutationResult<
+  unknown,
+  UpdateStrategyRequest
+> {
+  const {
+    mutate,
+    data,
+    isLoading: loading,
+  } = useMutation('update-strategy', updateStrategy);
+
+  return { mutate, data, loading };
 }
