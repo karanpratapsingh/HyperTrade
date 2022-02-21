@@ -56,20 +56,20 @@ type Balance struct {
 	Amount float64 `json:"amount"`
 }
 
-type BalanceResponse struct {
+type GetBalanceResponse struct {
 	Test    bool      `json:"test"`
 	Balance []Balance `json:"balance"`
 }
 
 var GetPositionsEvent string = "Event:Positions:Get"
 
-type PositionsResponse struct {
+type GetPositionsResponse struct {
 	Positions []db.Positions `json:"positions"`
 }
 
 var GetTradesEvent string = "Event:Trades:Get"
 
-type TradesResponse struct {
+type GetTradesResponse struct {
 	Trades []db.Trades `json:"trades"`
 }
 
@@ -81,21 +81,21 @@ type Stats struct {
 	Total  float64 `json:"total"`
 }
 
-type StatsRequest struct {
+type GetStatsRequest struct {
 	Symbol string `json:"symbol"`
 }
 
-type StatsResponse struct {
+type GetStatsResponse struct {
 	Stats *Stats `json:"stats"`
 }
 
 var GetDataFrameEvent string = "Event:DataFrame:Get"
 
-type DataFrameRequest struct {
+type GetDataFrameRequest struct {
 	Size int `json:"size"`
 }
 
-type DataFrameResponse struct {
+type GetDataFrameResponse struct {
 	DataFrame []DataFrameEventPayload `json:"dataframe"`
 }
 
@@ -119,7 +119,7 @@ type DumpResponse struct {
 
 var GetConfigsEvent string = "Event:Configs:Get"
 
-type ConfigsResponse struct {
+type GetConfigsResponse struct {
 	Configs []db.Configs `json:"configs"`
 }
 

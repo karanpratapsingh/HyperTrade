@@ -12,14 +12,14 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { TradesResponse } from '../../api/trades';
+import { GetTradesResponse } from '../../api/trades';
 import { ApiQueryResult } from '../../api/types';
 import { Colors, LineColors } from '../../theme/colors';
 import * as animated from '../ui/animated';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
 
-interface TradesChartProps extends ApiQueryResult<TradesResponse> {}
+interface TradesChartProps extends ApiQueryResult<GetTradesResponse> {}
 
 export function TradesChart(props: TradesChartProps): React.ReactElement {
   const { data, loading } = props;

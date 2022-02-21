@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func (t Telegram) FormatConfigsMessage(r ConfigsResponse) string {
+func (t Telegram) FormatConfigsMessage(r GetConfigsResponse) string {
 	header := "*Configs*"
 
 	var configs = []string{header}
@@ -35,7 +35,7 @@ func (t Telegram) FormatConfigsMessage(r ConfigsResponse) string {
 	return strings.Join(configs, "\n")
 }
 
-func (t Telegram) FormatPostionsMessage(r PositionsResponse) string {
+func (t Telegram) FormatPostionsMessage(r GetPositionsResponse) string {
 	header := "*Positions*"
 
 	var positions = []string{header}
@@ -110,7 +110,7 @@ func (t Telegram) FormatTradeMessage(p TradeEventPayload) string {
 	return message
 }
 
-func (t Telegram) FormatBalanceMessage(r BalanceResponse) string {
+func (t Telegram) FormatBalanceMessage(r GetBalanceResponse) string {
 	header := "*Balance*\n"
 
 	if r.Test {
@@ -128,7 +128,7 @@ func (t Telegram) FormatBalanceMessage(r BalanceResponse) string {
 	return strings.Join(balances, "\n")
 }
 
-func (t Telegram) FormatStatsMessage(r StatsResponse) string {
+func (t Telegram) FormatStatsMessage(r GetStatsResponse) string {
 	var message string
 
 	if r.Stats == nil {

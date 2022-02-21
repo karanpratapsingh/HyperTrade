@@ -84,7 +84,7 @@ func (t Telegram) ListenForCommands(symbol string) {
 
 		switch command {
 		case ConfigsCommand:
-			var r ConfigsResponse
+			var r GetConfigsResponse
 
 			err := t.pubsub.Request(GetConfigsEvent, nil, &r)
 
@@ -94,7 +94,7 @@ func (t Telegram) ListenForCommands(symbol string) {
 				message.Text = t.FormatConfigsMessage(r)
 			}
 		case BalanceCommand:
-			var r BalanceResponse
+			var r GetBalanceResponse
 
 			err := t.pubsub.Request(GetBalanceEvent, nil, &r)
 
@@ -104,7 +104,7 @@ func (t Telegram) ListenForCommands(symbol string) {
 				message.Text = t.FormatBalanceMessage(r)
 			}
 		case PositionsCommand:
-			var r PositionsResponse
+			var r GetPositionsResponse
 
 			err := t.pubsub.Request(GetPositionsEvent, nil, &r)
 
@@ -114,9 +114,9 @@ func (t Telegram) ListenForCommands(symbol string) {
 				message.Text = t.FormatPostionsMessage(r)
 			}
 		case StatsCommand:
-			var r StatsResponse
+			var r GetStatsResponse
 
-			req := StatsRequest{symbol}
+			req := GetStatsRequest{symbol}
 			err := t.pubsub.Request(GetStatsEvent, req, &r)
 
 			if err != nil {

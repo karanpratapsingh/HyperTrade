@@ -41,7 +41,7 @@ type Balance struct {
 	Amount float64 `json:"amount"`
 }
 
-type BalanceResponse struct {
+type GetBalanceResponse struct {
 	Test    bool      `json:"test"`
 	Balance []Balance `json:"balance"`
 }
@@ -55,7 +55,7 @@ type Positions struct {
 	Time     time.Time `json:"time"`
 }
 
-type PositionsResponse struct {
+type GetPositionsResponse struct {
 	Positions []Positions `json:"positions"`
 }
 
@@ -67,11 +67,11 @@ type Stats struct {
 	Total  float64 `json:"total"`
 }
 
-type StatsRequest struct {
+type GetStatsRequest struct {
 	Symbol string `json:"symbol"`
 }
 
-type StatsResponse struct {
+type GetStatsResponse struct {
 	Stats *Stats `json:"stats"`
 }
 
@@ -104,6 +104,6 @@ type Configs struct {
 	TradingEnabled bool    `json:"trading_enabled"`
 }
 
-type ConfigsResponse struct {
+type GetConfigsResponse struct {
 	Configs []Configs `json:"configs"`
 }

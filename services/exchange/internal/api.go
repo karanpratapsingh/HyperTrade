@@ -38,7 +38,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	})
 
 	pubsub.Subscribe(GetConfigsEvent, func(m *nats.Msg) {
-		payload := ConfigsResponse{
+		payload := GetConfigsResponse{
 			Configs: DB.GetConfigs(),
 		}
 
@@ -101,7 +101,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	})
 
 	pubsub.Subscribe(GetBalanceEvent, func(m *nats.Msg) {
-		response := BalanceResponse{
+		response := GetBalanceResponse{
 			Test:    exchange.test,
 			Balance: exchange.GetBalance(),
 		}
@@ -110,7 +110,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	})
 
 	pubsub.Subscribe(GetPositionsEvent, func(m *nats.Msg) {
-		response := PositionsResponse{
+		response := GetPositionsResponse{
 			Positions: DB.GetPositions(),
 		}
 
@@ -118,7 +118,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	})
 
 	pubsub.Subscribe(GetTradesEvent, func(m *nats.Msg) {
-		response := TradesResponse{
+		response := GetTradesResponse{
 			Trades: DB.GetTrades(),
 		}
 
@@ -126,10 +126,10 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	})
 
 	pubsub.Subscribe(GetStatsEvent, func(m *nats.Msg) {
-		var response StatsResponse
+		var response GetStatsResponse
 		var stats Stats
 
-		var request StatsRequest
+		var request GetStatsRequest
 		utils.Unmarshal(m.Data, &request)
 
 		trades := DB.GetTrades()
@@ -148,17 +148,17 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 			}
 
 			stats.Total = stats.Profit + stats.Loss
-			response = StatsResponse{&stats}
+			response = GetStatsResponse{&stats}
 		}
 
 		pubsub.Publish(m.Reply, response)
 	})
 
 	pubsub.Subscribe(GetDataFrameEvent, func(m *nats.Msg) {
-		var request DataFrameRequest
+		var request GetDataFrameRequest
 		utils.Unmarshal(m.Data, &request)
 
-		var response DataFrameResponse
+		var response GetDataFrameResponse
 		var data []DataFrameEventPayload
 
 		js := pubsub.JetStream()

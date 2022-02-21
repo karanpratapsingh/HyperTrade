@@ -1,13 +1,13 @@
 import { Table } from 'antd';
 import dateFormat from 'dateformat';
-import { Trade, TradesResponse } from '../../api/trades';
+import { Trade, GetTradesResponse } from '../../api/trades';
 import { ApiQueryResult } from '../../api/types';
 import { paginationProps } from '../../utils/pagination';
 import * as animated from '../ui/animated';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
 
-interface TradesTableProps extends ApiQueryResult<TradesResponse> {}
+interface TradesTableProps extends ApiQueryResult<GetTradesResponse> {}
 
 export function TradesTable(props: TradesTableProps): React.ReactElement {
   const { data, loading } = props;

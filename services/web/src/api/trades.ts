@@ -12,21 +12,21 @@ export type Trade = {
   time: Date;
 };
 
-export type TradesResponse = {
+export type GetTradesResponse = {
   trades: Trade[];
 };
 
-export async function getPositions(): Promise<TradesResponse> {
+export async function getPositions(): Promise<GetTradesResponse> {
   const pubsub = await PubSub.getInstance();
-  return await pubsub.request<TradesResponse>(Events.GetTrades);
+  return await pubsub.request<GetTradesResponse>(Events.GetTrades);
 }
 
-export function useTrades(): ApiQueryResult<TradesResponse> {
+export function useTrades(): ApiQueryResult<GetTradesResponse> {
   const {
     data,
     isLoading: loading,
     error,
-  } = useQuery<TradesResponse, Error>('trades', getPositions, options);
+  } = useQuery<GetTradesResponse, Error>('trades', getPositions, options);
 
   return { data, loading, error };
 }

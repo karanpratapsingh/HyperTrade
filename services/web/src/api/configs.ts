@@ -12,21 +12,21 @@ export type Configs = {
   trading_enabled: boolean;
 };
 
-export type ConfigsResponse = {
+export type GetConfigsResponse = {
   configs: Configs[];
 };
 
-export async function getConfigs(): Promise<ConfigsResponse> {
+export async function getConfigs(): Promise<GetConfigsResponse> {
   const pubsub = await PubSub.getInstance();
-  return await pubsub.request<ConfigsResponse>(Events.GetConfigs);
+  return await pubsub.request<GetConfigsResponse>(Events.GetConfigs);
 }
 
-export function useConfigs(): ApiQueryResult<ConfigsResponse> {
+export function useConfigs(): ApiQueryResult<GetConfigsResponse> {
   const {
     data,
     isLoading: loading,
     error,
-  } = useQuery<ConfigsResponse, Error>('configs', getConfigs);
+  } = useQuery<GetConfigsResponse, Error>('configs', getConfigs);
 
   return { data, loading, error };
 }

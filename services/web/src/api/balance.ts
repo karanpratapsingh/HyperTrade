@@ -8,22 +8,22 @@ export type Balance = {
   amount: number;
 };
 
-export type BalanceResponse = {
+export type GetBalanceResponse = {
   test: boolean;
   balance: Balance[];
 };
 
-export async function getBalance(): Promise<BalanceResponse> {
+export async function getBalance(): Promise<GetBalanceResponse> {
   const pubsub = await PubSub.getInstance();
-  return await pubsub.request<BalanceResponse>(Events.GetBalance);
+  return await pubsub.request<GetBalanceResponse>(Events.GetBalance);
 }
 
-export function useBalance(): ApiQueryResult<BalanceResponse> {
+export function useBalance(): ApiQueryResult<GetBalanceResponse> {
   const {
     data,
     isLoading: loading,
     error,
-  } = useQuery<BalanceResponse, Error>('balance', getBalance, options);
+  } = useQuery<GetBalanceResponse, Error>('balance', getBalance, options);
 
   return { data, loading, error };
 }

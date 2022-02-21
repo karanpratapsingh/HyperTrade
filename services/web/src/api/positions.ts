@@ -10,21 +10,21 @@ export type Position = {
   time: Date;
 };
 
-export type PositionsResponse = {
+export type GetPositionsResponse = {
   positions: Position[];
 };
 
-export async function getPositions(): Promise<PositionsResponse> {
+export async function getPositions(): Promise<GetPositionsResponse> {
   const pubsub = await PubSub.getInstance();
-  return await pubsub.request<PositionsResponse>(Events.GetPositions);
+  return await pubsub.request<GetPositionsResponse>(Events.GetPositions);
 }
 
-export function usePositions(): ApiQueryResult<PositionsResponse> {
+export function usePositions(): ApiQueryResult<GetPositionsResponse> {
   const {
     data,
     isLoading: loading,
     error,
-  } = useQuery<PositionsResponse, Error>('positions', getPositions, options);
+  } = useQuery<GetPositionsResponse, Error>('positions', getPositions, options);
 
   return { data, loading, error };
 }

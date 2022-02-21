@@ -188,7 +188,7 @@ func (b Binance) Kline(symbol string, interval string) {
 		final := event.Kline.IsFinal
 
 		kline := Kline{symbol, time, open, high, low, close, volume, final}
-
+		return
 		log.Info().
 			Str("symbol", symbol).
 			Float64("open", open).
