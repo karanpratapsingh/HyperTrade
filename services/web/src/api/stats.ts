@@ -19,9 +19,12 @@ export type GetStatsResponse = {
 
 export async function getStats(symbol: string): Promise<GetStatsResponse> {
   const pubsub = await PubSub.getInstance();
-  return await pubsub.request<GetStatsResponse, GetStatsRequest>(Events.GetStats, {
-    symbol,
-  });
+  return await pubsub.request<GetStatsResponse, GetStatsRequest>(
+    Events.GetStats,
+    {
+      symbol,
+    }
+  );
 }
 
 export function useStats(symbol: string): ApiQueryResult<GetStatsResponse> {
@@ -29,7 +32,11 @@ export function useStats(symbol: string): ApiQueryResult<GetStatsResponse> {
     data,
     isLoading: loading,
     error,
-  } = useQuery<GetStatsResponse, Error>('stats', () => getStats(symbol), options);
+  } = useQuery<GetStatsResponse, Error>(
+    'stats',
+    () => getStats(symbol),
+    options
+  );
 
   return { data, loading, error };
 }

@@ -29,7 +29,7 @@ function App(): React.ReactElement {
     const pubsub = await PubSub.getInstance();
     await restore();
 
-    mountNotifications(pubsub)
+    mountNotifications(pubsub);
     pubsub.subscribe<DataFrameEventPayload>(Events.DataFrame, payload => {
       add([payload]);
     });

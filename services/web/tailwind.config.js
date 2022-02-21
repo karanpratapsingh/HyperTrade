@@ -8,7 +8,7 @@ module.exports = {
         'light-gray': '#ddd',
         light: '#f3f4f6',
         dark: '#202020',
-      }
+      },
     },
   },
   plugins: [],

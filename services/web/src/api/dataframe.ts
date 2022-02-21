@@ -9,7 +9,9 @@ type GetDataFrameResponse = {
   dataframe: DataFrameEventPayload[];
 };
 
-export async function getDataFrame(size: number): Promise<GetDataFrameResponse> {
+export async function getDataFrame(
+  size: number
+): Promise<GetDataFrameResponse> {
   const pubsub = await PubSub.getInstance();
 
   return await pubsub.request<GetDataFrameResponse, GetDataFrameRequest>(
