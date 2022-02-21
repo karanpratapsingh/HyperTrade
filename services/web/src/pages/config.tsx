@@ -1,6 +1,6 @@
-import { Avatar, Card, Col, InputNumber, Layout, Row } from 'antd';
+import { Avatar, Card, Col, InputNumber, Layout, Modal, Row } from 'antd';
 import sortBy from 'lodash/sortBy';
-import React from 'react';
+import React, { useState } from 'react';
 import { RiSettings3Fill } from 'react-icons/ri';
 import Switch from 'react-switch';
 import {
@@ -9,7 +9,7 @@ import {
   UpdateTradingEnabledRequest,
   useConfigs,
   useUpdateAllowedAmount,
-  useUpdateTradingEnabled
+  useUpdateTradingEnabled,
 } from '../api/configs';
 import * as animated from '../components/ui/animated';
 import { Header } from '../components/ui/header';
@@ -26,13 +26,16 @@ export function Config(): React.ReactElement {
   const { mutate: mutateTradingEnabled, loading: loadingTradingEnabled } =
     useUpdateTradingEnabled();
   const { mutate: mutateAllowedAmount } = useUpdateAllowedAmount();
+  const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [currentSymbol, setCurrentSymbol] = useState<Configs['symbol']>('');
 
   function renderConfig(config: Configs): React.ReactNode {
     const { symbol, base, quote, minimum, allowed_amount, trading_enabled } =
       config;
 
     function onSettings(): void {
-      // TODO: open strategy settings
+      setShowSettings(true);
+      setCurrentSymbol(symbol);
     }
 
     async function onUpdateTradingEnable(
@@ -75,42 +78,34 @@ export function Config(): React.ReactElement {
       />
     );
 
+    const title = (
+      <ContentRow label={symbol} content={settings} suffix={tradingSwitch} />
+    );
+
+    const description = (
+      <div className='flex flex-col'>
+        <ContentRow label='Base' content={baseAvatar} />
+        <ContentRow label='Quote' content={quoteAvatar} />
+        <ContentRow label='Minimum' content={minimum} suffix={quoteAvatar} />
+        <ContentRow
+          label='Allowed'
+          content={
+            <InputNumber
+              className='w-16'
+              min={minimum}
+              defaultValue={allowed_amount}
+              onChange={onAmountChange}
+            />
+          }
+          suffix={quoteAvatar}
+        />
+      </div>
+    );
+
     return (
       <Col span={6}>
         <Card className='w-min-full'>
-          <Meta
-            avatar={symbolAvatar}
-            title={
-              <ContentRow
-                label={symbol}
-                content={settings}
-                suffix={tradingSwitch}
-              />
-            }
-            description={
-              <div className='flex flex-col'>
-                <ContentRow label='Base' content={baseAvatar} />
-                <ContentRow label='Quote' content={quoteAvatar} />
-                <ContentRow
-                  label='Minimum'
-                  content={minimum}
-                  suffix={quoteAvatar}
-                />
-                <ContentRow
-                  label='Allowed'
-                  content={
-                    <InputNumber
-                      className='w-16'
-                      min={minimum}
-                      defaultValue={allowed_amount}
-                      onChange={onAmountChange}
-                    />
-                  }
-                  suffix={quoteAvatar}
-                />
-              </div>
-            }
-          />
+          <Meta avatar={symbolAvatar} title={title} description={description} />
         </Card>
       </Col>
     );
@@ -135,6 +130,18 @@ export function Config(): React.ReactElement {
     <Content className='p-6 bg-white'>
       <Header title='Config' subtitle='Configure your assets' />
       {content}
+      <Modal
+        className='mt-24'
+        title={
+          <Header
+            className='mb-0'
+            title='Strategy'
+            subtitle={`Configure strategy for ${currentSymbol}`}
+          />
+        }
+        visible={showSettings}
+        footer={null}
+        onCancel={() => setShowSettings(false)}></Modal>
     </Content>
   );
 }
