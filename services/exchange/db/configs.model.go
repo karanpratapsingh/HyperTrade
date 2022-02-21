@@ -22,8 +22,7 @@ func (db DB) GetConfigs() []Configs {
 	result := db.conn.Find(&configs)
 
 	if result.Error != nil {
-		log.Error().Err(result.Error).
-			Msg("DB.Configs.GetConfigs")
+		log.Error().Err(result.Error).Msg("DB.Configs.GetConfigs")
 	}
 
 	return configs
@@ -35,7 +34,7 @@ func (db DB) GetConfig(symbol string) Configs {
 	result := db.conn.First(&config, "symbol = ?", symbol)
 
 	if result.Error != nil && !errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		log.Error().Err(result.Error).Str("symbol", symbol).Msg("DB.Positions.GetPosition")
+		log.Error().Err(result.Error).Str("symbol", symbol).Msg("DB.Configs.GetConfig")
 	}
 
 	return config

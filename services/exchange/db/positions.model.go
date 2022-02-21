@@ -21,8 +21,7 @@ func (db DB) GetPositions() []Positions {
 	result := db.conn.Find(&positions)
 
 	if result.Error != nil {
-		log.Error().Err(result.Error).
-			Msg("DB.Positions.GetPositions")
+		log.Error().Err(result.Error).Msg("DB.Positions.GetPositions")
 	}
 
 	return positions

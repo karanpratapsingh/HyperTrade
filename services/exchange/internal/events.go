@@ -44,7 +44,6 @@ type TradeEventPayload struct {
 var DataFrameEvent string = "Event:DataFrame"
 
 type DataFrameEventPayload struct {
-	Open       float64    `json:"open"`
 	Kline      Kline      `json:"kline"`
 	Indicators Indicators `json:"indicators"`
 	Signal     Signal     `json:"signal"`
