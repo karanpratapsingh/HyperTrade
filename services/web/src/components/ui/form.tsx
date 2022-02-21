@@ -19,3 +19,21 @@ export function ContentRow(props: ContentRowProps): React.ReactElement {
     </div>
   );
 }
+
+interface IndicatorLabelProps {
+  name: string;
+  description: string;
+}
+
+export function IndicatorLabel(props: IndicatorLabelProps): React.ReactElement {
+  const { name, description } = props;
+
+  return (
+    <span className='ml-2 font-light'>
+      {name}
+      <span className='ml-1 italic font-light text-dark-gray'>
+        ({description})
+      </span>
+    </span>
+  );
+}

@@ -15,7 +15,7 @@ import { StrategyModal } from '../components/modal/strategy';
 import * as animated from '../components/ui/animated';
 import { Header } from '../components/ui/header';
 import { Loader } from '../components/ui/loader';
-import { ContentRow } from '../components/ui/row';
+import { ContentRow } from '../components/ui/form';
 import { Colors } from '../theme/colors';
 import { getCryptoIcon } from '../theme/icons';
 

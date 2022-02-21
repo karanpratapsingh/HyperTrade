@@ -5,10 +5,10 @@ import {
   useStrategy,
   useUpdateStrategy,
 } from '../../api/strategies';
-import { Header } from '../ui/header';
 import * as Notifications from '../../utils/notifications';
+import { ContentRow, IndicatorLabel } from '../ui/form';
+import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
-import { ContentRow } from '../ui/row';
 
 interface StrategyModalProps {
   show: boolean;
@@ -21,7 +21,7 @@ const { Panel } = Collapse;
 type PanelItem = {
   key: string;
   header: {
-    label: string;
+    label: React.ReactNode;
     checked: boolean;
     onClick: (event: React.MouseEvent<HTMLElement>) => void;
   };
@@ -123,7 +123,9 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
       {
         key: 'rsi',
         header: {
-          label: 'Relative Strength Index (RSI)',
+          label: (
+            <IndicatorLabel name='RSI' description='Relative Strength Index' />
+          ),
           checked: rsi.enabled,
           onClick: onRsiToggle,
         },
@@ -152,7 +154,7 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
     ];
 
     content = (
-      <Collapse className='w-full bg-primary bg-opacity-5'>
+      <Collapse className='w-full bg-dark-light bg-opacity-5'>
         {React.Children.toArray(panels.map(renderPanel))}
       </Collapse>
     );
