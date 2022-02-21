@@ -56,10 +56,6 @@ profiles:
                 dest: .
         - image: registry.digitalocean.com/trader-registry/strategy
           context: ./services/strategy
-          sync:
-            manual:
-              - src: "**/*.py"
-                dest: .
 deploy:
   helm:
     releases:
