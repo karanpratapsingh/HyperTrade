@@ -11,6 +11,8 @@ export enum Events {
   CriticalError = 'Event:CriticalError',
   Order = 'Event:Order',
   Trade = 'Event:Trade',
+  GetStrategies = 'Event:Strategies:Get',
+  UpdateStrategies = 'Event:Strategies:Update',
 }
 
 export type DataFrameEventPayload = {

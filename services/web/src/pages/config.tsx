@@ -1,4 +1,4 @@
-import { Avatar, Card, Col, InputNumber, Layout, Modal, Row } from 'antd';
+import { Avatar, Card, Col, InputNumber, Layout, Row } from 'antd';
 import sortBy from 'lodash/sortBy';
 import React, { useState } from 'react';
 import { RiSettings3Fill } from 'react-icons/ri';
@@ -11,6 +11,7 @@ import {
   useUpdateAllowedAmount,
   useUpdateTradingEnabled,
 } from '../api/configs';
+import { StrategiesModal } from '../components/modal/strategies';
 import * as animated from '../components/ui/animated';
 import { Header } from '../components/ui/header';
 import { Loader } from '../components/ui/loader';
@@ -27,15 +28,17 @@ export function Config(): React.ReactElement {
     useUpdateTradingEnabled();
   const { mutate: mutateAllowedAmount } = useUpdateAllowedAmount();
   const [showSettings, setShowSettings] = useState<boolean>(false);
-  const [currentSymbol, setCurrentSymbol] = useState<Configs['symbol']>('');
+  const [currentSymbol, setCurrentSymbol] = useState<Configs['symbol'] | null>(
+    null
+  );
 
   function renderConfig(config: Configs): React.ReactNode {
     const { symbol, base, quote, minimum, allowed_amount, trading_enabled } =
       config;
 
     function onSettings(): void {
-      setShowSettings(true);
       setCurrentSymbol(symbol);
+      setShowSettings(true);
     }
 
     async function onUpdateTradingEnable(
@@ -130,18 +133,13 @@ export function Config(): React.ReactElement {
     <Content className='p-6 bg-white'>
       <Header title='Config' subtitle='Configure your assets' />
       {content}
-      <Modal
-        className='mt-24'
-        title={
-          <Header
-            className='mb-0'
-            title='Strategy'
-            subtitle={`Configure strategy for ${currentSymbol}`}
-          />
-        }
-        visible={showSettings}
-        footer={null}
-        onCancel={() => setShowSettings(false)}></Modal>
+      {currentSymbol && (
+        <StrategiesModal
+          show={showSettings}
+          symbol={currentSymbol}
+          onClose={() => setShowSettings(false)}
+        />
+      )}
     </Content>
   );
 }
