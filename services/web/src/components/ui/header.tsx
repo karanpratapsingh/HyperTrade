@@ -13,7 +13,7 @@ export function Header(props: HeaderProps) {
     <div className={clsx('flex flex-col mb-4', className)}>
       <span className='font-bold text-xl'>{title}</span>
       {subtitle && (
-        <span className='text-sm font-light italic text-gray-400'>
+        <span className='text-sm font-light italic text-dark-gray'>
           {subtitle}
         </span>
       )}

@@ -45,14 +45,14 @@ export function Chart(): React.ReactElement {
     [ChartType.AREA]: (
       <BiBarChart
         size={25}
-        color={Colors.black}
+        color={Colors.dark}
         onClick={() => setType(ChartType.CANDLE)}
       />
     ),
     [ChartType.CANDLE]: (
       <AiOutlineAreaChart
         size={25}
-        color={Colors.black}
+        color={Colors.dark}
         onClick={() => setType(ChartType.AREA)}
       />
     ),
@@ -62,14 +62,14 @@ export function Chart(): React.ReactElement {
     [AxisType.NORMAL]: (
       <AiOutlinePercentage
         size={22}
-        color={Colors.black}
+        color={Colors.dark}
         onClick={() => setAxis(AxisType.PERCENTAGE)}
       />
     ),
     [AxisType.PERCENTAGE]: (
       <AiOutlineFieldNumber
         size={25}
-        color={Colors.black}
+        color={Colors.dark}
         onClick={() => setAxis(AxisType.NORMAL)}
       />
     ),
@@ -83,7 +83,7 @@ export function Chart(): React.ReactElement {
       icon={
         <AiOutlineFunction
           size={25}
-          color={Colors.black}
+          color={Colors.dark}
           onClick={() => setShowIndicators(true)}
         />
       }
@@ -167,7 +167,7 @@ function IndicatorsList(props: IndicatorsListProps): React.ReactElement {
         <Checkbox checked={checked} />
         <span className='ml-2 font-light'>
           {indicator.name}
-          <span className='ml-1 italic font-light text-gray-400'>
+          <span className='ml-1 italic font-light text-dark-gray'>
             ({indicator.description})
           </span>
         </span>
@@ -182,7 +182,7 @@ function IndicatorsList(props: IndicatorsListProps): React.ReactElement {
   if (!filtered.length) {
     content = (
       <div className='mb-1'>
-        <span className='italic font-light text-gray-400'>Not found</span>
+        <span className='italic font-light text-dark-gray'>Not found</span>
       </div>
     );
   }

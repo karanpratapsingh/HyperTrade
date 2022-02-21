@@ -8,6 +8,7 @@ import {
 import { Header } from '../ui/header';
 import * as Notifications from '../../utils/notifications';
 import { Loader } from '../ui/loader';
+import { ContentRow } from '../ui/row';
 
 interface StrategyModalProps {
   show: boolean;
@@ -122,26 +123,36 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
       {
         key: 'rsi',
         header: {
-          label: 'RSI 14',
+          label: 'Relative Strength Index (RSI)',
           checked: rsi.enabled,
           onClick: onRsiToggle,
         },
         content: (
-          <Slider
-            range
-            step={5}
-            min={0}
-            max={100}
-            value={[rsi.oversold, rsi.overbought]}
-            onChange={onRsiChange}
-            disabled={!rsi.enabled}
-          />
+          <div className='font-light text-dark-gray'>
+            <ContentRow label='Interval' content='14' />
+            <ContentRow label='Overbought' content={rsi.overbought} />
+            <ContentRow label='Oversold' content={rsi.oversold} />
+            <div className='flex w-full items-center'>
+              <span>0</span>
+              <Slider
+                className='w-full'
+                range
+                step={5}
+                min={0}
+                max={100}
+                value={[rsi.oversold, rsi.overbought]}
+                onChange={onRsiChange}
+                disabled={!rsi.enabled}
+              />
+              <span>100</span>
+            </div>
+          </div>
         ),
       },
     ];
 
     content = (
-      <Collapse className='w-full bg-gray-50'>
+      <Collapse className='w-full bg-primary bg-opacity-5'>
         {React.Children.toArray(panels.map(renderPanel))}
       </Collapse>
     );

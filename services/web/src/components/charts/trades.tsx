@@ -30,7 +30,7 @@ export function TradesChart(props: TradesChartProps): React.ReactElement {
 
   const tickStyle = {
     style: {
-      color: Colors.gray,
+      color: Colors.darkGray,
       fontSize: 10,
       fontWeight: 300,
     },

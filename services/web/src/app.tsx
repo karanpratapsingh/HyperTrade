@@ -41,9 +41,9 @@ function App(): React.ReactElement {
 
   const content: React.ReactNode = (
     <Layout className='min-h-screen'>
-      <Sider className='bg-gray-100' theme='light' collapsed>
+      <Sider className='bg-light' theme='light' collapsed>
         <Menu
-          className='bg-gray-100 mt-2'
+          className='bg-light mt-2'
           theme='light'
           mode='inline'
           defaultSelectedKeys={[MenuItem.CHART]}>
