@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"errors"
+	"exchange/db"
 	"exchange/utils"
 	"fmt"
 	"strings"
@@ -18,17 +19,18 @@ type Binance struct {
 	client *binance.Client
 	test   bool
 	pubsub PubSub
+	DB     db.DB
 }
 
 var ErrBaseAsset = errors.New("base asset for symbol not found")
 
-func NewBinance(key, secret string, test bool, pubsub PubSub) Binance {
+func NewBinance(key, secret string, test bool, pubsub PubSub, DB db.DB) Binance {
 	log.Trace().Str("type", "binance").Bool("test", test).Msg("Binance.Init")
 
 	binance.UseTestnet = test
 	client := binance.NewClient(key, secret)
 
-	return Binance{client, test, pubsub}
+	return Binance{client, test, pubsub, DB}
 }
 
 func (b Binance) GetAccount() *binance.Account {
@@ -188,7 +190,7 @@ func (b Binance) Kline(symbol string, interval string) {
 		final := event.Kline.IsFinal
 
 		kline := Kline{symbol, time, open, high, low, close, volume, final}
-		return
+
 		log.Info().
 			Str("symbol", symbol).
 			Float64("open", open).
@@ -199,7 +201,8 @@ func (b Binance) Kline(symbol string, interval string) {
 			Bool("final", final).
 			Msg(KlineEvent)
 
-		b.pubsub.Publish(KlineEvent, KlinePayload{kline})
+		strategy := b.DB.GetStrategy(symbol)
+		b.pubsub.Publish(KlineEvent, KlinePayload{kline, strategy})
 	}
 
 	errHandler := func(err error) {

@@ -29,7 +29,14 @@ func main() {
 	pubsub := internal.NewPubSub(env.NatsUrl, env.NatsUser, env.NatsPass)
 	defer pubsub.Close()
 
-	bex := internal.NewBinance(env.BinanceApiKey, env.BinanceApiSecretKey, env.BinanceTestnet, pubsub)
+	bex := internal.NewBinance(
+		env.BinanceApiKey,
+		env.BinanceApiSecretKey,
+		env.BinanceTestnet,
+		pubsub,
+		DB,
+	)
+
 	bex.PrintAccountInfo(symbol)
 
 	go bex.Kline(symbol, interval)

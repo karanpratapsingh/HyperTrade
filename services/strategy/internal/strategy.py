@@ -8,9 +8,12 @@ from internal.events import Signal
 
 class Strategy:
     df = pd.DataFrame()
+    strategy = None
 
     def populate(self, data):
         kline = data['kline']
+
+        self.strategy = data['strategy']
 
         self.df = self.df.append(kline, ignore_index=True)
         self.add_indicators()
@@ -93,8 +96,16 @@ class Strategy:
         self.df = frame
 
     def get_buy_condition(self, index) -> bool:
+        condition = False
+
+        if self.strategy is None:
+            return condition
+
         rsi = self.df['rsi'][index]
-        condition = rsi <= 30
+        rsi_config = self.strategy['rsi']
+
+        if rsi_config['enabled']:
+            condition = rsi <= rsi_config['oversold']
 
         return condition
 
@@ -107,9 +118,17 @@ class Strategy:
         else:
             self.df.loc[index, 'buy'] = False
 
-    def get_sell_condition(self, index):
+    def get_sell_condition(self, index) -> bool:
+        condition = False
+
+        if self.strategy is None:
+            return condition
+
         rsi = self.df['rsi'][index]
-        condition = rsi >= 70
+        rsi_config = self.strategy['rsi']
+
+        if rsi_config['enabled']:
+            condition = rsi >= rsi_config['overbought']
 
         return condition
 

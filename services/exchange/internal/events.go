@@ -16,7 +16,8 @@ type CriticalErrorEventPayload struct {
 var KlineEvent string = "Event:Kline"
 
 type KlinePayload struct {
-	Kline Kline `json:"kline"`
+	Kline    Kline         `json:"kline"`
+	Strategy db.Strategies `json:"strategy"`
 }
 
 var OrderEvent string = "Event:Order"
