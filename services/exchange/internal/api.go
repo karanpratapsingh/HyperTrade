@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"exchange/db"
 	"exchange/utils"
+	"fmt"
 
 	"github.com/adshao/go-binance/v2"
 	"github.com/nats-io/nats.go"
@@ -12,6 +13,29 @@ import (
 
 func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	log.Trace().Msg("Internal.AsyncApi.Init")
+
+	pubsub.Subscribe(GetStrategyEvent, func(m *nats.Msg) {
+		var request GetStrategyRequest
+		utils.Unmarshal(m.Data, &request)
+
+		payload := GetStrategyResponse{
+			Strategy: DB.GetStrategy(request.Symbol),
+		}
+
+		pubsub.Publish(m.Reply, payload)
+	})
+
+	pubsub.Subscribe(UpdateStrategyEvent, func(m *nats.Msg) {
+		var request UpdateStrategyRequest
+		utils.Unmarshal(m.Data, &request)
+
+		fmt.Println(request)
+		DB.UpdateStrategy(request.Strategy)
+
+		log.Trace().Msg("Internal.Strategy.Update")
+		var payload interface{}
+		pubsub.Publish(m.Reply, payload)
+	})
 
 	pubsub.Subscribe(GetConfigsEvent, func(m *nats.Msg) {
 		payload := ConfigsResponse{

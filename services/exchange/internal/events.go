@@ -129,3 +129,19 @@ type UpdateAllowedAmountRequest struct {
 	Symbol string  `json:"symbol"`
 	Amount float64 `json:"amount"`
 }
+
+var GetStrategyEvent string = "Event:Strategies:Get"
+
+type GetStrategyRequest struct {
+	Symbol string `json:"symbol"`
+}
+
+type GetStrategyResponse struct {
+	Strategy db.Strategies `json:"strategy"`
+}
+
+var UpdateStrategyEvent string = "Event:Strategies:Update"
+
+type UpdateStrategyRequest struct {
+	Strategy db.Strategies `json:"strategy"`
+}
