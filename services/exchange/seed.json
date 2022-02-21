@@ -24,5 +24,31 @@
       "allowed_amount": 25,
       "trading_enabled": false
     }
+  ],
+  "strategies": [
+    {
+      "symbol": "BTCUSDT",
+      "rsi": {
+        "enabled": false,
+        "overbought": 70,
+        "oversold": 30
+      }
+    },
+    {
+      "symbol": "ETHUSDT",
+      "rsi": {
+        "enabled": true,
+        "overbought": 70,
+        "oversold": 30
+      }
+    },
+    {
+      "symbol": "SOLUSDT",
+      "rsi": {
+        "enabled": false,
+        "overbought": 60,
+        "oversold": 40
+      }
+    }
   ]
 }

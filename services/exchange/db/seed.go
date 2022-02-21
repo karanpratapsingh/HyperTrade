@@ -10,7 +10,8 @@ import (
 )
 
 type seedConfig struct {
-	Configs []Configs `json:"configs"`
+	Configs    []Configs    `json:"configs"`
+	Strategies []Strategies `json:"strategies"`
 }
 
 type seed struct {
@@ -31,7 +32,11 @@ func (db DB) Seed() {
 	}
 
 	var sc seedConfig
-	utils.Unmarshal(file, &sc)
+	err = utils.Unmarshal(file, &sc)
+
+	if err != nil {
+		panic(err)
+	}
 
 	var seeds = []seed{
 		{
@@ -39,6 +44,13 @@ func (db DB) Seed() {
 			Type: &Configs{},
 			Fn: func() error {
 				return db.CreateConfigs(sc.Configs)
+			},
+		},
+		{
+			Name: "create strategies",
+			Type: &Strategies{},
+			Fn: func() error {
+				return db.CreateStrategies(sc.Strategies)
 			},
 		},
 	}
