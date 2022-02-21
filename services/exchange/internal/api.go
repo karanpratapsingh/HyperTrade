@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"exchange/db"
 	"exchange/utils"
-	"fmt"
 
 	"github.com/adshao/go-binance/v2"
 	"github.com/nats-io/nats.go"
@@ -29,7 +28,6 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 		var request UpdateStrategyRequest
 		utils.Unmarshal(m.Data, &request)
 
-		fmt.Println(request)
 		DB.UpdateStrategy(request.Strategy)
 
 		log.Trace().Msg("Internal.Strategy.Update")
