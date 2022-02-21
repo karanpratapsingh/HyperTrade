@@ -46,3 +46,15 @@ body {
 .table {
   min-height: 16rem;
 }
+
+.ant-collapse {
+  border: none !important;
+}
+
+.ant-collapse-item {
+  border: none !important;
+}
+
+.ant-collapse-content {
+  border: none !important;
+}

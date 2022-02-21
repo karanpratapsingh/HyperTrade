@@ -11,7 +11,7 @@ import {
   useUpdateAllowedAmount,
   useUpdateTradingEnabled,
 } from '../api/configs';
-import { StrategiesModal } from '../components/modal/strategies';
+import { StrategyModal } from '../components/modal/strategy';
 import * as animated from '../components/ui/animated';
 import { Header } from '../components/ui/header';
 import { Loader } from '../components/ui/loader';
@@ -130,11 +130,11 @@ export function Config(): React.ReactElement {
   }
 
   return (
-    <Content className='p-6 bg-white'>
+    <Content className='p-6 bg-white flex flex-col'>
       <Header title='Config' subtitle='Configure your assets' />
       {content}
       {currentSymbol && (
-        <StrategiesModal
+        <StrategyModal
           show={showSettings}
           symbol={currentSymbol}
           onClose={() => setShowSettings(false)}
