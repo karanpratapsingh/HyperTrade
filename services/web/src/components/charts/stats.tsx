@@ -27,7 +27,7 @@ export function StatsChart(): React.ReactElement {
     return <Loader />;
   }
 
-  let content: React.ReactNode | null = (
+  let content: React.ReactNode = (
     <animated.Div
       className='flex flex-1 items-center justify-center'
       style={{ height, width }}>
