@@ -7,7 +7,6 @@ EXPOSE 8080
 CMD npm run dev
 
 FROM node:16.13.2-alpine AS builder
-ENV NODE_ENV production
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
