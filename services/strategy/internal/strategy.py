@@ -81,14 +81,22 @@ class Strategy:
     def add_indicators(self):
         frame = self.df
 
+        rsi_config = self.strategy['rsi']
+        macd_config = self.strategy['macd']
+
         adx = ta.ADX(frame.high, frame.low, frame.close, timeperiod=14)
         frame['adx'] = adx
 
-        rsi = ta.RSI(frame.close)
+        rsi = ta.RSI(frame.close, timeperiod=rsi_config['period'])
         frame['rsi'] = rsi
 
         macd, macd_signal, macd_hist = ta.MACD(
-            frame.close, fastperiod=12, slowperiod=26, signalperiod=9)
+            frame.close,
+            fastperiod=macd_config['fast'],
+            slowperiod=macd_config['slow'],
+            signalperiod=macd_config['signal']
+        )
+
         frame['macd'] = macd
         frame['macd_signal'] = macd_signal
         frame['macd_hist'] = macd_hist
