@@ -1,12 +1,15 @@
-import { Checkbox, Collapse, Modal, Slider } from 'antd';
+import { Checkbox, Collapse, Modal } from 'antd';
+import toUpper from 'lodash/toUpper';
 import React, { useEffect, useState } from 'react';
 import {
+  Macd,
+  Rsi,
   Strategies,
   useStrategy,
   useUpdateStrategy,
 } from '../../api/strategies';
 import * as Notifications from '../../utils/notifications';
-import { ContentRow, IndicatorLabel } from '../ui/form';
+import { ContentRow, IndicatorLabel, NumberInput } from '../ui/form';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
 
@@ -47,7 +50,7 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
 
   async function onSave(): Promise<void> {
     if (!strategy) {
-      Notifications.error('Save Error', new Error('Strategy is null'));
+      Notifications.error('Save Error', new Error('Cannot save null strategy'));
       return;
     }
 
@@ -63,7 +66,10 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
     key: 'rsi' | 'macd'
   ): void {
     if (!strategy) {
-      Notifications.error('Strategy Error', new Error('Strategy is null'));
+      Notifications.error(
+        'Strategy Error',
+        new Error('Cannot toggle null strategy')
+      );
       return;
     }
 
@@ -81,18 +87,24 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
     setStrategy(update);
   }
 
-  function onRsiChange([oversold, overbought]: [number, number]): void {
-    if (!strategy?.rsi.enabled) {
-      Notifications.warning('Strategy Error', 'RSI is not enabled');
+  function onStrategyChange(
+    type: 'rsi' | 'macd',
+    key: keyof Rsi | keyof Macd,
+    value: number
+  ): void {
+    if (!strategy?.[type].enabled) {
+      Notifications.warning(
+        'Warning',
+        `Please enable ${toUpper(type)} strategy first`
+      );
       return;
     }
 
     const update: Strategies = {
       ...strategy,
-      rsi: {
-        ...strategy.rsi,
-        overbought,
-        oversold,
+      [type]: {
+        ...strategy?.[type],
+        [key]: value,
       },
     };
 
@@ -139,22 +151,40 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
         },
         content: (
           <div className='font-light text-dark-gray'>
-            <ContentRow label='Period' content={rsi.period} />
-            <ContentRow label='Overbought' content={rsi.overbought} />
-            <ContentRow label='Oversold' content={rsi.oversold} />
-            <div className='flex w-full items-center'>
-              <Slider
-                className='w-full'
-                range
-                marks={{ 0: 0, 100: 100 }}
-                step={5}
-                min={0}
-                max={100}
-                value={[rsi.oversold, rsi.overbought]}
-                onChange={onRsiChange}
-                disabled={!rsi.enabled}
-              />
-            </div>
+            <ContentRow
+              label='Period'
+              content={
+                <NumberInput
+                  value={rsi.period}
+                  onChange={(value: number) =>
+                    onStrategyChange('rsi', 'period', value)
+                  }
+                />
+              }
+            />
+            <ContentRow
+              label='Overbought'
+              content={
+                <NumberInput
+                  value={rsi.overbought}
+                  onChange={(value: number) =>
+                    onStrategyChange('rsi', 'overbought', value)
+                  }
+                />
+              }
+            />
+            <ContentRow
+              label='Oversold'
+              content={
+                <NumberInput
+                  className='w-16 text-dark-gray'
+                  value={rsi.oversold}
+                  onChange={(value: number) =>
+                    onStrategyChange('rsi', 'oversold', value)
+                  }
+                />
+              }
+            />
           </div>
         ),
       },
@@ -172,9 +202,37 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
         },
         content: (
           <div className='font-light text-dark-gray'>
-            <ContentRow label='Fast' content={macd.fast} />
-            <ContentRow label='Slow' content={macd.slow} />
-            <ContentRow label='Signal' content={macd.signal} />
+            <ContentRow
+              label='Fast'
+              content={
+                <NumberInput
+                  value={macd.fast}
+                  onChange={(value: number) =>
+                    onStrategyChange('macd', 'fast', value)
+                  }
+                />
+              }
+            />
+            <ContentRow
+              label='Slow'
+              content={
+                <NumberInput
+                  value={macd.slow}
+                  onChange={(value: number) =>
+                    onStrategyChange('macd', 'slow', value)
+                  }
+                />
+              }
+            />
+            <ContentRow
+              label='Signal'
+              content={
+                <NumberInput
+                  value={macd.signal}
+                  onChange={value => onStrategyChange('macd', 'signal', value)}
+                />
+              }
+            />
           </div>
         ),
       },

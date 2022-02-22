@@ -1,3 +1,4 @@
+import { InputNumber, InputNumberProps } from 'antd';
 import React from 'react';
 
 interface ContentRowProps {
@@ -36,4 +37,10 @@ export function IndicatorLabel(props: IndicatorLabelProps): React.ReactElement {
       </span>
     </span>
   );
+}
+
+export function NumberInput(
+  props: InputNumberProps<number>
+): React.ReactElement {
+  return <InputNumber className='w-16 text-dark-gray' {...props} />;
 }
