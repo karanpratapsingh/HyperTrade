@@ -44,7 +44,7 @@
     {
       "symbol": "ETHUSDT",
       "rsi": {
-        "enabled": true,
+        "enabled": false,
         "period": 14,
         "overbought": 70,
         "oversold": 30
