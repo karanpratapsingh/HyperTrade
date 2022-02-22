@@ -1,4 +1,4 @@
-import { Avatar, Card, Col, InputNumber, Layout, Row } from 'antd';
+import { Avatar, Card, Col, Layout, Row } from 'antd';
 import sortBy from 'lodash/sortBy';
 import React, { useState } from 'react';
 import { RiSettings3Fill } from 'react-icons/ri';
@@ -13,9 +13,9 @@ import {
 } from '../api/configs';
 import { StrategyModal } from '../components/modals/strategy';
 import * as animated from '../components/ui/animated';
+import { ContentRow, NumberInput } from '../components/ui/form';
 import { Header } from '../components/ui/header';
 import { Loader } from '../components/ui/loader';
-import { ContentRow, NumberInput } from '../components/ui/form';
 import { Colors } from '../theme/colors';
 import { getCryptoIcon } from '../theme/icons';
 

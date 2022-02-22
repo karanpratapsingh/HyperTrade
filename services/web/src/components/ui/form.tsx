@@ -11,11 +11,11 @@ export function ContentRow(props: ContentRowProps): React.ReactElement {
   const { label, content, suffix } = props;
 
   return (
-    <div className='mb-2 flex items-center justify-between min-w-full last:mb-0'>
+    <div className='min-w-full flex items-center justify-between mb-2 last:mb-0 font-light'>
       <span>{label}</span>
       <div className='flex items-center'>
         {content}
-        {suffix && <div className='ml-2 flex'>{suffix}</div>}
+        {suffix && <div className='flex ml-2'>{suffix}</div>}
       </div>
     </div>
   );
