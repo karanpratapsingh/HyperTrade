@@ -2,8 +2,9 @@ import json
 
 import pandas as pd
 import talib as ta
-from utils.log import Logger
 from internal.events import Signal
+from utils.functions import normalize_booleans
+from utils.log import Logger
 
 
 class Strategy:
@@ -12,9 +13,9 @@ class Strategy:
 
     def populate(self, data):
         kline = data['kline']
+        strategy = data['strategy']
 
-        self.strategy = data['strategy']
-
+        self.strategy = strategy
         self.df = self.df.append(kline, ignore_index=True)
         self.add_indicators()
         self.buy_trend()
@@ -99,18 +100,25 @@ class Strategy:
         self.df = frame
 
     def get_buy_condition(self, index) -> bool:
-        condition = False
-
         if self.strategy is None:
-            return condition
+            return False
 
         rsi = self.df['rsi'][index]
         rsi_config = self.strategy['rsi']
 
+        rsi_condition = None
         if rsi_config['enabled']:
-            condition = rsi <= rsi_config['oversold']
+            rsi_condition = rsi <= rsi_config['oversold']
 
-        return condition
+        macd = self.df['macd'][index]
+        macd_signal = self.df['macd_signal'][index]
+        macd_config = self.strategy['macd']
+
+        macd_condition = None
+        if macd_config['enabled']:
+            macd_condition = macd >= macd_signal
+
+        return normalize_booleans([rsi_condition, macd_condition])
 
     def buy_trend(self):
         index = self.last_index()
@@ -122,18 +130,25 @@ class Strategy:
             self.df.loc[index, 'buy'] = False
 
     def get_sell_condition(self, index) -> bool:
-        condition = False
-
         if self.strategy is None:
-            return condition
+            return False
 
         rsi = self.df['rsi'][index]
         rsi_config = self.strategy['rsi']
 
+        rsi_condition = None
         if rsi_config['enabled']:
-            condition = rsi >= rsi_config['overbought']
+            rsi_condition = rsi >= rsi_config['overbought']
 
-        return condition
+        macd = self.df['macd'][index]
+        macd_signal = self.df['macd_signal'][index]
+        macd_config = self.strategy['macd']
+
+        macd_condition = None
+        if macd_config['enabled']:
+            macd_condition = macd <= macd_signal
+
+        return normalize_booleans([rsi_condition, macd_condition])
 
     def sell_trend(self):
         index = self.last_index()
