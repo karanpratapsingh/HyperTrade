@@ -9,7 +9,8 @@ import (
 
 type Strategies struct {
 	Symbol string `gorm:"primaryKey" json:"symbol"`
-	Rsi    Rsi   `gorm:"not null" json:"rsi"`
+	Rsi    Rsi    `gorm:"not null" json:"rsi"`
+	Macd   Macd   `gorm:"not null" json:"macd"`
 }
 
 func (db DB) GetStrategy(symbol string) Strategies {
