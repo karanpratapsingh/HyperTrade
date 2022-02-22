@@ -164,6 +164,7 @@ function IndicatorsList(props: IndicatorsListProps): React.ReactElement {
       } else {
         update = [...update, indicator];
       }
+
       onUpdate(update);
     }
 
