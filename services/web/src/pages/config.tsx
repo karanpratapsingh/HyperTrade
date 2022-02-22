@@ -11,7 +11,7 @@ import {
   useUpdateAllowedAmount,
   useUpdateTradingEnabled,
 } from '../api/configs';
-import { StrategyModal } from '../components/modal/strategy';
+import { StrategyModal } from '../components/modals/strategy';
 import * as animated from '../components/ui/animated';
 import { Header } from '../components/ui/header';
 import { Loader } from '../components/ui/loader';
