@@ -30,7 +30,6 @@ class Strategy:
             'close': float,
             'volume': float,
             'final': bool,
-            'adx': float,
             'rsi': float,
             'macd': float,
             'macd_signal': float,
@@ -67,7 +66,6 @@ class Strategy:
                 'final': data['final']
             },
             'indicators': {
-                'adx': data['adx'],
                 'rsi': data['rsi'],
                 'macd': data['macd'],
                 'macd_signal': data['macd_signal'],
@@ -83,9 +81,6 @@ class Strategy:
 
         rsi_config = self.strategy['rsi']
         macd_config = self.strategy['macd']
-
-        adx = ta.ADX(frame.high, frame.low, frame.close, timeperiod=14)
-        frame['adx'] = adx
 
         rsi = ta.RSI(frame.close, timeperiod=rsi_config['period'])
         frame['rsi'] = rsi

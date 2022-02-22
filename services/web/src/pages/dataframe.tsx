@@ -70,12 +70,6 @@ export function DataFrame(): React.ReactElement {
           </ColumnGroup>
           <ColumnGroup title='Indicators' key='indicators'>
             <Column
-              title='ADX'
-              dataIndex={['indicators', 'adx']}
-              key='adx'
-              render={renderIndicators}
-            />
-            <Column
               title='RSI'
               dataIndex={['indicators', 'rsi']}
               key='rsi'

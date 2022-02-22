@@ -55,7 +55,6 @@ export type Kline = {
 };
 
 export type Indicators = {
-  adx: number;
   rsi: number;
   macd: number;
   macd_signal: number;
