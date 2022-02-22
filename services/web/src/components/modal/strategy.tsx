@@ -135,10 +135,10 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
             <ContentRow label='Overbought' content={rsi.overbought} />
             <ContentRow label='Oversold' content={rsi.oversold} />
             <div className='flex w-full items-center'>
-              <span>0</span>
               <Slider
                 className='w-full'
                 range
+                marks={{ 0: 0, 100: 100 }}
                 step={5}
                 min={0}
                 max={100}
@@ -146,7 +146,6 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
                 onChange={onRsiChange}
                 disabled={!rsi.enabled}
               />
-              <span>100</span>
             </div>
           </div>
         ),

@@ -86,7 +86,7 @@ export function Config(): React.ReactElement {
     );
 
     const description = (
-      <div className='flex flex-col'>
+      <div className='flex flex-col text-dark-gray'>
         <ContentRow label='Base' content={baseAvatar} />
         <ContentRow label='Quote' content={quoteAvatar} />
         <ContentRow label='Minimum' content={minimum} suffix={quoteAvatar} />
@@ -94,7 +94,7 @@ export function Config(): React.ReactElement {
           label='Allowed'
           content={
             <InputNumber
-              className='w-16'
+              className='w-16 text-dark-gray'
               min={minimum}
               defaultValue={allowed_amount}
               onChange={onAmountChange}
@@ -120,6 +120,7 @@ export function Config(): React.ReactElement {
     content = <Loader />;
   } else {
     const { configs } = data;
+
     content = (
       <animated.Div>
         <Row gutter={[16, 16]}>
