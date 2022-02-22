@@ -131,7 +131,7 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
         },
         content: (
           <div className='font-light text-dark-gray'>
-            <ContentRow label='Interval' content='14' />
+            <ContentRow label='Period' content={rsi.period} />
             <ContentRow label='Overbought' content={rsi.overbought} />
             <ContentRow label='Oversold' content={rsi.oversold} />
             <div className='flex w-full items-center'>

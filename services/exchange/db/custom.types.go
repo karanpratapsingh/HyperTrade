@@ -11,6 +11,7 @@ type CommonStrategyProps struct {
 
 type Rsi struct {
 	CommonStrategyProps
+	Period     int `json:"period"`
 	Overbought int `json:"overbought"`
 	Oversold   int `json:"oversold"`
 }

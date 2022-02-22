@@ -5,6 +5,7 @@ import { ApiMutationResult, ApiQueryResult } from './types';
 
 export type Rsi = {
   enabled: boolean;
+  period: number;
   oversold: number;
   overbought: number;
 };
