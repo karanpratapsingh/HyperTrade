@@ -62,3 +62,11 @@ body {
 .ant-input-number-input {
   @apply font-light;
 }
+
+.ant-switch {
+  @apply bg-light-gray;
+}
+
+.ant-switch-checked {
+  @apply bg-primary;
+}

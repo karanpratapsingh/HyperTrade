@@ -1,8 +1,7 @@
-import { Avatar, Card, Col, Layout, Row } from 'antd';
+import { Avatar, Card, Col, Layout, Row, Switch } from 'antd';
 import sortBy from 'lodash/sortBy';
 import React, { useState } from 'react';
 import { RiSettings3Fill } from 'react-icons/ri';
-import Switch from 'react-switch';
 import {
   Configs,
   UpdateAllowedAmountRequest,
@@ -66,22 +65,16 @@ export function Config(): React.ReactElement {
       />
     );
 
-    const tradingSwitch = (
+    const tradingSwitch: React.ReactNode = (
       <Switch
-        height={18}
-        width={30}
-        handleDiameter={12}
+        size='small'
         checked={trading_enabled}
-        onColor={Colors.primary}
-        offColor={Colors.lightGray}
-        disabled={loadingTradingEnabled}
-        uncheckedIcon={false}
-        checkedIcon={false}
+        loading={loadingTradingEnabled}
         onChange={onUpdateTradingEnable}
       />
     );
 
-    const title = (
+    const title: React.ReactNode = (
       <ContentRow label={symbol} content={settings} suffix={tradingSwitch} />
     );
 
