@@ -10,7 +10,7 @@ export function ContentRow(props: ContentRowProps): React.ReactElement {
   const { label, content, suffix } = props;
 
   return (
-    <div className='mb-2 flex items-center justify-between min-w-full'>
+    <div className='mb-2 flex items-center justify-between min-w-full last:mb-0'>
       <span>{label}</span>
       <div className='flex items-center'>
         {content}
