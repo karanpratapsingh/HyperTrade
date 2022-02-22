@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { PubSub } from '../events/pubsub';
 import { Events } from '../events/types';
-import { ApiMutationResult, ApiQueryResult } from './types';
+import { ApiMutationResult, ApiQueryResult, options } from './types';
 
 export type Configs = {
   symbol: string;
@@ -26,7 +26,7 @@ export function useConfigs(): ApiQueryResult<GetConfigsResponse> {
     data,
     isLoading: loading,
     error,
-  } = useQuery<GetConfigsResponse, Error>('configs', getConfigs);
+  } = useQuery<GetConfigsResponse, Error>('configs', getConfigs, options);
 
   return { data, loading, error };
 }
