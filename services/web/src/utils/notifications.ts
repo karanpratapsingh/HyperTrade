@@ -63,6 +63,7 @@ export function warning(message: string, description?: string): void {
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function error(message: string, error: any): void {
   notification.error({
     ...defaultOptions,
