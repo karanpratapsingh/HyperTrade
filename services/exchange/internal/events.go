@@ -16,7 +16,8 @@ type CriticalErrorEventPayload struct {
 var KlineEvent string = "Event:Kline"
 
 type KlinePayload struct {
-	Kline Kline `json:"kline"`
+	Kline    Kline         `json:"kline"`
+	Strategy db.Strategies `json:"strategy"`
 }
 
 var OrderEvent string = "Event:Order"
@@ -44,7 +45,6 @@ type TradeEventPayload struct {
 var DataFrameEvent string = "Event:DataFrame"
 
 type DataFrameEventPayload struct {
-	Open       float64    `json:"open"`
 	Kline      Kline      `json:"kline"`
 	Indicators Indicators `json:"indicators"`
 	Signal     Signal     `json:"signal"`
@@ -57,20 +57,20 @@ type Balance struct {
 	Amount float64 `json:"amount"`
 }
 
-type BalanceResponse struct {
+type GetBalanceResponse struct {
 	Test    bool      `json:"test"`
 	Balance []Balance `json:"balance"`
 }
 
 var GetPositionsEvent string = "Event:Positions:Get"
 
-type PositionsResponse struct {
+type GetPositionsResponse struct {
 	Positions []db.Positions `json:"positions"`
 }
 
 var GetTradesEvent string = "Event:Trades:Get"
 
-type TradesResponse struct {
+type GetTradesResponse struct {
 	Trades []db.Trades `json:"trades"`
 }
 
@@ -82,27 +82,27 @@ type Stats struct {
 	Total  float64 `json:"total"`
 }
 
-type StatsRequest struct {
+type GetStatsRequest struct {
 	Symbol string `json:"symbol"`
 }
 
-type StatsResponse struct {
+type GetStatsResponse struct {
 	Stats *Stats `json:"stats"`
 }
 
 var GetDataFrameEvent string = "Event:DataFrame:Get"
 
-type DataFrameRequest struct {
+type GetDataFrameRequest struct {
 	Size int `json:"size"`
 }
 
-type DataFrameResponse struct {
+type GetDataFrameResponse struct {
 	DataFrame []DataFrameEventPayload `json:"dataframe"`
 }
 
-var UpdateTradingEvent string = "Event:Trading:Update"
+var UpdateTradingEnabledEvent string = "Event:Config:Update:TradingEnabled"
 
-type UpdateTradingRequest struct {
+type UpdateTradingEnabledRequest struct {
 	Symbol  string `json:"symbol"`
 	Enabled bool   `json:"enabled"`
 }
@@ -120,6 +120,29 @@ type DumpResponse struct {
 
 var GetConfigsEvent string = "Event:Configs:Get"
 
-type ConfigsResponse struct {
+type GetConfigsResponse struct {
 	Configs []db.Configs `json:"configs"`
+}
+
+var UpdateAllowedAmountEvent string = "Event:Config:Update:AllowedAmount"
+
+type UpdateAllowedAmountRequest struct {
+	Symbol string  `json:"symbol"`
+	Amount float64 `json:"amount"`
+}
+
+var GetStrategyEvent string = "Event:Strategies:Get"
+
+type GetStrategyRequest struct {
+	Symbol string `json:"symbol"`
+}
+
+type GetStrategyResponse struct {
+	Strategy db.Strategies `json:"strategy"`
+}
+
+var UpdateStrategyEvent string = "Event:Strategies:Update"
+
+type UpdateStrategyRequest struct {
+	Strategy db.Strategies `json:"strategy"`
 }

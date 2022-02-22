@@ -2,11 +2,17 @@ package db
 
 import (
 	"errors"
-	"fmt"
+	"exchange/utils"
+	"os"
 
 	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
 )
+
+type seedConfig struct {
+	Configs    []Configs    `json:"configs"`
+	Strategies []Strategies `json:"strategies"`
+}
 
 type seed struct {
 	Name string
@@ -14,15 +20,37 @@ type seed struct {
 	Fn   func() error
 }
 
-func (db DB) Seed(symbol string) {
+var path = "seed.json"
+
+func (db DB) Seed() {
 	migrater := db.conn.Migrator()
+
+	file, err := os.ReadFile(path)
+
+	if err != nil {
+		log.Panic().Str("path", path).Msg("Database.Seed.ReadFile")
+	}
+
+	var sc seedConfig
+	err = utils.Unmarshal(file, &sc)
+
+	if err != nil {
+		panic(err)
+	}
 
 	var seeds = []seed{
 		{
-			Name: fmt.Sprintf("create config for %v", symbol),
+			Name: "create configs",
 			Type: &Configs{},
 			Fn: func() error {
-				return db.CreateConfig(symbol, 15, 15, false)
+				return db.CreateConfigs(sc.Configs)
+			},
+		},
+		{
+			Name: "create strategies",
+			Type: &Strategies{},
+			Fn: func() error {
+				return db.CreateStrategies(sc.Strategies)
 			},
 		},
 	}

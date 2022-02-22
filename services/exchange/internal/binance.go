@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"errors"
+	"exchange/db"
 	"exchange/utils"
 	"fmt"
 	"strings"
@@ -18,17 +19,18 @@ type Binance struct {
 	client *binance.Client
 	test   bool
 	pubsub PubSub
+	DB     db.DB
 }
 
 var ErrBaseAsset = errors.New("base asset for symbol not found")
 
-func NewBinance(key, secret string, test bool, pubsub PubSub) Binance {
+func NewBinance(key, secret string, test bool, pubsub PubSub, DB db.DB) Binance {
 	log.Trace().Str("type", "binance").Bool("test", test).Msg("Binance.Init")
 
 	binance.UseTestnet = test
 	client := binance.NewClient(key, secret)
 
-	return Binance{client, test, pubsub}
+	return Binance{client, test, pubsub, DB}
 }
 
 func (b Binance) GetAccount() *binance.Account {
@@ -158,13 +160,13 @@ func (b Binance) Trade(side binance.SideType, symbol string, price, quantity flo
 		Quantity(orderQuantity).
 		Do(context.Background())
 
+	finalQuantity := utils.ParseFloat(orderQuantity)
+
 	if err != nil {
-		log.Error().Interface("side", side).Float64("price", price).Float64("quantity", quantity).Err(err).Msg("Binance.Trade")
+		log.Error().Interface("side", side).Float64("price", price).Float64("quantity", finalQuantity).Err(err).Msg("Binance.Trade")
 		b.pubsub.Publish(CriticalErrorEvent, CriticalErrorEventPayload{err.Error()})
 		return err
 	}
-
-	finalQuantity := utils.ParseFloat(orderQuantity)
 
 	log.Info().Interface("side", side).Float64("price", price).Float64("quantity", finalQuantity).Msg("Binance.Trade.Order")
 
@@ -199,7 +201,8 @@ func (b Binance) Kline(symbol string, interval string) {
 			Bool("final", final).
 			Msg(KlineEvent)
 
-		b.pubsub.Publish(KlineEvent, KlinePayload{kline})
+		strategy := b.DB.GetStrategy(symbol)
+		b.pubsub.Publish(KlineEvent, KlinePayload{kline, strategy})
 	}
 
 	errHandler := func(err error) {

@@ -30,6 +30,7 @@ func New(dbURL string) DB {
 		&Configs{},
 		&Positions{},
 		&Trades{},
+		&Strategies{},
 	)
 
 	if err != nil {

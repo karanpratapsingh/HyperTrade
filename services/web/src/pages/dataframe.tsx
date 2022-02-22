@@ -70,12 +70,6 @@ export function DataFrame(): React.ReactElement {
           </ColumnGroup>
           <ColumnGroup title='Indicators' key='indicators'>
             <Column
-              title='ADX'
-              dataIndex={['indicators', 'adx']}
-              key='adx'
-              render={renderIndicators}
-            />
-            <Column
               title='RSI'
               dataIndex={['indicators', 'rsi']}
               key='rsi'
@@ -94,7 +88,7 @@ export function DataFrame(): React.ReactElement {
               render={renderIndicators}
             />
             <Column
-              title='MACD History'
+              title='MACD Hist'
               dataIndex={['indicators', 'macd_hist']}
               key='macd_hist'
               render={renderIndicators}
@@ -112,7 +106,7 @@ export function DataFrame(): React.ReactElement {
   }
 
   return (
-    <Content className='p-6 bg-white'>
+    <Content className='p-6 bg-white flex flex-col'>
       <Header title='Dataframe' subtitle='Live data frames' />
       {content}
     </Content>

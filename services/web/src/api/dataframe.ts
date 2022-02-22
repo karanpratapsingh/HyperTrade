@@ -1,18 +1,20 @@
 import { PubSub } from '../events/pubsub';
 import { DataFrameEventPayload, Events } from '../events/types';
 
-type DataFrameRequest = {
+type GetDataFrameRequest = {
   size: number;
 };
 
-type DataFrameResponse = {
+type GetDataFrameResponse = {
   dataframe: DataFrameEventPayload[];
 };
 
-export async function getDataFrame(size: number): Promise<DataFrameResponse> {
+export async function getDataFrame(
+  size: number
+): Promise<GetDataFrameResponse> {
   const pubsub = await PubSub.getInstance();
 
-  return await pubsub.request<DataFrameResponse, DataFrameRequest>(
+  return await pubsub.request<GetDataFrameResponse, GetDataFrameRequest>(
     Events.GetDataFrame,
     { size }
   );

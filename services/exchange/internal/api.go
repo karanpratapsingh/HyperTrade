@@ -13,8 +13,30 @@ import (
 func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	log.Trace().Msg("Internal.AsyncApi.Init")
 
+	pubsub.Subscribe(GetStrategyEvent, func(m *nats.Msg) {
+		var request GetStrategyRequest
+		utils.Unmarshal(m.Data, &request)
+
+		payload := GetStrategyResponse{
+			Strategy: DB.GetStrategy(request.Symbol),
+		}
+
+		pubsub.Publish(m.Reply, payload)
+	})
+
+	pubsub.Subscribe(UpdateStrategyEvent, func(m *nats.Msg) {
+		var request UpdateStrategyRequest
+		utils.Unmarshal(m.Data, &request)
+
+		DB.UpdateStrategy(request.Strategy)
+
+		log.Trace().Msg("Internal.Strategy.Update")
+		var payload interface{}
+		pubsub.Publish(m.Reply, payload)
+	})
+
 	pubsub.Subscribe(GetConfigsEvent, func(m *nats.Msg) {
-		payload := ConfigsResponse{
+		payload := GetConfigsResponse{
 			Configs: DB.GetConfigs(),
 		}
 
@@ -30,7 +52,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 		config := DB.GetConfig(symbol)
 
 		log.Warn().Str("symbol", symbol).Msg("Internal.Dump.Trading.Disable")
-		DB.UpdateTrading(symbol, false)
+		DB.UpdateConfigTradingEnabled(symbol, false)
 
 		DB.DeletePosition(symbol)
 		log.Warn().Str("symbol", symbol).Msg("Internal.Dump.Positions")
@@ -38,7 +60,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 		payload, err := exchange.Dump(symbol)
 
 		if config.TradingEnabled {
-			DB.UpdateTrading(symbol, true)
+			DB.UpdateConfigTradingEnabled(symbol, true)
 			log.Warn().Str("symbol", symbol).Msg("Internal.Dump.Trading.Enable")
 		}
 
@@ -50,13 +72,24 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 		pubsub.Publish(m.Reply, payload)
 	})
 
-	pubsub.Subscribe(UpdateTradingEvent, func(m *nats.Msg) {
-		var request UpdateTradingRequest
+	pubsub.Subscribe(UpdateTradingEnabledEvent, func(m *nats.Msg) {
+		var request UpdateTradingEnabledRequest
 		utils.Unmarshal(m.Data, &request)
 
-		DB.UpdateTrading(request.Symbol, request.Enabled)
+		DB.UpdateConfigTradingEnabled(request.Symbol, request.Enabled)
 
-		log.Trace().Str("symbol", request.Symbol).Bool("enabled", request.Enabled).Msg("Internal.Config.Trading")
+		log.Trace().Str("symbol", request.Symbol).Bool("enabled", request.Enabled).Msg("Internal.Config.TradingEnabled")
+		var payload interface{}
+		pubsub.Publish(m.Reply, payload)
+	})
+
+	pubsub.Subscribe(UpdateAllowedAmountEvent, func(m *nats.Msg) {
+		var request UpdateAllowedAmountRequest
+		utils.Unmarshal(m.Data, &request)
+
+		DB.UpdateConfigAllowedAmount(request.Symbol, request.Amount)
+
+		log.Trace().Str("symbol", request.Symbol).Float64("amount", request.Amount).Msg("Internal.Config.AllowedAmount")
 		var payload interface{}
 		pubsub.Publish(m.Reply, payload)
 	})
@@ -66,7 +99,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	})
 
 	pubsub.Subscribe(GetBalanceEvent, func(m *nats.Msg) {
-		response := BalanceResponse{
+		response := GetBalanceResponse{
 			Test:    exchange.test,
 			Balance: exchange.GetBalance(),
 		}
@@ -75,7 +108,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	})
 
 	pubsub.Subscribe(GetPositionsEvent, func(m *nats.Msg) {
-		response := PositionsResponse{
+		response := GetPositionsResponse{
 			Positions: DB.GetPositions(),
 		}
 
@@ -83,7 +116,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	})
 
 	pubsub.Subscribe(GetTradesEvent, func(m *nats.Msg) {
-		response := TradesResponse{
+		response := GetTradesResponse{
 			Trades: DB.GetTrades(),
 		}
 
@@ -91,10 +124,10 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 	})
 
 	pubsub.Subscribe(GetStatsEvent, func(m *nats.Msg) {
-		var response StatsResponse
+		var response GetStatsResponse
 		var stats Stats
 
-		var request StatsRequest
+		var request GetStatsRequest
 		utils.Unmarshal(m.Data, &request)
 
 		trades := DB.GetTrades()
@@ -113,17 +146,17 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 			}
 
 			stats.Total = stats.Profit + stats.Loss
-			response = StatsResponse{&stats}
+			response = GetStatsResponse{&stats}
 		}
 
 		pubsub.Publish(m.Reply, response)
 	})
 
 	pubsub.Subscribe(GetDataFrameEvent, func(m *nats.Msg) {
-		var request DataFrameRequest
+		var request GetDataFrameRequest
 		utils.Unmarshal(m.Data, &request)
 
-		var response DataFrameResponse
+		var response GetDataFrameResponse
 		var data []DataFrameEventPayload
 
 		js := pubsub.JetStream()
@@ -208,6 +241,7 @@ func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal 
 		err := exchange.Trade(binance.SideTypeSell, symbol, closePrice, quantity)
 
 		if err != nil {
+			exchange.Dump(symbol)
 			return
 		}
 

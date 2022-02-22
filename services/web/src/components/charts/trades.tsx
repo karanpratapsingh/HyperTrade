@@ -12,14 +12,14 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { TradesResponse } from '../../api/trades';
-import { ApiHookResult } from '../../api/types';
+import { GetTradesResponse } from '../../api/trades';
+import { ApiQueryResult } from '../../api/types';
 import { Colors, LineColors } from '../../theme/colors';
 import * as animated from '../ui/animated';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
 
-interface TradesChartProps extends ApiHookResult<TradesResponse> {}
+interface TradesChartProps extends ApiQueryResult<GetTradesResponse> {}
 
 export function TradesChart(props: TradesChartProps): React.ReactElement {
   const { data, loading } = props;
@@ -30,7 +30,7 @@ export function TradesChart(props: TradesChartProps): React.ReactElement {
 
   const tickStyle = {
     style: {
-      color: Colors.gray,
+      color: Colors.darkGray,
       fontSize: 10,
       fontWeight: 300,
     },
@@ -62,7 +62,7 @@ export function TradesChart(props: TradesChartProps): React.ReactElement {
     dot: { r: 0 },
   };
 
-  let content: React.ReactNode | null = (
+  let content: React.ReactNode = (
     <div className='flex flex-1 items-center justify-center'>
       <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
     </div>

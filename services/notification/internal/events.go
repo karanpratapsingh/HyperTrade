@@ -41,7 +41,7 @@ type Balance struct {
 	Amount float64 `json:"amount"`
 }
 
-type BalanceResponse struct {
+type GetBalanceResponse struct {
 	Test    bool      `json:"test"`
 	Balance []Balance `json:"balance"`
 }
@@ -55,7 +55,7 @@ type Positions struct {
 	Time     time.Time `json:"time"`
 }
 
-type PositionsResponse struct {
+type GetPositionsResponse struct {
 	Positions []Positions `json:"positions"`
 }
 
@@ -67,17 +67,17 @@ type Stats struct {
 	Total  float64 `json:"total"`
 }
 
-type StatsRequest struct {
+type GetStatsRequest struct {
 	Symbol string `json:"symbol"`
 }
 
-type StatsResponse struct {
+type GetStatsResponse struct {
 	Stats *Stats `json:"stats"`
 }
 
-var UpdateTradingEvent string = "Event:Trading:Update"
+var UpdateTradingEnabledEvent string = "Event:Config:Update:TradingEnabled"
 
-type UpdateTradingRequest struct {
+type UpdateTradingEnabledRequest struct {
 	Symbol  string `json:"symbol"`
 	Enabled bool   `json:"enabled"`
 }
@@ -97,11 +97,13 @@ var GetConfigsEvent string = "Event:Configs:Get"
 
 type Configs struct {
 	Symbol         string  `json:"symbol"`
+	Base           string  `json:"base"`
+	Quote          string  `json:"quote"`
 	Minimum        float64 `json:"minimum"`
-	AllowedAmount  float64 `json:"allowedAmount"`
-	TradingEnabled bool    `json:"TradingEnabled"`
+	AllowedAmount  float64 `json:"allowed_amount"`
+	TradingEnabled bool    `json:"trading_enabled"`
 }
 
-type ConfigsResponse struct {
+type GetConfigsResponse struct {
 	Configs []Configs `json:"configs"`
 }

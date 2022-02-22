@@ -12,11 +12,10 @@ type Kline struct {
 }
 
 type Indicators struct {
-	Adx         *float64 `json:"adx"`
-	Rsi         *float64 `json:"rsi"`
-	Macd        *float64 `json:"macd"`
-	MacdSignal  *float64 `json:"macd_signal"`
-	MacdHistory *float64 `json:"macd_hist"`
+	Rsi        *float64 `json:"rsi"`
+	Macd       *float64 `json:"macd"`
+	MacdSignal *float64 `json:"macd_signal"`
+	MacdHist   *float64 `json:"macd_hist"`
 }
 
 type Signal string

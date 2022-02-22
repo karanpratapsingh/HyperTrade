@@ -11,6 +11,7 @@ import {
 import { BiBarChart } from 'react-icons/bi';
 import { IoSearchOutline } from 'react-icons/io5';
 import { AxisType, ChartType, KlineChart } from '../components/charts/kline';
+import { IndicatorLabel } from '../components/ui/form';
 import { Header } from '../components/ui/header';
 import {
   PrimaryIndicators,
@@ -45,14 +46,14 @@ export function Chart(): React.ReactElement {
     [ChartType.AREA]: (
       <BiBarChart
         size={25}
-        color={Colors.black}
+        color={Colors.dark}
         onClick={() => setType(ChartType.CANDLE)}
       />
     ),
     [ChartType.CANDLE]: (
       <AiOutlineAreaChart
         size={25}
-        color={Colors.black}
+        color={Colors.dark}
         onClick={() => setType(ChartType.AREA)}
       />
     ),
@@ -62,14 +63,14 @@ export function Chart(): React.ReactElement {
     [AxisType.NORMAL]: (
       <AiOutlinePercentage
         size={22}
-        color={Colors.black}
+        color={Colors.dark}
         onClick={() => setAxis(AxisType.PERCENTAGE)}
       />
     ),
     [AxisType.PERCENTAGE]: (
       <AiOutlineFieldNumber
         size={25}
-        color={Colors.black}
+        color={Colors.dark}
         onClick={() => setAxis(AxisType.NORMAL)}
       />
     ),
@@ -83,7 +84,7 @@ export function Chart(): React.ReactElement {
       icon={
         <AiOutlineFunction
           size={25}
-          color={Colors.black}
+          color={Colors.dark}
           onClick={() => setShowIndicators(true)}
         />
       }
@@ -101,7 +102,13 @@ export function Chart(): React.ReactElement {
       />
       <Modal
         className='mt-24'
-        title={<Header className='mb-0' title='Indicators' subtitle='Select indicators' />}
+        title={
+          <Header
+            className='!mb-0'
+            title='Indicators'
+            subtitle='Select indicators'
+          />
+        }
         visible={showIndicators}
         footer={null}
         onCancel={() => setShowIndicators(false)}>
@@ -147,6 +154,8 @@ function IndicatorsList(props: IndicatorsListProps): React.ReactElement {
   const filtered = searchFilter(all, search);
 
   function renderList(indicator: TechnicalIndicators): React.ReactNode {
+    const { name, description } = indicator;
+
     function onCheck(checked: boolean): void {
       let update = [...indicators];
 
@@ -155,6 +164,7 @@ function IndicatorsList(props: IndicatorsListProps): React.ReactElement {
       } else {
         update = [...update, indicator];
       }
+
       onUpdate(update);
     }
 
@@ -165,12 +175,7 @@ function IndicatorsList(props: IndicatorsListProps): React.ReactElement {
         className='flex py-1 my-1 items-center cursor-pointer'
         onClick={() => onCheck(!checked)}>
         <Checkbox checked={checked} />
-        <span className='ml-2 font-light'>
-          {indicator.name}
-          <span className='ml-1 italic font-light text-gray-400'>
-            ({indicator.description})
-          </span>
-        </span>
+        <IndicatorLabel name={name} description={description} />
       </div>
     );
   }
@@ -182,7 +187,7 @@ function IndicatorsList(props: IndicatorsListProps): React.ReactElement {
   if (!filtered.length) {
     content = (
       <div className='mb-1'>
-        <span className='italic font-light text-gray-400'>Not found</span>
+        <span className='italic font-light text-dark-gray'>Not found</span>
       </div>
     );
   }

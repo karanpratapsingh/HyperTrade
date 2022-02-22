@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import { PubSub } from '../events/pubsub';
 import { Events } from '../events/types';
-import { ApiHookResult, options } from './types';
+import { ApiQueryResult, options } from './types';
 
 export type Stats = {
   profit: number;
@@ -9,27 +9,34 @@ export type Stats = {
   total: number;
 };
 
-export type StatsRequest = {
+export type GetStatsRequest = {
   symbol: string;
 };
 
-export type StatsResponse = {
+export type GetStatsResponse = {
   stats: Stats | null;
 };
 
-export async function getStats(symbol: string): Promise<StatsResponse> {
+export async function getStats(symbol: string): Promise<GetStatsResponse> {
   const pubsub = await PubSub.getInstance();
-  return await pubsub.request<StatsResponse, StatsRequest>(Events.GetStats, {
-    symbol,
-  });
+  return await pubsub.request<GetStatsResponse, GetStatsRequest>(
+    Events.GetStats,
+    {
+      symbol,
+    }
+  );
 }
 
-export function useStats(symbol: string): ApiHookResult<StatsResponse> {
+export function useStats(symbol: string): ApiQueryResult<GetStatsResponse> {
   const {
     data,
     isLoading: loading,
     error,
-  } = useQuery<StatsResponse, Error>('stats', () => getStats(symbol), options);
+  } = useQuery<GetStatsResponse, Error>(
+    'stats',
+    () => getStats(symbol),
+    options
+  );
 
   return { data, loading, error };
 }

@@ -21,7 +21,7 @@ export const useDataFrame = create<DataFrameStore>(
         const { dataframe } = await getDataFrame(MAX_INTERVALS);
         set({ data: dataframe });
       } catch (err) {
-        Notifications.error(err);
+        Notifications.error('GetDataFrame', err);
       } finally {
         set({ loading: false });
       }
