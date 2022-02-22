@@ -58,7 +58,10 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
     mutate({ strategy }, { onSuccess });
   }
 
-  function onRsiToggle(event: React.MouseEvent<HTMLElement>): void {
+  function onToggle(
+    event: React.MouseEvent<HTMLElement>,
+    key: 'rsi' | 'macd'
+  ): void {
     if (!strategy) {
       Notifications.error('Strategy Error', new Error('Strategy is null'));
       return;
@@ -68,8 +71,8 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
 
     const update: Strategies = {
       ...strategy,
-      rsi: {
-        ...strategy.rsi,
+      [key]: {
+        ...strategy[key],
         // @ts-expect-error: dynamically injected property
         enabled: event.target.checked,
       },
@@ -97,15 +100,20 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
   }
 
   function renderPanel({ key, header, content }: PanelItem): React.ReactNode {
+    const { label, checked, onClick } = header;
+
+    const panelHeader: React.ReactNode = (
+      <div className='flex items-center justify-content'>
+        <Checkbox checked={checked} onClick={onClick} />
+        <span className='ml-2 font-light'>{label}</span>
+      </div>
+    );
+
     return (
       <Panel
+        className='bg-dark-gray bg-opacity-5 p-1 mb-2 last:mb-0'
         key={key}
-        header={
-          <div className='flex items-center justify-content'>
-            <Checkbox checked={header.checked} onClick={header.onClick} />
-            <span className='ml-2 font-light'>{header.label}</span>
-          </div>
-        }
+        header={panelHeader}
         showArrow={false}>
         {content}
       </Panel>
@@ -117,7 +125,7 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
   if (!strategy) {
     content = <Loader />;
   } else {
-    const { rsi } = strategy;
+    const { rsi, macd } = strategy;
 
     const panels: PanelItem[] = [
       {
@@ -127,7 +135,7 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
             <IndicatorLabel name='RSI' description='Relative Strength Index' />
           ),
           checked: rsi.enabled,
-          onClick: onRsiToggle,
+          onClick: event => onToggle(event, 'rsi'),
         },
         content: (
           <div className='font-light text-dark-gray'>
@@ -150,10 +158,30 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
           </div>
         ),
       },
+      {
+        key: 'macd',
+        header: {
+          label: (
+            <IndicatorLabel
+              name='MACD'
+              description='Moving Average Convergence Divergence'
+            />
+          ),
+          checked: macd.enabled,
+          onClick: event => onToggle(event, 'macd'),
+        },
+        content: (
+          <div className='font-light text-dark-gray'>
+            <ContentRow label='Fast' content={macd.fast} />
+            <ContentRow label='Slow' content={macd.slow} />
+            <ContentRow label='Signal' content={macd.signal} />
+          </div>
+        ),
+      },
     ];
 
     content = (
-      <Collapse className='w-full bg-dark-light bg-opacity-5'>
+      <Collapse className='w-full bg-white'>
         {React.Children.toArray(panels.map(renderPanel))}
       </Collapse>
     );

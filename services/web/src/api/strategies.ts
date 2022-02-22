@@ -10,9 +10,17 @@ export type Rsi = {
   overbought: number;
 };
 
+export type Macd = {
+  enabled: boolean;
+  fast: number;
+  slow: number;
+  signal: number;
+};
+
 export type Strategies = {
   symbol: string;
   rsi: Rsi;
+  macd: Macd;
 };
 
 export type GetStrategyRequest = {
