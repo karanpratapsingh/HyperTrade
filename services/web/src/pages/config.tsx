@@ -33,7 +33,7 @@ const { Meta } = Card;
 
 export function Config(): React.ReactElement {
   const { data, loading } = useConfigs();
-  const { symbol, setSymbol } = useSymbolStore();
+  const { getSymbol, setSymbol } = useSymbolStore();
   const { mutate: mutateTradingEnabled, loading: loadingTradingEnabled } =
     useUpdateTradingEnabled();
   const { mutate: mutateAllowedAmount } = useUpdateAllowedAmount();
@@ -130,6 +130,8 @@ export function Config(): React.ReactElement {
   } else {
     const { configs } = data;
     const sortedConfig = sortBy(configs, 'symbol');
+
+    const symbol = getSymbol();
 
     content = (
       <animated.Div>

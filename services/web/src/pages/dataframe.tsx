@@ -16,7 +16,7 @@ const { Content } = Layout;
 const { Column, ColumnGroup } = Table;
 
 export function DataFrame(): React.ReactElement {
-  const { symbol } = useSymbolStore();
+  const { getSymbol } = useSymbolStore();
   const [dataframe, get, loading] = useDataFrameStore(state => [
     state.data,
     state.get,
@@ -44,6 +44,7 @@ export function DataFrame(): React.ReactElement {
   let content: React.ReactNode = <Loader />;
 
   if (!loading) {
+    const symbol = getSymbol();
     const dataSource = reverse(get(symbol));
 
     content = (

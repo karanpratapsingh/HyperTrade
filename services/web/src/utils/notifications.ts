@@ -13,7 +13,7 @@ const defaultOptions: Partial<ArgsProps> = {
   placement: 'bottomRight',
 };
 
-export function mountNotifications(pubsub: PubSub): void {
+export function mount(pubsub: PubSub): void {
   pubsub.subscribe<CriticalErrorEventPayload>(Events.CriticalError, payload => {
     error('Critical Error', new Error(payload.error));
   });

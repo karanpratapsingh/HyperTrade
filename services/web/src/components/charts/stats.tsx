@@ -21,7 +21,9 @@ const height = 200;
 const width = 180;
 
 export function StatsChart(): React.ReactElement {
-  const { symbol } = useSymbolStore();
+  const { getSymbol } = useSymbolStore();
+  const symbol = getSymbol();
+
   const { data, loading } = useStats(symbol);
 
   if (!data || loading) {
