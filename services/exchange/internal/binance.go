@@ -142,11 +142,8 @@ func (b Binance) Trade(side binance.SideType, symbol string, price, quantity flo
 	return nil
 }
 
-func (b Binance) Kline(symbol string) {
-	config := b.DB.GetConfig(symbol)
-	log.Info().Str("symbol", symbol).Str("interval", config.Interval).Msg("Binance.Kline.Subscribe")
-
-	wsKlineHandler := func(event *binance.WsKlineEvent) {
+func (b Binance) Kline() {
+	klineHandler := func(event *binance.WsKlineEvent) {
 		symbol := event.Kline.Symbol
 		time := time.Now().Unix() * 1000
 		open := utils.ParseFloat(event.Kline.Open)
@@ -177,8 +174,18 @@ func (b Binance) Kline(symbol string) {
 
 		// Try to restart ws connection
 		log.Warn().Msg("Binance.Kline.Recover")
-		b.Kline(symbol)
+		b.Kline()
 	}
 
-	binance.WsKlineServe(symbol, config.Interval, wsKlineHandler, errHandler)
+	configs := b.DB.GetConfigs()
+
+	for _, config := range configs {
+		log.Info().Str("symbol", config.Symbol).Str("interval", config.Interval).Msg("Binance.Kline.Subscribe")
+		go binance.WsKlineServe(
+			config.Symbol,
+			config.Interval,
+			klineHandler,
+			errHandler,
+		)
+	}
 }

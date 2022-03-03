@@ -14,7 +14,7 @@ import { Chart } from './pages/chart';
 import { Config } from './pages/config';
 import { DataFrame } from './pages/dataframe';
 import { Portfolio } from './pages/portfolio';
-import { useDataFrame } from './store/dataframe';
+import { useDataFrameStore } from './store/dataframe';
 import './styles/app.css';
 import { mountNotifications } from './utils/notifications';
 
@@ -23,7 +23,7 @@ const client = new QueryClient();
 const { Sider } = Layout;
 
 function App(): React.ReactElement {
-  const [restore, add] = useDataFrame(state => [state.restore, state.add]);
+  const [restore, add] = useDataFrameStore(state => [state.restore, state.add]);
 
   async function init(): Promise<void> {
     const pubsub = await PubSub.getInstance();

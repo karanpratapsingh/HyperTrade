@@ -19,7 +19,6 @@ func main() {
 	wait := make(chan bool)
 
 	env := utils.GetEnv()
-	symbol := env.Symbol
 
 	DB := db.New(env.DatabaseUrl)
 	DB.Seed()
@@ -35,7 +34,7 @@ func main() {
 		DB,
 	)
 
-	go bex.Kline(symbol)
+	go bex.Kline()
 
 	internal.RunAsyncApi(DB, bex, pubsub)
 

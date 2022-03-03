@@ -7,7 +7,8 @@ import * as animated from '../components/ui/animated';
 import { Header } from '../components/ui/header';
 import { Loader } from '../components/ui/loader';
 import { Kline, Signal } from '../events/types';
-import { useDataFrame } from '../store/dataframe';
+import { useDataFrameStore } from '../store/dataframe';
+import { useSymbolStore } from '../store/symbol';
 import { FinalTagColors, SignalTagColors } from '../theme/colors';
 import { paginationProps } from '../utils/pagination';
 
@@ -15,8 +16,10 @@ const { Content } = Layout;
 const { Column, ColumnGroup } = Table;
 
 export function DataFrame(): React.ReactElement {
-  const [dataframe, loading] = useDataFrame(state => [
+  const { symbol } = useSymbolStore();
+  const [dataframe, get, loading] = useDataFrameStore(state => [
     state.data,
+    state.get,
     state.loading,
   ]);
 
@@ -41,18 +44,25 @@ export function DataFrame(): React.ReactElement {
   let content: React.ReactNode = <Loader />;
 
   if (!loading) {
+    const dataSource = reverse(get(symbol));
+
     content = (
       <animated.Div>
         <Table
           className='text-xs font-light'
-          dataSource={reverse(dataframe)}
-          pagination={paginationProps(dataframe.length, 11)}>
+          dataSource={dataSource}
+          pagination={paginationProps(dataSource.length, 11)}>
           <ColumnGroup title='Kline' key='kline'>
             <Column
               title='Time'
               dataIndex={['kline', 'time']}
               key='time'
               render={renderTime}
+            />
+            <Column
+              title='Symbol'
+              dataIndex={['kline', 'symbol']}
+              key='symbol'
             />
             <Column title='Open' dataIndex={['kline', 'open']} key='open' />
             <Column title='High' dataIndex={['kline', 'high']} key='high' />

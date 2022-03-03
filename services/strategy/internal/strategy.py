@@ -24,7 +24,7 @@ class Strategy:
 
     def set_datatypes(self):
         types = {
-            "time": int,
+            'time': int,
             'open': float,
             'high': float,
             'low': float,
@@ -161,3 +161,12 @@ class Strategy:
 
     def last_index(self) -> int:
         return self.df.index[-1]
+
+class StrategyMap:
+    hashmap = dict()
+
+    def get_instance(self, symbol: str) -> Strategy:
+        if self.hashmap.get(symbol) is None:
+            self.hashmap.update({symbol: Strategy()})
+
+        return self.hashmap.get(symbol)
