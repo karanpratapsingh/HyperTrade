@@ -10,7 +10,7 @@ type DataFrameStore = {
   add(frames: DataFrameEventPayload[]): void;
 };
 
-const MAX_INTERVALS = 120;
+const MAX_INTERVALS = 400;
 
 export const useDataFrame = create<DataFrameStore>(
   (set: SetState<DataFrameStore>, get: GetState<DataFrameStore>) => ({
