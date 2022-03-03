@@ -17,7 +17,7 @@ export const useIndicatorsStore = create<IndicatorsStore>(
   (set: SetState<IndicatorsStore>) => ({
     type: ChartType.AREA,
     axis: AxisType.NORMAL,
-    primary: [Indicators.EMA],
+    primary: [],
     secondary: [Indicators.VOL],
     setPrimary: (primary: TechnicalIndicators[]): void => {
       set({ primary });
