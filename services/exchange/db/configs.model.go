@@ -11,6 +11,7 @@ type Configs struct {
 	Symbol         string  `gorm:"primaryKey" json:"symbol"`
 	Base           string  `gorm:"not null" json:"base"`
 	Quote          string  `gorm:"not null" json:"quote"`
+	Interval       string  `gorm:"not null" json:"interval"`
 	Minimum        float64 `gorm:"not null" json:"minimum"`
 	AllowedAmount  float64 `gorm:"not null" json:"allowed_amount"`
 	TradingEnabled bool    `gorm:"not null" json:"trading_enabled"`

@@ -18,6 +18,7 @@ func (t Telegram) FormatConfigsMessage(r GetConfigsResponse) string {
 				"Symbol: %v\n"+
 				"Base: %v\n"+
 				"Quote: %v\n"+
+				"Interval: %v\n"+
 				"Minimum: %v %v\n"+
 				"Allowed: %v %v\n"+
 				"Enabled: %v`",
@@ -25,6 +26,7 @@ func (t Telegram) FormatConfigsMessage(r GetConfigsResponse) string {
 			config.Symbol,
 			config.Base,
 			config.Quote,
+			config.Interval,
 			config.Minimum, config.Quote,
 			config.AllowedAmount, config.Quote,
 			config.TradingEnabled,

@@ -20,7 +20,7 @@ type seed struct {
 	Fn   func() error
 }
 
-var path = "seed.json"
+var path = "config.json"
 
 func (db DB) Seed() {
 	migrater := db.conn.Migrator()
