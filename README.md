@@ -56,7 +56,7 @@ $ terraform apply
 - Generate `base64` string of your secrets, and add it as `APP_SECRETS` to your repository secrets for github actions. 
 
 ```
-$ cat infrastructure/k8s/env.yaml| base64
+$ cat infrastructure/k8s/env.yaml | base64
 ```
 
 - Go to the actions tab and run `Build and Deploy` action.
