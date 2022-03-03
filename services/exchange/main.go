@@ -15,8 +15,6 @@ func init() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 }
 
-var interval string = "1m"
-
 func main() {
 	wait := make(chan bool)
 
@@ -37,9 +35,7 @@ func main() {
 		DB,
 	)
 
-	bex.PrintAccountInfo(symbol)
-
-	go bex.Kline(symbol, interval)
+	go bex.Kline(symbol)
 
 	internal.RunAsyncApi(DB, bex, pubsub)
 
