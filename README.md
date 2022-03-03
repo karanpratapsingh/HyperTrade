@@ -22,7 +22,7 @@
 - Start development with `make dev` command.
 - Use `make stop` to stop the local minikube cluster.
 
-_Note: Make sure the `SYMBOL` you used in `env.yaml` is also configured in `services/exchange/seed.json`_
+_Note: Make sure the `SYMBOL` you used in `env.yaml` is also configured in `services/exchange/config.json`_
 
 ### Deployment
 
