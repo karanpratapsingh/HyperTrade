@@ -12,8 +12,8 @@
       "symbol": "ETHUSDT",
       "base": "ETH",
       "quote": "USDT",
-      "minimum": 20,
-      "allowed_amount": 25,
+      "minimum": 15,
+      "allowed_amount": 20,
       "trading_enabled": false
     },
     {
@@ -46,8 +46,8 @@
       "rsi": {
         "enabled": false,
         "period": 14,
-        "overbought": 70,
-        "oversold": 30
+        "overbought": 60,
+        "oversold": 40
       },
       "macd": {
         "enabled": false,
@@ -61,8 +61,8 @@
       "rsi": {
         "enabled": false,
         "period": 14,
-        "overbought": 60,
-        "oversold": 40
+        "overbought": 30,
+        "oversold": 70
       },
       "macd": {
         "enabled": false,

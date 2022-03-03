@@ -40,14 +40,14 @@ func (db DB) Seed() {
 
 	var seeds = []seed{
 		{
-			Name: "create configs",
+			Name: "create default configs",
 			Type: &Configs{},
 			Fn: func() error {
 				return db.CreateConfigs(sc.Configs)
 			},
 		},
 		{
-			Name: "create strategies",
+			Name: "create default strategies",
 			Type: &Strategies{},
 			Fn: func() error {
 				return db.CreateStrategies(sc.Strategies)
