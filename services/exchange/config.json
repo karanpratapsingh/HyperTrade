@@ -4,6 +4,7 @@
       "symbol": "BTCUSDT",
       "base": "BTC",
       "quote": "USDT",
+      "interval": "15m",
       "minimum": 20,
       "allowed_amount": 25,
       "trading_enabled": false
@@ -12,6 +13,7 @@
       "symbol": "ETHUSDT",
       "base": "ETH",
       "quote": "USDT",
+      "interval": "15m",
       "minimum": 15,
       "allowed_amount": 20,
       "trading_enabled": false
@@ -20,6 +22,7 @@
       "symbol": "SOLUSDT",
       "base": "SOL",
       "quote": "USDT",
+      "interval": "15m",
       "minimum": 20,
       "allowed_amount": 25,
       "trading_enabled": false
