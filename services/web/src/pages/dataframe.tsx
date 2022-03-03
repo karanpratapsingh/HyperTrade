@@ -1,6 +1,8 @@
 import { Layout, Table, Tag } from 'antd';
 import dateFormat from 'dateformat';
 import reverse from 'lodash/reverse';
+import React from 'react';
+import { ExportButton } from '../components/buttons/export';
 import * as animated from '../components/ui/animated';
 import { Header } from '../components/ui/header';
 import { Loader } from '../components/ui/loader';
@@ -105,9 +107,13 @@ export function DataFrame(): React.ReactElement {
     );
   }
 
+  const extra: React.ReactNode[] = React.Children.toArray([
+    <ExportButton type='dataframe' data={dataframe} />,
+  ]);
+
   return (
     <Content className='p-6 bg-white flex flex-col'>
-      <Header title='Dataframe' subtitle='Live data frames' />
+      <Header title='Dataframe' subtitle='Live data frames' extra={extra} />
       {content}
     </Content>
   );
