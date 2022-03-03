@@ -172,8 +172,13 @@ func (t Telegram) FormatUpdateTradingMessage(symbol string, enable bool) string 
 		case false:
 			status = "disabled"
 		}
-		message = fmt.Sprintf("*Message*\n\n`Trading has been %v`", status)
+		message = fmt.Sprintf("*Message*\n\n`Trading has been %s for %s`", status, symbol)
 	}
 
 	return message
+}
+
+func (t Telegram) FormatSymbolErrorMessage(command string) string {
+
+	return fmt.Sprintf("*Error*\n\nInvalid symbol, please try again\nUsage: /%s symbol", command)
 }

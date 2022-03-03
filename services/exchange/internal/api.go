@@ -127,14 +127,12 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 		var response GetStatsResponse
 		var stats Stats
 
-		var request GetStatsRequest
-		utils.Unmarshal(m.Data, &request)
-
 		trades := DB.GetTrades()
-		config := DB.GetConfig(request.Symbol)
 
 		if len(trades) != 0 {
 			for _, trade := range trades {
+
+				config := DB.GetConfig(trade.Symbol)
 				percentage := ((trade.Exit - trade.Entry) / trade.Entry) * 100
 				amount := (percentage * config.AllowedAmount) / 100
 

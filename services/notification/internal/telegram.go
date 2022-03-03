@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"errors"
 	"fmt"
 
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -58,7 +59,7 @@ func (t Telegram) SetDefaultCommands() {
 	}
 }
 
-func (t Telegram) ListenForCommands(symbol string) {
+func (t Telegram) ListenForCommands() {
 	log.Trace().Msg("TelegramBot.ListenForCommands.Init")
 
 	update := telegram.NewUpdate(0)
@@ -74,6 +75,8 @@ func (t Telegram) ListenForCommands(symbol string) {
 		if !update.Message.IsCommand() {
 			continue
 		}
+
+		args := update.Message.CommandArguments()
 
 		message := telegram.NewMessage(update.Message.Chat.ID, "")
 		message.ParseMode = telegram.ModeMarkdownV2
@@ -116,8 +119,7 @@ func (t Telegram) ListenForCommands(symbol string) {
 		case StatsCommand:
 			var r GetStatsResponse
 
-			req := GetStatsRequest{symbol}
-			err := t.pubsub.Request(GetStatsEvent, req, &r)
+			err := t.pubsub.Request(GetStatsEvent, nil, &r)
 
 			if err != nil {
 				message.Text = err.Error()
@@ -125,19 +127,36 @@ func (t Telegram) ListenForCommands(symbol string) {
 				message.Text = t.FormatStatsMessage(r)
 			}
 		case EnableTradingCommand:
-			message.Text = t.FormatUpdateTradingMessage(symbol, true)
+			err := t.ValidateSymbolArgs(args)
+
+			if err != nil {
+				message.Text = t.FormatSymbolErrorMessage(command)
+			} else {
+				message.Text = t.FormatUpdateTradingMessage(args, true)
+			}
 		case DisableTradingCommand:
-			message.Text = t.FormatUpdateTradingMessage(symbol, false)
+			err := t.ValidateSymbolArgs(args)
+
+			if err != nil {
+				message.Text = t.FormatSymbolErrorMessage(command)
+			} else {
+				message.Text = t.FormatUpdateTradingMessage(args, false)
+			}
 		case DumpCommand:
+			if err := t.ValidateSymbolArgs(args); err != nil {
+				message.Text = t.FormatSymbolErrorMessage(command)
+				break
+			}
+
 			var r DumpResponse
 
-			req := DumpRequest{symbol}
+			req := DumpRequest{args}
 			err := t.pubsub.Request(DumpEvent, req, &r)
 
 			if err != nil {
 				message.Text = err.Error()
 			} else {
-				message.Text = t.FormatDumpMessage(symbol, r)
+				message.Text = t.FormatDumpMessage(args, r)
 			}
 		default:
 			message.Text = "Command not defined"
@@ -171,4 +190,20 @@ func (t Telegram) SendMessage(event string, msg string) {
 	if err != nil {
 		log.Error().Err(err).Msg("TelegramBot.SendMessage")
 	}
+}
+
+func (t Telegram) ValidateSymbolArgs(args string) error {
+	var r GetConfigsResponse
+
+	if err := t.pubsub.Request(GetConfigsEvent, nil, &r); err != nil {
+		return err
+	}
+
+	for _, config := range r.Configs {
+		if config.Symbol == args {
+			return nil
+		}
+	}
+
+	return errors.New("err: invalid symbol")
 }
