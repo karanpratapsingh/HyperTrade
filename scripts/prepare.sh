@@ -31,10 +31,6 @@ if ! [ -x "$(command -v yq)" ]; then
   error "yq" "https://github.com/mikefarah/yq"
 fi
 
-if ! [ -x "$(command -v volta)" ]; then
-  error "volta" "https://volta.sh"
-fi
-
 if ! [ -x "$(command -v skaffold)" ]; then
   error "skaffold" "https://skaffold.dev/docs/install"
 fi
@@ -45,6 +41,12 @@ fi
 
 if ! [ -x "$(command -v doctl)" ]; then
   error "doctl" "https://github.com/digitalocean/doctl"
+fi
+
+if [[ "$ENVIRONMENT" == "development" ]]; then
+  if ! [ -x "$(command -v volta)" ]; then
+    error "volta" "https://volta.sh"
+  fi
 fi
 
 SECRETS_PATH=infrastructure/k8s/env.yaml

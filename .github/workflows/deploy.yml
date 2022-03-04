@@ -17,9 +17,6 @@ jobs:
       - name: Configure secrets
         run: echo "${{ env.APP_SECRETS }}" | base64 --decode > infrastructure/k8s/env.yaml
 
-      - name: Install volta
-        run: curl https://get.volta.sh | bash
-
       - name: Install skaffold
         run: curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && sudo install skaffold /usr/local/bin/
 
