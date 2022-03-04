@@ -33,7 +33,10 @@ const { Meta } = Card;
 
 export function Config(): React.ReactElement {
   const { data, loading } = useConfigs();
-  const { getSymbol, setSymbol } = useSymbolStore();
+  const [getSymbol, setSymbol] = useSymbolStore(state => [
+    state.getSymbol,
+    state.setSymbol,
+  ]);
   const { mutate: mutateTradingEnabled, loading: loadingTradingEnabled } =
     useUpdateTradingEnabled();
   const { mutate: mutateAllowedAmount } = useUpdateAllowedAmount();

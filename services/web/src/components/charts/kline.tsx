@@ -49,7 +49,7 @@ const options = {
 export function KlineChart(props: KlineChartProps): React.ReactElement {
   const { type, axis, primary, secondary } = props;
 
-  const { getSymbol } = useSymbolStore();
+  const getSymbol = useSymbolStore(state => state.getSymbol);
   const loading = useDataFrameStore(state => state.loading);
   const [chart, setChart] = useState<Chart | null>(null);
 

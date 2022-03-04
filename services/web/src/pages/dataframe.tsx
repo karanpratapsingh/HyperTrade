@@ -16,7 +16,7 @@ const { Content } = Layout;
 const { Column, ColumnGroup } = Table;
 
 export function DataFrame(): React.ReactElement {
-  const { getSymbol } = useSymbolStore();
+  const getSymbol = useSymbolStore(state => state.getSymbol);
   const [dataframe, get, loading] = useDataFrameStore(state => [
     state.data,
     state.get,
