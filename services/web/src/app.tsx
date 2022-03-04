@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import { ErrorBoundary } from './components/misc/error-boundary';
 import { Loader } from './components/ui/loader';
-import { MenuItem, Paths } from './config/routes';
+import { DefaultKey, MenuItem, Paths } from './config/routes';
 import { PubSub } from './events/pubsub';
 import { DataFrameEventPayload, Events } from './events/types';
 import { Chart } from './pages/chart';
@@ -53,6 +53,9 @@ function App(): React.ReactElement {
   let content: React.ReactNode = <Loader />;
 
   if (!loading) {
+    const { pathname } = window.location;
+    const defaultKeys = [DefaultKey[pathname as Paths]];
+
     content = (
       <Layout className='min-h-screen'>
         <Sider className='bg-light' theme='light' collapsed>
@@ -60,7 +63,7 @@ function App(): React.ReactElement {
             className='bg-light mt-2'
             theme='light'
             mode='inline'
-            defaultSelectedKeys={[MenuItem.CHART]}>
+            defaultSelectedKeys={defaultKeys}>
             <Menu.Item key={MenuItem.CHART} icon={<BiBarChart size={25} />}>
               <Link to={Paths.HOME}>Chart</Link>
             </Menu.Item>
