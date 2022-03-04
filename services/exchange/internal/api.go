@@ -190,7 +190,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 }
 
 func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal Signal) {
-	if signal == "NONE" {
+	if signal == "NONE" || !kline.Final {
 		return
 	}
 
