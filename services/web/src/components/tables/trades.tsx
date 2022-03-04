@@ -54,7 +54,7 @@ export function TradesTable(props: TradesTableProps): React.ReactElement {
   ];
 
   const extra: React.ReactNode[] = React.Children.toArray([
-    <ExportButton type='dataframe' data={data.trades} />,
+    <ExportButton type='trades' data={data.trades} />,
   ]);
 
   return (
