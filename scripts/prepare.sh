@@ -32,7 +32,7 @@ if ! [ -x "$(command -v yq)" ]; then
 fi
 
 if ! [ -x "$(command -v volta)" ]; then
-  error "yq" "https://volta.sh"
+  error "volta" "https://volta.sh"
 fi
 
 if ! [ -x "$(command -v skaffold)" ]; then
