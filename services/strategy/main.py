@@ -1,5 +1,4 @@
 import asyncio
-import json
 
 from internal.events import Events
 from internal.pubsub import PubSub

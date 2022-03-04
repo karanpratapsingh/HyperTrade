@@ -4,7 +4,6 @@ import pandas as pd
 import talib as ta
 from internal.events import Signal
 from utils.functions import normalize_booleans
-from utils.log import Logger
 
 
 class Strategy:
