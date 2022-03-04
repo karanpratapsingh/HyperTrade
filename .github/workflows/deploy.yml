@@ -11,31 +11,34 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Configure secrets
-      run: echo "${{ env.APP_SECRETS }}" | base64 --decode > infrastructure/k8s/env.yaml
+      - name: Configure secrets
+        run: echo "${{ env.APP_SECRETS }}" | base64 --decode > infrastructure/k8s/env.yaml
 
-    - name: Install skaffold
-      run: curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && sudo install skaffold /usr/local/bin/
+      - name: Install volta
+        run: curl https://get.volta.sh | bash
 
-    - name: Install helm
-      run: curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 && chmod 700 get_helm.sh && ./get_helm.sh
+      - name: Install skaffold
+        run: curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && sudo install skaffold /usr/local/bin/
 
-    - name: Install doctl
-      uses: digitalocean/action-doctl@v2
-      with:
-        token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      - name: Install helm
+        run: curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 && chmod 700 get_helm.sh && ./get_helm.sh
 
-    - name: Log in to DigitalOcean Container Registry
-      run: doctl registry login --expiry-seconds 720
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
-    - name: Save DigitalOcean kubeconfig
-      run: doctl kubernetes cluster kubeconfig save trader-cluster
+      - name: Log in to DigitalOcean Container Registry
+        run: doctl registry login --expiry-seconds 720
 
-    - name: Prepare environment
-      run: scripts/prepare.sh production
+      - name: Save DigitalOcean kubeconfig
+        run: doctl kubernetes cluster kubeconfig save trader-cluster
 
-    - name: Deploy to cluster with Skaffold
-      run: skaffold run --profile production
+      - name: Prepare environment
+        run: scripts/prepare.sh production
+
+      - name: Deploy to cluster with Skaffold
+        run: skaffold run --profile production
