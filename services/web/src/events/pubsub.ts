@@ -40,7 +40,7 @@ export class PubSub {
 
         this.instance = new PubSub(conn);
       } catch (err) {
-        Notifications.error('PubSub', err);
+        Notifications.error('PubSub get instance', err);
       }
     }
 
