@@ -1,5 +1,5 @@
 # Image registry should be same as created in digitalocean_container_registry (infrastructure/main.tf)
-apiVersion: skaffold/v2beta20
+apiVersion: skaffold/v2beta25
 kind: Config
 profiles:
   - name: production
