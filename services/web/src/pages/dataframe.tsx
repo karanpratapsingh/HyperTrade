@@ -1,11 +1,14 @@
 import { Layout, Table, Tag } from 'antd';
 import dateFormat from 'dateformat';
 import reverse from 'lodash/reverse';
+import React from 'react';
+import { ExportButton } from '../components/buttons/export';
 import * as animated from '../components/ui/animated';
 import { Header } from '../components/ui/header';
 import { Loader } from '../components/ui/loader';
 import { Kline, Signal } from '../events/types';
-import { useDataFrame } from '../store/dataframe';
+import { useDataFrameStore } from '../store/dataframe';
+import { useSymbolStore } from '../store/symbol';
 import { FinalTagColors, SignalTagColors } from '../theme/colors';
 import { paginationProps } from '../utils/pagination';
 
@@ -13,8 +16,10 @@ const { Content } = Layout;
 const { Column, ColumnGroup } = Table;
 
 export function DataFrame(): React.ReactElement {
-  const [dataframe, loading] = useDataFrame(state => [
+  const getSymbol = useSymbolStore(state => state.getSymbol);
+  const [dataframe, get, loading] = useDataFrameStore(state => [
     state.data,
+    state.get,
     state.loading,
   ]);
 
@@ -39,18 +44,26 @@ export function DataFrame(): React.ReactElement {
   let content: React.ReactNode = <Loader />;
 
   if (!loading) {
+    const symbol = getSymbol();
+    const dataSource = reverse(get(symbol));
+
     content = (
       <animated.Div>
         <Table
           className='text-xs font-light'
-          dataSource={reverse(dataframe)}
-          pagination={paginationProps(dataframe.length, 11)}>
+          dataSource={dataSource}
+          pagination={paginationProps(dataSource.length, 11)}>
           <ColumnGroup title='Kline' key='kline'>
             <Column
               title='Time'
               dataIndex={['kline', 'time']}
               key='time'
               render={renderTime}
+            />
+            <Column
+              title='Symbol'
+              dataIndex={['kline', 'symbol']}
+              key='symbol'
             />
             <Column title='Open' dataIndex={['kline', 'open']} key='open' />
             <Column title='High' dataIndex={['kline', 'high']} key='high' />
@@ -105,9 +118,13 @@ export function DataFrame(): React.ReactElement {
     );
   }
 
+  const extra: React.ReactNode[] = React.Children.toArray([
+    <ExportButton type='dataframe' data={dataframe} />,
+  ]);
+
   return (
     <Content className='p-6 bg-white flex flex-col'>
-      <Header title='Dataframe' subtitle='Live data frames' />
+      <Header title='Dataframe' subtitle='Live data frames' extra={extra} />
       {content}
     </Content>
   );

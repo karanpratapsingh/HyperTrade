@@ -15,13 +15,10 @@ func init() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 }
 
-var interval string = "1m"
-
 func main() {
 	wait := make(chan bool)
 
 	env := utils.GetEnv()
-	symbol := env.Symbol
 
 	DB := db.New(env.DatabaseUrl)
 	DB.Seed()
@@ -37,9 +34,7 @@ func main() {
 		DB,
 	)
 
-	bex.PrintAccountInfo(symbol)
-
-	go bex.Kline(symbol, interval)
+	go bex.Kline()
 
 	internal.RunAsyncApi(DB, bex, pubsub)
 

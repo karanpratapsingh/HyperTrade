@@ -67,10 +67,6 @@ type Stats struct {
 	Total  float64 `json:"total"`
 }
 
-type GetStatsRequest struct {
-	Symbol string `json:"symbol"`
-}
-
 type GetStatsResponse struct {
 	Stats *Stats `json:"stats"`
 }
@@ -99,6 +95,7 @@ type Configs struct {
 	Symbol         string  `json:"symbol"`
 	Base           string  `json:"base"`
 	Quote          string  `json:"quote"`
+	Interval       string  `json:"interval"`
 	Minimum        float64 `json:"minimum"`
 	AllowedAmount  float64 `json:"allowed_amount"`
 	TradingEnabled bool    `json:"trading_enabled"`

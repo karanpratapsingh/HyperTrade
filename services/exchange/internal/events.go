@@ -82,10 +82,6 @@ type Stats struct {
 	Total  float64 `json:"total"`
 }
 
-type GetStatsRequest struct {
-	Symbol string `json:"symbol"`
-}
-
 type GetStatsResponse struct {
 	Stats *Stats `json:"stats"`
 }

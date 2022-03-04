@@ -3,7 +3,6 @@ package utils
 import "github.com/kelseyhightower/envconfig"
 
 type Env struct {
-	Symbol              string `envconfig:"SYMBOL"`
 	BinanceTestnet      bool   `envconfig:"BINANCE_TESTNET"`
 	BinanceApiKey       string `envconfig:"BINANCE_API_KEY"`
 	BinanceApiSecretKey string `envconfig:"BINANCE_SECRET_KEY"`

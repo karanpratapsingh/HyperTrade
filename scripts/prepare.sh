@@ -31,6 +31,10 @@ if ! [ -x "$(command -v yq)" ]; then
   error "yq" "https://github.com/mikefarah/yq"
 fi
 
+if ! [ -x "$(command -v volta)" ]; then
+  error "yq" "https://volta.sh"
+fi
+
 if ! [ -x "$(command -v skaffold)" ]; then
   error "skaffold" "https://skaffold.dev/docs/install"
 fi
@@ -46,7 +50,6 @@ fi
 SECRETS_PATH=infrastructure/k8s/env.yaml
 WEB_ENV_PATH=services/web/.env
 
-SYMBOL=$(yq ".env.global.SYMBOL" $SECRETS_PATH)
 NATS_USER=$(yq ".env.nats.USER" $SECRETS_PATH)
 NATS_PASS=$(yq ".env.nats.PASS" $SECRETS_PATH)
 
@@ -58,7 +61,6 @@ else
 fi
 
 echo "
-VITE_SYMBOL=$SYMBOL
 VITE_NATS_USER=$NATS_USER
 VITE_NATS_PASS=$NATS_PASS
 " >>$WEB_ENV_PATH
@@ -70,7 +72,7 @@ if [[ "$ENVIRONMENT" == "development" ]]; then
   cd services/web && npm install && cd ../..
 
   echo "[*] Starting minikube"
-  minikube start
+  minikube start --driver=docker
  	kubectl config use-context minikube
 fi
 

@@ -3,7 +3,8 @@ import difference from 'lodash/difference';
 import map from 'lodash/map';
 import React, { useEffect, useState } from 'react';
 import { Indicators, TechnicalIndicators } from '../../config/indicators';
-import { useDataFrame } from '../../store/dataframe';
+import { useDataFrameStore } from '../../store/dataframe';
+import { useSymbolStore } from '../../store/symbol';
 import * as animated from '../ui/animated';
 import { Loader } from '../ui/loader';
 
@@ -48,13 +49,17 @@ const options = {
 export function KlineChart(props: KlineChartProps): React.ReactElement {
   const { type, axis, primary, secondary } = props;
 
-  const loading = useDataFrame(state => state.loading);
+  const getSymbol = useSymbolStore(state => state.getSymbol);
+  const loading = useDataFrameStore(state => state.loading);
   const [chart, setChart] = useState<Chart | null>(null);
 
   useEffect(() => {
     const chart = init(CHART_ID, options);
 
-    const unsubscribe = useDataFrame.subscribe(({ data }): void => {
+    const unsubscribe = useDataFrameStore.subscribe(({ get }): void => {
+      const symbol = getSymbol();
+      const data = get(symbol);
+
       const klineData: KLineData[] = map(
         data,
         ({ kline: { open, close, high, low, volume, time } }) => ({
@@ -66,6 +71,7 @@ export function KlineChart(props: KlineChartProps): React.ReactElement {
           timestamp: time,
         })
       );
+
       chart?.applyNewData(klineData);
     });
 

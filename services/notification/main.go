@@ -22,5 +22,5 @@ func main() {
 	telegram := internal.NewTelegramBot(env.TelegramApiToken, env.TelegramChatId, pubsub)
 
 	internal.RunAsyncApi(telegram, pubsub)
-	telegram.ListenForCommands(env.Symbol)
+	telegram.ListenForCommands()
 }

@@ -5,8 +5,6 @@ import (
 	"errors"
 	"exchange/db"
 	"exchange/utils"
-	"fmt"
-	"strings"
 	"time"
 
 	"github.com/adshao/go-binance/v2"
@@ -44,18 +42,6 @@ func (b Binance) GetAccount() *binance.Account {
 	return account
 }
 
-func (b Binance) PrintAccountInfo(symbol string) {
-	acc := b.GetAccount()
-
-	fmt.Println("-------- Account Info --------")
-	fmt.Println("Type:", acc.AccountType)
-	fmt.Println("Can Trade:", acc.CanTrade)
-	fmt.Println("Test Mode:", b.test)
-	fmt.Println("Symbol:", symbol)
-	fmt.Println(b.GetBalanceString())
-	fmt.Println("------------------------------")
-}
-
 func (b Binance) GetBalance() []Balance {
 	acc := b.GetAccount()
 	balances := []Balance{}
@@ -71,26 +57,6 @@ func (b Binance) GetBalance() []Balance {
 	}
 
 	return balances
-}
-
-func (b Binance) GetBalanceString() string {
-	userBalances := b.GetBalance()
-
-	header := "Balance:"
-
-	if b.test {
-		header = fmt.Sprintln("Test", header)
-	}
-
-	var balances = []string{header}
-	var separator rune = '•'
-
-	for _, balance := range userBalances {
-		b := fmt.Sprintf("%c %v %v", separator, balance.Asset, balance.Amount)
-		balances = append(balances, b)
-	}
-
-	return strings.Join(balances, "\n")
 }
 
 func (b Binance) GetBalanceQuantity(symbol string) (float64, error) {
@@ -176,10 +142,8 @@ func (b Binance) Trade(side binance.SideType, symbol string, price, quantity flo
 	return nil
 }
 
-func (b Binance) Kline(symbol string, interval string) {
-	log.Info().Str("symbol", symbol).Str("interval", interval).Msg("Binance.Kline.Subscribe")
-
-	wsKlineHandler := func(event *binance.WsKlineEvent) {
+func (b Binance) Kline() {
+	klineHandler := func(event *binance.WsKlineEvent) {
 		symbol := event.Kline.Symbol
 		time := time.Now().Unix() * 1000
 		open := utils.ParseFloat(event.Kline.Open)
@@ -210,8 +174,18 @@ func (b Binance) Kline(symbol string, interval string) {
 
 		// Try to restart ws connection
 		log.Warn().Msg("Binance.Kline.Recover")
-		b.Kline(symbol, interval)
+		b.Kline()
 	}
 
-	binance.WsKlineServe(symbol, interval, wsKlineHandler, errHandler)
+	configs := b.DB.GetConfigs()
+
+	for _, config := range configs {
+		log.Info().Str("symbol", config.Symbol).Str("interval", config.Interval).Msg("Binance.Kline.Subscribe")
+		go binance.WsKlineServe(
+			config.Symbol,
+			config.Interval,
+			klineHandler,
+			errHandler,
+		)
+	}
 }

@@ -1,0 +1,246 @@
+{
+  "configs": [
+    {
+      "symbol": "BTCUSDT",
+      "base": "BTC",
+      "quote": "USDT",
+      "interval": "15m",
+      "minimum": 20,
+      "allowed_amount": 25,
+      "trading_enabled": false
+    },
+    {
+      "symbol": "ETHUSDT",
+      "base": "ETH",
+      "quote": "USDT",
+      "interval": "15m",
+      "minimum": 15,
+      "allowed_amount": 20,
+      "trading_enabled": false
+    },
+    {
+      "symbol": "XRPUSDT",
+      "base": "XRP",
+      "quote": "USDT",
+      "interval": "15m",
+      "minimum": 15,
+      "allowed_amount": 20,
+      "trading_enabled": false
+    },
+    {
+      "symbol": "LUNAUSDT",
+      "base": "LUNA",
+      "quote": "USDT",
+      "interval": "15m",
+      "minimum": 15,
+      "allowed_amount": 20,
+      "trading_enabled": false
+    },
+    {
+      "symbol": "SOLUSDT",
+      "base": "SOL",
+      "quote": "USDT",
+      "interval": "15m",
+      "minimum": 15,
+      "allowed_amount": 20,
+      "trading_enabled": false
+    },
+    {
+      "symbol": "ADAUSDT",
+      "base": "ADA",
+      "quote": "USDT",
+      "interval": "15m",
+      "minimum": 15,
+      "allowed_amount": 20,
+      "trading_enabled": false
+    },
+    {
+      "symbol": "AVAXUSDT",
+      "base": "AVAX",
+      "quote": "USDT",
+      "interval": "15m",
+      "minimum": 15,
+      "allowed_amount": 20,
+      "trading_enabled": false
+    },
+    {
+      "symbol": "DOTUSDT",
+      "base": "DOT",
+      "quote": "USDT",
+      "interval": "15m",
+      "minimum": 15,
+      "allowed_amount": 20,
+      "trading_enabled": false
+    },
+    {
+      "symbol": "DOGEUSDT",
+      "base": "DOGE",
+      "quote": "USDT",
+      "interval": "15m",
+      "minimum": 15,
+      "allowed_amount": 20,
+      "trading_enabled": false
+    },
+    {
+      "symbol": "MATICUSDT",
+      "base": "MATIC",
+      "quote": "USDT",
+      "interval": "15m",
+      "minimum": 15,
+      "allowed_amount": 20,
+      "trading_enabled": false
+    }
+  ],
+  "strategies": [
+    {
+      "symbol": "BTCUSDT",
+      "rsi": {
+        "enabled": false,
+        "period": 14,
+        "overbought": 70,
+        "oversold": 30
+      },
+      "macd": {
+        "enabled": false,
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    },
+    {
+      "symbol": "ETHUSDT",
+      "rsi": {
+        "enabled": false,
+        "period": 14,
+        "overbought": 70,
+        "oversold": 30
+      },
+      "macd": {
+        "enabled": false,
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    },
+    {
+      "symbol": "XRPUSDT",
+      "rsi": {
+        "enabled": false,
+        "period": 14,
+        "overbought": 70,
+        "oversold": 30
+      },
+      "macd": {
+        "enabled": false,
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    },
+    {
+      "symbol": "LUNAUSDT",
+      "rsi": {
+        "enabled": false,
+        "period": 14,
+        "overbought": 70,
+        "oversold": 30
+      },
+      "macd": {
+        "enabled": false,
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    },
+    {
+      "symbol": "SOLUSDT",
+      "rsi": {
+        "enabled": false,
+        "period": 14,
+        "overbought": 70,
+        "oversold": 30
+      },
+      "macd": {
+        "enabled": false,
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    },
+    {
+      "symbol": "ADAUSDT",
+      "rsi": {
+        "enabled": false,
+        "period": 14,
+        "overbought": 70,
+        "oversold": 30
+      },
+      "macd": {
+        "enabled": false,
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    },
+    {
+      "symbol": "AVAXUSDT",
+      "rsi": {
+        "enabled": false,
+        "period": 14,
+        "overbought": 70,
+        "oversold": 30
+      },
+      "macd": {
+        "enabled": false,
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    },
+    {
+      "symbol": "DOTUSDT",
+      "rsi": {
+        "enabled": false,
+        "period": 14,
+        "overbought": 70,
+        "oversold": 30
+      },
+      "macd": {
+        "enabled": false,
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    },
+    {
+      "symbol": "DOGEUSDT",
+      "rsi": {
+        "enabled": false,
+        "period": 14,
+        "overbought": 70,
+        "oversold": 30
+      },
+      "macd": {
+        "enabled": false,
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    },
+    {
+      "symbol": "MATICUSDT",
+      "rsi": {
+        "enabled": false,
+        "period": 14,
+        "overbought": 70,
+        "oversold": 30
+      },
+      "macd": {
+        "enabled": false,
+        "fast": 12,
+        "slow": 26,
+        "signal": 9
+      }
+    }
+  ]
+}

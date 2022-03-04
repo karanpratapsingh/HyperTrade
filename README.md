@@ -13,16 +13,16 @@
 -  [Node >= 16](https://nodejs.org/en/download/)
 -  [Python >= 3.8](https://www.python.org/downloads/)
 -  [yq](https://github.com/mikefarah/yq)
+-  [volta](https://volta.sh/)
 -  [doctl](https://github.com/digitalocean/doctl)
 
 **Steps**
 
 - Once all the tools are installed, execute `make prepare` to prepare local environment.
 - Create a `infrastructure/k8s/env.yaml` file and add your secrets as shown in `infrastructure/k8s/env.example.yaml`.
+- Review the configuration in `services/exchange/config.json`
 - Start development with `make dev` command.
 - Use `make stop` to stop the local minikube cluster.
-
-_Note: Make sure the `SYMBOL` you used in `env.yaml` is also configured in `services/exchange/seed.json`_
 
 ### Deployment
 

@@ -1,8 +1,10 @@
 import { Table } from 'antd';
 import dateFormat from 'dateformat';
-import { Trade, GetTradesResponse } from '../../api/trades';
+import React from 'react';
+import { GetTradesResponse, Trade } from '../../api/trades';
 import { ApiQueryResult } from '../../api/types';
 import { paginationProps } from '../../utils/pagination';
+import { ExportButton } from '../buttons/export';
 import * as animated from '../ui/animated';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
@@ -51,9 +53,13 @@ export function TradesTable(props: TradesTableProps): React.ReactElement {
     },
   ];
 
+  const extra: React.ReactNode[] = React.Children.toArray([
+    <ExportButton type='dataframe' data={data.trades} />,
+  ]);
+
   return (
     <animated.Div className='mt-4 w-full flex flex-1 flex-col table'>
-      <Header title='Trades' subtitle='Trades executed so far' />
+      <Header title='Trades' subtitle='Trades executed so far' extra={extra} />
       <Table
         className='text-xs font-light'
         pagination={paginationProps(data.trades.length)}

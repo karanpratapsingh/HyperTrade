@@ -18,6 +18,7 @@ func (t Telegram) FormatConfigsMessage(r GetConfigsResponse) string {
 				"Symbol: %v\n"+
 				"Base: %v\n"+
 				"Quote: %v\n"+
+				"Interval: %v\n"+
 				"Minimum: %v %v\n"+
 				"Allowed: %v %v\n"+
 				"Enabled: %v`",
@@ -25,6 +26,7 @@ func (t Telegram) FormatConfigsMessage(r GetConfigsResponse) string {
 			config.Symbol,
 			config.Base,
 			config.Quote,
+			config.Interval,
 			config.Minimum, config.Quote,
 			config.AllowedAmount, config.Quote,
 			config.TradingEnabled,
@@ -170,8 +172,13 @@ func (t Telegram) FormatUpdateTradingMessage(symbol string, enable bool) string 
 		case false:
 			status = "disabled"
 		}
-		message = fmt.Sprintf("*Message*\n\n`Trading has been %v`", status)
+		message = fmt.Sprintf("*Message*\n\n`Trading has been %s for %s`", status, symbol)
 	}
 
 	return message
+}
+
+func (t Telegram) FormatSymbolErrorMessage(command string) string {
+
+	return fmt.Sprintf("*Error*\n\nInvalid symbol, please try again\nUsage: /%s symbol", command)
 }

@@ -5,5 +5,5 @@ class Streams:
     DataFrame = {
         'name': "Stream:DataFrame",
         'subjects': [Events.DataFrame],
-        'max_msgs': 120,
+        'max_msgs': 400,
     }

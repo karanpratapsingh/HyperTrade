@@ -1,9 +1,8 @@
 import asyncio
-import json
 
 from internal.events import Events
 from internal.pubsub import PubSub
-from internal.strategy import Strategy
+from internal.strategy import StrategyMap
 from internal.streams import Streams
 from utils.env import Env
 
@@ -15,15 +14,18 @@ async def main():
         url=Env.NATS_URL
     )
 
-    strat = Strategy()
+    hashmap = StrategyMap()
 
     instance = await PubSub.init(url)
     pubsub = PubSub(instance)
     await pubsub.jetstream(Streams.DataFrame)
 
     async def handler(data):
-        strat.populate(data)
-        payload = strat.get_payload()
+        symbol = data['kline']['symbol']
+        strategy = hashmap.get_instance(symbol)
+
+        strategy.populate(data)
+        payload = strategy.get_payload()
         await pubsub.publish(Events.DataFrame, payload)
 
     await pubsub.subscribe(Events.Kline, handler)

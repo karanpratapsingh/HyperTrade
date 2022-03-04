@@ -1,4 +1,4 @@
-import { Button, Checkbox, Input, Layout, Modal, PageHeader } from 'antd';
+import { Button, Checkbox, Input, Layout, Modal } from 'antd';
 import includes from 'lodash/includes';
 import toLower from 'lodash/toLower';
 import React, { useState } from 'react';
@@ -38,10 +38,6 @@ export function Chart(): React.ReactElement {
   const [showIndicators, setShowIndicators] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
 
-  const title: React.ReactNode = (
-    <Header title='Charts' subtitle='Live data charts' />
-  );
-
   const typeIcon: Record<ChartType, React.ReactNode> = {
     [ChartType.AREA]: (
       <BiBarChart
@@ -76,10 +72,11 @@ export function Chart(): React.ReactElement {
     ),
   };
 
-  const extras: React.ReactNode[] = React.Children.toArray([
+  const extra: React.ReactNode[] = React.Children.toArray([
     <Button type='link' icon={typeIcon[type]} />,
     <Button type='link' icon={axisIcon[axis]} />,
     <Button
+      className='mr-12'
       type='link'
       icon={
         <AiOutlineFunction
@@ -93,7 +90,7 @@ export function Chart(): React.ReactElement {
 
   return (
     <Content className='p-6 bg-white'>
-      <PageHeader className='p-0 pr-12' title={title} extra={extras} />
+      <Header title='Charts' subtitle='Live data charts' extra={extra} />
       <KlineChart
         type={type}
         axis={axis}
