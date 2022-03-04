@@ -33,7 +33,8 @@ function App(): React.ReactElement {
     const pubsub = await PubSub.getInstance();
 
     try {
-      await Promise.allSettled([setDefault(), restore()]);
+      await setDefault();
+      await restore();
       setLoading(false);
     } catch (err) {
       Notifications.error('Initialization Error', err);
