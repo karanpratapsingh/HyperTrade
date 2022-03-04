@@ -13,6 +13,7 @@
 -  [Node >= 16](https://nodejs.org/en/download/)
 -  [Python >= 3.8](https://www.python.org/downloads/)
 -  [yq](https://github.com/mikefarah/yq)
+-  [volta](https://volta.sh/)
 -  [doctl](https://github.com/digitalocean/doctl)
 
 **Steps**

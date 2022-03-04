@@ -31,6 +31,10 @@ if ! [ -x "$(command -v yq)" ]; then
   error "yq" "https://github.com/mikefarah/yq"
 fi
 
+if ! [ -x "$(command -v volta)" ]; then
+  error "yq" "https://volta.sh"
+fi
+
 if ! [ -x "$(command -v skaffold)" ]; then
   error "skaffold" "https://skaffold.dev/docs/install"
 fi
@@ -68,7 +72,7 @@ if [[ "$ENVIRONMENT" == "development" ]]; then
   cd services/web && npm install && cd ../..
 
   echo "[*] Starting minikube"
-  minikube start
+  minikube start --driver=docker
  	kubectl config use-context minikube
 fi
 
