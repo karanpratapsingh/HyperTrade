@@ -27,8 +27,12 @@ TODO Screen shots
 
 ## <a id="architecture" style="color: black;">Architecture</a>
 
-![architecture](./docs/diagrams/architecture.png)
+<!-- ![architecture](./docs/diagrams/architecture.png)
 ![k8s](./docs/diagrams/k8s.png)
+ -->
+
+<img width="60%" src="./docs/diagrams/architecture.png" alt="architecture" />
+<img width="37.5%" src="./docs/diagrams/k8s.png" alt="k8s" />
 
 _Note: The k8s diagram was generated using [Lens - The Kubernetes IDE](https://github.com/nevalla/lens-resource-map-extension/)_
 
