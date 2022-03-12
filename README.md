@@ -1,8 +1,38 @@
 ## Trader (yet to be named properly!)
 
-**USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHORS AND ALL AFFILIATES ASSUME NO LIABILITY FOR YOUR TRADING OUTCOMES.**
+<br />
 
-### Development
+
+<!-- TODO_CODE_QUALITY -->
+
+<br />
+
+<p align="center">
+<a href="https://www.buymeacoffee.com/karanps" target="_blank"><img width="105px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" alt="Buy Me A Coffee" ></a>
+<img src="https://img.shields.io/github/workflow/status/karanpratapsingh/trader/TODO?style=for-the-badge" />
+<img src="https://img.shields.io/badge/License-GPL-red.svg?style=for-the-badge" />
+<img alt="Twitter: karan_6864" src="https://img.shields.io/twitter/follow/karan_6864.svg?style=for-the-badge&logo=TWITTER&logoColor=FFFFFF&labelColor=00aced&logoWidth=20&color=white" target="_blank" />
+
+_**USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHORS AND ALL AFFILIATES ASSUME NO LIABILITY FOR YOUR TRADING OUTCOMES.**_
+
+TODO Screen shots
+
+## 📖 Contents
+
+- [Architecture](#architecture)
+- [Getting Started](#getting-started)
+- [Deployment](#deployment)
+- [Usage](#usage)
+- [License](#license)
+
+## <a id="architecture" style="color: black;">Architecture</a>
+
+![architecture](./docs/diagrams/architecture.png)
+![k8s](./docs/diagrams/k8s.png)
+
+_Note: The k8s diagram was generated using [Lens - The Kubernetes IDE](https://github.com/nevalla/lens-resource-map-extension/)_
+
+## <a id="getting-started" style="color: black;">Getting Started</a>
 
 **Tools**
 
@@ -10,7 +40,7 @@
 -  [Skaffold](https://skaffold.dev/docs/install/)
 -  [Helm](https://helm.sh/docs/intro/install/)
 -  [Go >= 1.17](https://go.dev/doc/install)
--  [Node >= 16](https://nodejs.org/en/download/)
+-  [Node >= 16.13](https://nodejs.org/en/download/)
 -  [Python >= 3.8](https://www.python.org/downloads/)
 -  [yq](https://github.com/mikefarah/yq)
 -  [volta](https://volta.sh/)
@@ -24,9 +54,9 @@
 - Start development with `make dev` command.
 - Use `make stop` to stop the local minikube cluster.
 
-### Deployment
+## <a id="deployment" style="color: black;">Deployment</a>
 
-Deployments are done automatically via `deploy.yml` github actions on merge with `main` branch. It also supports manual deployment as well. But first we need to provision our infrastructure.
+Deployments are done automatically via `deploy.yml` github actions on merge with `main` branch. It supports manual deployment as well. But first we will need to provision our infrastructure.
 
 _Note: Infrastructure we're about to provision has it's own cost!_
 
@@ -63,7 +93,7 @@ $ cat infrastructure/k8s/env.yaml | base64
 
 _Note: If you want to change name of the project, make sure to update all the associated kubernetes manifest files, skaffold config etc._
 
-### Connecting
+## <a id="usage" style="color: black;">Usage</a>
 
 Since this application deals with sensitive personal financial data, it is **not recommended** to expose it via ingress unless we have proper authorization in place. Hence, it is recommended to connect to it via port-forwarding on your local machine.
 
@@ -78,3 +108,7 @@ _Note: Make sure `doctl` is authenticated, and we're using correct k8s cluster n
 - Once done, use the `make disconnect` command to remove the kubectl context from your machine.
 
 _Note: It is recommended to use the telegram bot over user interface on non-secure systems._
+
+## 📄 <a id="license" style="color: black;">License</a>
+
+This project is GPL-3.0 licensed, as found in the [LICENSE](/LICENSE)
