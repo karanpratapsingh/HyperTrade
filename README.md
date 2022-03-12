@@ -31,8 +31,7 @@ TODO Screen shots
 ![k8s](./docs/diagrams/k8s.png)
  -->
 
-<img width="50%" src="./docs/diagrams/architecture.png" alt="architecture" />
-<img width="31.25%" src="./docs/diagrams/k8s.png" alt="k8s" />
+<img width="50%" src="./docs/diagrams/architecture.png" alt="architecture" /><img width="31.25%" src="./docs/diagrams/k8s.png" alt="k8s" />
 
 _Note: The k8s diagram was generated using [Lens - The Kubernetes IDE](https://github.com/nevalla/lens-resource-map-extension/)_
 
