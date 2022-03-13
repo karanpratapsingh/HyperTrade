@@ -4,7 +4,7 @@
 
 
 <!-- TODO_CODE_QUALITY -->
-#
+
 <br />
 
 <p align="center">
@@ -19,21 +19,22 @@ TODO Screen shots
 
 ## 📖 Contents
 
+- [Stack](#stack)
 - [Architecture](#architecture)
 - [Getting Started](#getting-started)
 - [Deployment](#deployment)
 - [Usage](#usage)
 - [License](#license)
 
+## <a id="stack" style="color: black;">Stack</a>
+
+<img width="98%" src="./docs/diagrams/stack.png" alt="stack" />
+
 ## <a id="architecture" style="color: black;">Architecture</a>
 
-<!-- ![architecture](./docs/diagrams/architecture.png)
-![k8s](./docs/diagrams/k8s.png)
- -->
+<img width="60%" src="./docs/diagrams/architecture.png" alt="architecture" /><img width="37.45%" src="./docs/diagrams/k8s.png" alt="k8s" />
 
-<img width="60%" src="./docs/diagrams/architecture.png" alt="architecture" /><img width="37.4%" src="./docs/diagrams/k8s.png" alt="k8s" />
-
-_Note: The k8s diagram was generated using [Lens - The Kubernetes IDE](https://github.com/nevalla/lens-resource-map-extension/)_
+_Note: Kubernetes diagram was generated using [Lens - The Kubernetes IDE](https://github.com/nevalla/lens-resource-map-extension/)_
 
 ## <a id="getting-started" style="color: black;">Getting Started</a>
 
