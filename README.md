@@ -2,7 +2,15 @@
 
 <br />
 
-
+<!--
+TODO:
+- Screenshots
+- Telegram screenshots
+- Badge
+  - Build status
+  - Code Quality
+- Article
+-->
 
 <br />
 
@@ -27,7 +35,7 @@ _**USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHORS AND ALL AFFILIATES ASSUME NO 
   - [Web](#web)
 - [License](#license)
 
-## 💡 <a id="stack" style="color: black;">Motivation</a>
+## 💡 <a id="motivation" style="color: black;">Motivation</a>
 
 Few months ago I got into crypto market. It was all new and facinating to me. Idea of this project originally came from a script I used to automate buying and selling of fiat assets.
 
@@ -37,34 +45,21 @@ Feel free to [reach out](https://karanpratapsingh.com?action=contact) to me if y
 
 **Please leave a ⭐ as motivation or support by [donating](https://www.buymeacoffee.com/karanps) if you liked the idea 😄**
 
-## ✨ <a id="stack" style="color: black;">Features</a>
+## ✨ <a id="features" style="color: black;">Features</a>
 
 This system has lots of features such as:
 
+- **Web UI**: Real-time access for charts, technical indicators, and portfolio.
 
-- **Web UI**
+- **Configurable**: Supports assets and strategies customization easily without touching any code!
 
-  Real-time access for charts, technical indicators, and portfolio.
+- **Portable**: Export your trades and real-time dataframe to CSV.
 
-- **Configurable**
+- **Multiple Assets**: Trade multiple crypto assets simultaneously!
 
-  Supports assets and strategies customization easily without touching any code!
+- **Telegram Support**: On the move? Use [Telegram](#telegram) bot to recieve real-time notifications and much more.
 
-- **Portable**
-
-  Export your trades and real-time dataframe to CSV.
-
-- **Multiple Assets**
-
-  Trade multiple crypto assets simultaneously!
-
-- **Telegram Support**
-
-  On the move? Use [Telegram](#telegram) bot to recieve real-time notifications and much more.
-
-- **Easy to upgrade**
-
-  Modify the system easily to your needs.
+- **Easy to upgrade**: Modify the system easily to your needs.
 
 ## ⚡️ <a id="technologies" style="color: black;">Technologies</a>
 
