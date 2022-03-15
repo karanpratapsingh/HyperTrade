@@ -3,7 +3,6 @@
 <br />
 
 
-<!-- TODO_CODE_QUALITY -->
 
 <br />
 
@@ -15,28 +14,99 @@
 
 _**USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHORS AND ALL AFFILIATES ASSUME NO LIABILITY FOR YOUR TRADING OUTCOMES.**_
 
-TODO Screen shots
-
 ## 📖 Contents
 
-- [Stack](#stack)
+- [Motivation](#motivation)
+- [Features](#features)
+- [Technologies](#technologies)
 - [Architecture](#architecture)
 - [Getting Started](#getting-started)
 - [Deployment](#deployment)
 - [Usage](#usage)
+  - [Telegram](#telegram)
+  - [Web](#web)
 - [License](#license)
 
-## <a id="stack" style="color: black;">Stack</a>
+## 💡 <a id="stack" style="color: black;">Motivation</a>
+
+Few months ago I got into crypto market. It was all new and facinating to me. Idea of this project originally came from a script I used to automate buying and selling of fiat assets.
+
+I was curious and wanted to scale it into a real system which can execute trades for me. I had a lot of fun building this. I got to integrate lots of different technologies while growing my financial knowledge.
+
+Feel free to [reach out](https://karanpratapsingh.com?action=contact) to me if you have any additional questions. There is lot's of fixes and features to be done!
+
+**Please leave a ⭐ as motivation or support by [donating](https://www.buymeacoffee.com/karanps) if you liked the idea 😄**
+
+## ✨ <a id="stack" style="color: black;">Features</a>
+
+This system has lots of features such as:
+
+
+- **Web UI**
+
+  Real-time access for charts, technical indicators, and portfolio.
+
+- **Configurable**
+
+  Supports assets and strategies customization easily without touching any code!
+
+- **Portable**
+
+  Export your trades and real-time dataframe to CSV.
+
+- **Multiple Assets**
+
+  Trade multiple crypto assets simultaneously!
+
+- **Telegram Support**
+
+  On the move? Use [Telegram](#telegram) bot to recieve real-time notifications and much more.
+
+- **Easy to upgrade**
+
+  Modify the system easily to your needs.
+
+## ⚡️ <a id="technologies" style="color: black;">Technologies</a>
 
 <img width="98%" src="./docs/diagrams/stack.png" alt="stack" />
 
-## <a id="architecture" style="color: black;">Architecture</a>
+## 🏭 <a id="architecture" style="color: black;">Architecture</a>
+
+It's a microservices based architecture with event driven approach for decoupling. It uses distributed streams and messaging which keeps the system simple yet robust to make sure it can grow in future.
 
 <img width="60%" src="./docs/diagrams/architecture.png" alt="architecture" /><img width="37.45%" src="./docs/diagrams/k8s.png" alt="k8s" />
 
 _Note: Kubernetes diagram was generated using [Lens - The Kubernetes IDE](https://github.com/nevalla/lens-resource-map-extension/)_
 
-## <a id="getting-started" style="color: black;">Getting Started</a>
+**Why so many technologies?**
+
+This started as an all Go project, but then I decieded to add Python to the mix as it has really good ecosystem for technical indicators and mathematical usecases. 
+
+For user interface I used React as it's easy and TypeScript provides some sanity to JavaScript projects!
+
+Nginx and Postgres fit right in as the usecase grew.
+
+As always, use what's right for the usecase, technologies come and go.
+
+**Why event driven?**
+
+Originally I made this using HTTP REST, but systems like this are event driven by nature. Plus this approach helps to decouple services even more.
+
+**How do services communicate?**
+
+All the messaging infrastructure use cases are handled by [NATS](https://nats.io). Service communication are mainly via publish-subscribe and request-reply pattern. Essentially, NATS acts as our service mesh!
+
+We also use [JetStream](https://docs.nats.io/nats-concepts/jetstream) to for real-time, persisted data streams.
+
+<img width="55%" src="https://res.cloudinary.com/practicaldev/image/fetch/s--R4us2uq1--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://user-images.githubusercontent.com/29705703/156038663-61d9c242-de32-41da-9a59-a2452a0ead11.png" alt="publish-subscribe" /><img width="43.8%" src="https://res.cloudinary.com/practicaldev/image/fetch/s--UiNxYPFj--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://user-images.githubusercontent.com/29705703/156039685-bb32987e-a11f-4246-a6fa-1d74f6388119.png" alt="request-reply" />
+
+_Read more about [Distributed communication patterns with NATS](https://dev.to/karanpratapsingh/distributed-communication-patterns-with-nats-g17)_
+
+**Why Kubernetes? Isn't it overkill?**
+
+I agree! Kubernetes can be bit overkill, especially for this project. But my goal here was to keep it cloud agnostic, even though it was very tempting to just spin up AWS lamdas with event bridge.
+
+## 🍕 <a id="getting-started" style="color: black;">Getting Started</a>
 
 **Tools**
 
@@ -58,11 +128,11 @@ _Note: Kubernetes diagram was generated using [Lens - The Kubernetes IDE](https:
 - Start development with `make dev` command.
 - Use `make stop` to stop the local minikube cluster.
 
-## <a id="deployment" style="color: black;">Deployment</a>
+## 🚀 <a id="deployment" style="color: black;">Deployment</a>
 
-Deployments are done automatically via `deploy.yml` github actions on merge with `main` branch. It supports manual deployment as well. But first we will need to provision our infrastructure.
+Deployments are done automatically via `deploy.yml` github actions to [Digital Ocean](https://www.digitalocean.com/) on merge with `main` branch. It supports manual deployment as well. But first we will need to provision our infrastructure.
 
-_Note: Infrastructure we're about to provision has it's own cost!_
+_Important: Infrastructure we're about to provision has it's own cost!_
 
 **Tools**
 
@@ -97,7 +167,15 @@ $ cat infrastructure/k8s/env.yaml | base64
 
 _Note: If you want to change name of the project, make sure to update all the associated kubernetes manifest files, skaffold config etc._
 
-## <a id="usage" style="color: black;">Usage</a>
+## 💻 <a id="usage" style="color: black;">Usage</a>
+
+### <a id="telegram" style="color: black;">Telegram</a>
+
+**Commands**
+
+TODO_Commands
+
+### <a id="web" style="color: black;">Web</a>
 
 Since this application deals with sensitive personal financial data, it is **not recommended** to expose it via ingress unless we have proper authorization in place. Hence, it is recommended to connect to it via port-forwarding on your local machine.
 
@@ -113,6 +191,14 @@ _Note: Make sure `doctl` is authenticated, and we're using correct k8s cluster n
 
 _Note: It is recommended to use the telegram bot over user interface on non-secure systems._
 
+## 👏 <a id="contribute" style="color: black;">Contribute</a>
+
+Contributions are welcome as always, before submitting a new PR please make sure to open a new issue so community members can discuss.
+
+Additionally you might find existing open issues which can helps with improvements.
+
+This project follows standard [code of conduct](./CODE_OF_CONDUCT.md) so that you can understand what actions will and will not be tolerated.
+
 ## 📄 <a id="license" style="color: black;">License</a>
 
-This project is GPL-3.0 licensed, as found in the [LICENSE](/LICENSE)
+This project is GPL-3.0 licensed, as found in the [LICENSE](./LICENSE)
