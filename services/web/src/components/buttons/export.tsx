@@ -30,7 +30,11 @@ export function ExportButton(props: ExportButtonProps): React.ReactElement {
   return (
     <Tooltip title='Export CSV' placement='bottomRight'>
       <div className='mt-2'>
-        <CSVLink filename={type} data={csv} enclosingCharacter='' target='_blank'>
+        <CSVLink
+          filename={type}
+          data={csv}
+          enclosingCharacter=''
+          target='_blank'>
           <RiShareBoxLine size={20} />
         </CSVLink>
       </div>
