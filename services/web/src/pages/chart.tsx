@@ -11,6 +11,7 @@ import {
 import { BiBarChart } from 'react-icons/bi';
 import { IoSearchOutline } from 'react-icons/io5';
 import { AxisType, ChartType, KlineChart } from '../components/charts/kline';
+import { ConfigDropown } from '../components/dropdown/config';
 import { IndicatorLabel } from '../components/ui/form';
 import { Header } from '../components/ui/header';
 import {
@@ -73,6 +74,7 @@ export function Chart(): React.ReactElement {
   };
 
   const extra: React.ReactNode[] = React.Children.toArray([
+    <ConfigDropown />,
     <Button type='link' icon={typeIcon[type]} />,
     <Button type='link' icon={axisIcon[axis]} />,
     <Button

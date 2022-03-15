@@ -8,7 +8,7 @@ import { Header } from '../components/ui/header';
 import { Loader } from '../components/ui/loader';
 import { Kline, Signal } from '../events/types';
 import { useDataFrameStore } from '../store/dataframe';
-import { useSymbolStore } from '../store/symbol';
+import { useConfigsStore } from '../store/configs';
 import { FinalTagColors, SignalTagColors } from '../theme/colors';
 import { paginationProps } from '../utils/pagination';
 
@@ -16,7 +16,7 @@ const { Content } = Layout;
 const { Column, ColumnGroup } = Table;
 
 export function DataFrame(): React.ReactElement {
-  const getSymbol = useSymbolStore(state => state.getSymbol);
+  const getActiveConfig = useConfigsStore(state => state.getActiveConfig);
   const [dataframe, get, loading] = useDataFrameStore(state => [
     state.data,
     state.get,
@@ -44,7 +44,7 @@ export function DataFrame(): React.ReactElement {
   let content: React.ReactNode = <Loader />;
 
   if (!loading) {
-    const symbol = getSymbol();
+    const { symbol } = getActiveConfig();
     const dataSource = reverse(get(symbol));
 
     content = (

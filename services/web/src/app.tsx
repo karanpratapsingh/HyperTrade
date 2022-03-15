@@ -16,7 +16,7 @@ import { Config } from './pages/config';
 import { DataFrame } from './pages/dataframe';
 import { Portfolio } from './pages/portfolio';
 import { useDataFrameStore } from './store/dataframe';
-import { useSymbolStore } from './store/symbol';
+import { useConfigsStore } from './store/configs';
 import './styles/app.css';
 import * as Notifications from './utils/notifications';
 
@@ -26,7 +26,7 @@ const { Sider } = Layout;
 
 function App(): React.ReactElement {
   const [loading, setLoading] = useState<boolean>(true);
-  const setDefault = useSymbolStore(state => state.setDefault);
+  const setDefault = useConfigsStore(state => state.setDefault);
   const [restore, add] = useDataFrameStore(state => [state.restore, state.add]);
 
   async function init(): Promise<void> {

@@ -16,7 +16,7 @@ import * as animated from '../components/ui/animated';
 import { ContentRow, NumberInput } from '../components/ui/form';
 import { Header } from '../components/ui/header';
 import { Loader } from '../components/ui/loader';
-import { useSymbolStore } from '../store/symbol';
+import { useConfigsStore } from '../store/configs';
 import { Colors } from '../theme/colors';
 import { getCryptoIcon } from '../theme/icons';
 
@@ -25,9 +25,9 @@ const { Meta } = Card;
 
 export function Config(): React.ReactElement {
   const { data, loading } = useConfigs();
-  const [getSymbol, setSymbol] = useSymbolStore(state => [
-    state.getSymbol,
-    state.setSymbol,
+  const [getActiveConfig, setActiveConfig] = useConfigsStore(state => [
+    state.getActiveConfig,
+    state.setActiveConfig,
   ]);
   const { mutate: mutateTradingEnabled, loading: loadingTradingEnabled } =
     useUpdateTradingEnabled();
@@ -103,10 +103,10 @@ export function Config(): React.ReactElement {
       </div>
     );
 
-    const isActive = config.symbol === getSymbol();
+    const isActive = config.symbol === getActiveConfig().symbol;
 
     function onActiveChange(): void {
-      setSymbol(config.symbol);
+      setActiveConfig(config.symbol);
     }
 
     return (
