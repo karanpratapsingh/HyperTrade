@@ -11,6 +11,8 @@ TODO:
 - Article
 -->
 
+_**USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHORS AND ALL AFFILIATES ASSUME NO LIABILITY FOR YOUR TRADING OUTCOMES.**_
+
 <br />
 
 <p align="center">
@@ -23,8 +25,6 @@ TODO:
 <img width="50%" src="./docs/screenshots/dashboard/portfolio.png" alt="portfolio" /><img width="50%" src="./docs/screenshots/dashboard/config.png" alt="config" />
 <img width="34.5%" src="./docs/screenshots/dashboard/config-strategy.png" alt="config-strategy" /><img width="34.5%" src="./docs/screenshots/dashboard/charts-indicators.png" alt="charts-indicators" /><img width="31%" src="./docs/screenshots/bot/telegram.png" alt="telegram" />
 
-_**USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHORS AND ALL AFFILIATES ASSUME NO LIABILITY FOR YOUR TRADING OUTCOMES.**_
-
 ## 📖 Contents
 
 - [Motivation](#motivation)
@@ -36,9 +36,10 @@ _**USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHORS AND ALL AFFILIATES ASSUME NO 
 - [Usage](#usage)
   - [Telegram](#telegram)
   - [Web](#web)
+- [Contribute](#contribute)
 - [License](#license)
 
-## 💡 <a id="motivation" style="color: black;">Motivation</a>
+## 💡 Motivation <a id="motivation" />
 
 Few months ago I got into crypto market. It was all new and facinating to me. Idea of this project originally came from a script I used to automate buying and selling of fiat assets.
 
@@ -48,7 +49,7 @@ Feel free to [reach out](https://karanpratapsingh.com?action=contact) to me if y
 
 **Please leave a ⭐ as motivation or support by [donating](https://www.buymeacoffee.com/karanps) if you liked the idea 😄**
 
-## ✨ <a id="features" style="color: black;">Features</a>
+## ✨ Features <a id="features" />
 
 This system has lots of features such as:
 
@@ -64,11 +65,11 @@ This system has lots of features such as:
 
 - **Easy to upgrade**: Modify the system easily to your needs.
 
-## ⚡️ <a id="technologies" style="color: black;">Technologies</a>
+## ⚡️ Technologies <a id="technologies" />
 
 <img width="98%" src="./docs/diagrams/stack.png" alt="stack" />
 
-## 🏭 <a id="architecture" style="color: black;">Architecture</a>
+## 🏭 Architecture <a id="architecture" />
 
 It's a microservices based architecture with event driven approach for decoupling. It uses distributed streams and messaging which keeps the system simple yet robust to make sure it can grow in future.
 
@@ -104,7 +105,7 @@ _Read more about [Distributed communication patterns with NATS](https://dev.to/k
 
 I agree! Kubernetes can be bit overkill, especially for this project. But my goal here was to keep it cloud agnostic, even though it was very tempting to just spin up AWS lamdas with event bridge.
 
-## 🍕 <a id="getting-started" style="color: black;">Getting Started</a>
+## 🍕 Getting Started <a id="getting-started" />
 
 **Tools**
 
@@ -126,7 +127,7 @@ I agree! Kubernetes can be bit overkill, especially for this project. But my goa
 - Start development with `make dev` command.
 - Use `make stop` to stop the local minikube cluster.
 
-## 🚀 <a id="deployment" style="color: black;">Deployment</a>
+## 🚀 Deployment <a id="deployment" />
 
 Deployments are done automatically via `deploy.yml` github actions to [Digital Ocean](https://www.digitalocean.com/) on merge with `main` branch. It supports manual deployment as well. But first we will need to provision our infrastructure.
 
@@ -165,15 +166,15 @@ $ cat infrastructure/k8s/env.yaml | base64
 
 _Note: If you want to change name of the project, make sure to update all the associated kubernetes manifest files, skaffold config etc._
 
-## 💻 <a id="usage" style="color: black;">Usage</a>
+## 📚 Usage <a id="usage" />
 
-### <a id="telegram" style="color: black;">Telegram</a>
+### 💬 Telegram <a id="telegram" />
 
 **Commands**
 
 <img src="./docs/screenshots/bot/telegram-commands.png" alt="telegram-commands" />
 
-### <a id="web" style="color: black;">Web</a>
+### 💻 Web <a id="web" />
 
 Since this application deals with sensitive personal financial data, it is **not recommended** to expose it via ingress unless we have proper authorization in place. Hence, it is recommended to connect to it via port-forwarding on your local machine.
 
@@ -189,7 +190,7 @@ _Note: Make sure `doctl` is authenticated, and we're using correct k8s cluster n
 
 _Note: It is recommended to use the telegram bot over user interface on non-secure systems._
 
-## 👏 <a id="contribute" style="color: black;">Contribute</a>
+## 👏 Contribute <a id="contribute" />
 
 Contributions are welcome as always, before submitting a new PR please make sure to open a new issue so community members can discuss.
 
@@ -197,6 +198,6 @@ Additionally you might find existing open issues which can helps with improvemen
 
 This project follows standard [code of conduct](./CODE_OF_CONDUCT.md) so that you can understand what actions will and will not be tolerated.
 
-## 📄 <a id="license" style="color: black;">License</a>
+## 📄 License <a id="license" />
 
 This project is GPL-3.0 licensed, as found in the [LICENSE](./LICENSE)
