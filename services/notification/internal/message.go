@@ -7,21 +7,21 @@ import (
 )
 
 func (t Telegram) FormatConfigsMessage(r GetConfigsResponse) string {
-	header := "*Configs*"
+	header := "<b>Configs</b>"
 
 	var configs = []string{header}
 
 	for i, config := range r.Configs {
 		index := i + 1
 		c := fmt.Sprintf(
-			"\n`#%v\n"+
+			"\n<pre>#%v\n"+
 				"Symbol: %v\n"+
 				"Base: %v\n"+
 				"Quote: %v\n"+
 				"Interval: %v\n"+
 				"Minimum: %v %v\n"+
 				"Allowed: %v %v\n"+
-				"Enabled: %v`",
+				"Enabled: %v</pre>",
 			index,
 			config.Symbol,
 			config.Base,
@@ -38,12 +38,12 @@ func (t Telegram) FormatConfigsMessage(r GetConfigsResponse) string {
 }
 
 func (t Telegram) FormatPostionsMessage(r GetPositionsResponse) string {
-	header := "*Positions*"
+	header := "<b>Positions</b>"
 
 	var positions = []string{header}
 
 	if len(r.Positions) == 0 {
-		p := "\n`No positions yet`"
+		p := "\n<pre>No positions yet</pre>"
 
 		positions = append(positions, p)
 	}
@@ -53,17 +53,18 @@ func (t Telegram) FormatPostionsMessage(r GetPositionsResponse) string {
 		time := position.Time.Format(time.RFC822)
 
 		p := fmt.Sprintf(
-			"\n`#%v\n"+
+			"\n<pre>#%v\n"+
 				"Symbol: %v\n"+
 				"Price: %v\n"+
 				"Quantity: %v\n"+
-				"Time: %v`",
+				"Time: %v</pre>",
 			index,
 			position.Symbol,
 			position.Price,
 			position.Quantity,
 			time,
 		)
+
 		positions = append(positions, p)
 	}
 
@@ -72,13 +73,13 @@ func (t Telegram) FormatPostionsMessage(r GetPositionsResponse) string {
 
 func (t Telegram) FormatOrderMessage(p OrderEventPayload) string {
 	message := fmt.Sprintf(
-		"*Created Order*\n\n"+
-			"`ID: %v\n"+
+		"<b>Created Order</b>\n\n"+
+			"<pre>ID: %v\n"+
 			"Side: %v\n"+
 			"Type: %v\n"+
 			"Symbol: %v\n"+
 			"Price: %v\n"+
-			"Quantity: %v`",
+			"Quantity: %v</pre>",
 		p.ID,
 		p.Side,
 		p.Type,
@@ -94,13 +95,13 @@ func (t Telegram) FormatTradeMessage(p TradeEventPayload) string {
 	time := p.Time.Format(time.RFC822)
 
 	message := fmt.Sprintf(
-		"*Executed Trade*\n\n"+
-			"`ID: %v\n"+
+		"<b>Executed Trade</b>\n\n"+
+			"<pre>ID: %v\n"+
 			"Symbol: %v\n"+
 			"Entry: %v\n"+
 			"Exit: %v\n"+
 			"Quantity: %v\n"+
-			"Time: %v`",
+			"Time: %v</pre>",
 		p.ID,
 		p.Symbol,
 		p.Entry,
@@ -113,17 +114,17 @@ func (t Telegram) FormatTradeMessage(p TradeEventPayload) string {
 }
 
 func (t Telegram) FormatBalanceMessage(r GetBalanceResponse) string {
-	header := "*Balance*\n"
+	header := "<b>Balance</b>\n"
 
 	if r.Test {
-		header = fmt.Sprintln("*Test*", header)
+		header = "<b>Test Balance</b>\n"
 	}
 
 	var balances = []string{header}
 	var separator rune = '•'
 
 	for _, balance := range r.Balance {
-		b := fmt.Sprintf("`%c %v %v`", separator, balance.Asset, balance.Amount)
+		b := fmt.Sprintf("<pre>%c %v %v</pre>", separator, balance.Asset, balance.Amount)
 		balances = append(balances, b)
 	}
 
@@ -134,22 +135,22 @@ func (t Telegram) FormatStatsMessage(r GetStatsResponse) string {
 	var message string
 
 	if r.Stats == nil {
-		message = "*Stats*\n\n`No data available yet`"
+		message = "<b>Stats</b>\n\n<pre>No data available yet</pre>"
 	} else {
-		message = fmt.Sprintf("*Stats*\n\n`Profit: %.4f\nLoss: %.4f`", r.Stats.Profit, r.Stats.Loss)
+		message = fmt.Sprintf("<b>Stats</b>\n\n<pre>Profit: %.4f\nLoss: %.4f</pre>", r.Stats.Profit, r.Stats.Loss)
 	}
 
 	return message
 }
 
 func (t Telegram) FormatDumpMessage(symbol string, r DumpResponse) string {
-	message := fmt.Sprintf("*Dump*\n\n`ID: %v\nSymbol: %v\nQuantity: %v`", r.ID, symbol, r.Quantity)
+	message := fmt.Sprintf("<b>Dump</b>\n\n<pre>ID: %v\nSymbol: %v\nQuantity: %v</pre>", r.ID, symbol, r.Quantity)
 
 	return message
 }
 
 func (t Telegram) FormatErrorMessage(p CriticalErrorEventPayload) string {
-	message := fmt.Sprintf("*Critical Error*\n\n`%v`", p.Error)
+	message := fmt.Sprintf("<b>Critical Error</b>\n\n<pre>%v</pre>", p.Error)
 
 	return message
 }
@@ -172,7 +173,7 @@ func (t Telegram) FormatUpdateTradingMessage(symbol string, enable bool) string 
 		case false:
 			status = "disabled"
 		}
-		message = fmt.Sprintf("*Message*\n\n`Trading has been %s for %s`", status, symbol)
+		message = fmt.Sprintf("<b>Message</b>\n\n<pre>Trading has been %s for %s</pre>", status, symbol)
 	}
 
 	return message
@@ -180,5 +181,5 @@ func (t Telegram) FormatUpdateTradingMessage(symbol string, enable bool) string 
 
 func (t Telegram) FormatSymbolErrorMessage(command string) string {
 
-	return fmt.Sprintf("*Error*\n\nInvalid symbol, please try again\nUsage: /%s symbol", command)
+	return fmt.Sprintf("<b>Error</b>\n\n<pre>Invalid symbol, please try again\nUsage: /%s symbol</pre>", command)
 }

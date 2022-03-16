@@ -79,7 +79,7 @@ func (t Telegram) ListenForCommands() {
 		args := update.Message.CommandArguments()
 
 		message := telegram.NewMessage(update.Message.Chat.ID, "")
-		message.ParseMode = telegram.ModeMarkdownV2
+		message.ParseMode = telegram.ModeHTML
 
 		command := update.Message.Command()
 
@@ -183,7 +183,7 @@ func (t Telegram) SendMessage(event string, msg string) {
 	log.Info().Str("event", event).Msg("TelegramBot.SendMessage")
 
 	message := telegram.NewMessage(t.chatID, msg)
-	message.ParseMode = telegram.ModeMarkdownV2
+	message.ParseMode = telegram.ModeHTML
 
 	_, err := t.bot.Send(message)
 
