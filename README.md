@@ -20,6 +20,8 @@ TODO:
 <img src="https://img.shields.io/badge/License-GPL-red.svg?style=for-the-badge" />
 <img alt="Twitter: karan_6864" src="https://img.shields.io/twitter/follow/karan_6864.svg?style=for-the-badge&logo=TWITTER&logoColor=FFFFFF&labelColor=00aced&logoWidth=20&color=00aced" target="_blank" />
 
+<img width="50%" src="./docs/screenshots/charts.png" alt="charts" /><img width="50%" src="./docs/screenshots/dataframe.png" alt="dataframe" /><img width="50%" src="./docs/screenshots/portfolio.png" alt="portfolio" /><img width="50%" src="./docs/screenshots/config.png" alt="config" /><img width="50%" src="./docs/screenshots/config-strategy.png" alt="config-strategy" /><img width="50%" src="./docs/screenshots/charts-indicators.png" alt="charts-indicators" />
+
 _**USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHORS AND ALL AFFILIATES ASSUME NO LIABILITY FOR YOUR TRADING OUTCOMES.**_
 
 ## 📖 Contents
@@ -117,7 +119,7 @@ I agree! Kubernetes can be bit overkill, especially for this project. But my goa
 
 **Steps**
 
-- Once all the tools are installed, execute `make prepare` to prepare local environment.
+- Once all the tools are installed, execute `make prepare` to prepare the local environment.
 - Create a `infrastructure/k8s/env.yaml` file and add your secrets as shown in `infrastructure/k8s/env.example.yaml`.
 - Review the configuration in `services/exchange/config.json`
 - Start development with `make dev` command.
