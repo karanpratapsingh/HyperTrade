@@ -131,10 +131,8 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 
 		if len(trades) != 0 {
 			for _, trade := range trades {
-
-				config := DB.GetConfig(trade.Symbol)
 				percentage := ((trade.Exit - trade.Entry) / trade.Entry) * 100
-				amount := (percentage * config.AllowedAmount) / 100
+				amount := (percentage * trade.Quantity) / 100
 
 				if amount > 0 {
 					stats.Profit += amount

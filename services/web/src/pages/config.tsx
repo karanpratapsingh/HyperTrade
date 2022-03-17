@@ -1,13 +1,5 @@
-import {
-  Avatar,
-  Card,
-  Col,
-  Layout,
-  Row,
-  Switch,
-  Radio,
-  RadioChangeEvent,
-} from 'antd';
+import { Avatar, Card, Col, Layout, Row, Switch } from 'antd';
+import clsx from 'clsx';
 import sortBy from 'lodash/sortBy';
 import React, { useState } from 'react';
 import { RiSettings3Fill } from 'react-icons/ri';
@@ -24,7 +16,7 @@ import * as animated from '../components/ui/animated';
 import { ContentRow, NumberInput } from '../components/ui/form';
 import { Header } from '../components/ui/header';
 import { Loader } from '../components/ui/loader';
-import { useSymbolStore } from '../store/symbol';
+import { useConfigsStore } from '../store/configs';
 import { Colors } from '../theme/colors';
 import { getCryptoIcon } from '../theme/icons';
 
@@ -33,9 +25,9 @@ const { Meta } = Card;
 
 export function Config(): React.ReactElement {
   const { data, loading } = useConfigs();
-  const [getSymbol, setSymbol] = useSymbolStore(state => [
-    state.getSymbol,
-    state.setSymbol,
+  const [getActiveConfig, setActiveConfig] = useConfigsStore(state => [
+    state.getActiveConfig,
+    state.setActiveConfig,
   ]);
   const { mutate: mutateTradingEnabled, loading: loadingTradingEnabled } =
     useUpdateTradingEnabled();
@@ -111,19 +103,24 @@ export function Config(): React.ReactElement {
       </div>
     );
 
+    const isActive = config.symbol === getActiveConfig().symbol;
+
+    function onActiveChange(): void {
+      setActiveConfig(config.symbol);
+    }
+
     return (
       <Col span={6}>
-        <Card className='w-min-full'>
-          <Radio className='absolute top-2 left-2' value={symbol} />
+        <Card
+          className={clsx(
+            'w-min-full cursor-pointer',
+            isActive && 'border-primary border-2'
+          )}
+          onClick={onActiveChange}>
           <Meta avatar={symbolAvatar} title={title} description={description} />
         </Card>
       </Col>
     );
-  }
-
-  function onSymbolChange(event: RadioChangeEvent): void {
-    const symbol = event.target.value;
-    setSymbol(symbol);
   }
 
   let content: React.ReactNode = null;
@@ -134,15 +131,11 @@ export function Config(): React.ReactElement {
     const { configs } = data;
     const sortedConfig = sortBy(configs, 'symbol');
 
-    const symbol = getSymbol();
-
     content = (
       <animated.Div>
-        <Radio.Group value={symbol} onChange={onSymbolChange}>
-          <Row gutter={[16, 16]}>
-            {React.Children.toArray(sortedConfig.map(renderConfig))}
-          </Row>
-        </Radio.Group>
+        <Row gutter={[16, 16]}>
+          {React.Children.toArray(sortedConfig.map(renderConfig))}
+        </Row>
       </animated.Div>
     );
   }

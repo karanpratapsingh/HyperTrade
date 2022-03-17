@@ -1,3 +1,4 @@
+# Config
 .env
 *kubeconfig.y*ml
 
@@ -27,3 +28,6 @@ terraform.rc
 
 # Python
 __pycache__
+
+# Misc.
+**/tmp/*

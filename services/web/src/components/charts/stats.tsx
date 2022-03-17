@@ -4,7 +4,7 @@ import React from 'react';
 import { BsCurrencyDollar } from 'react-icons/bs';
 import { Cell, Pie, PieChart } from 'recharts';
 import { useStats } from '../../api/stats';
-import { useSymbolStore } from '../../store/symbol';
+import { useConfigsStore } from '../../store/configs';
 import { StatsColors } from '../../theme/colors';
 import { percent } from '../../utils/math';
 import * as animated from '../ui/animated';
@@ -21,8 +21,8 @@ const height = 200;
 const width = 180;
 
 export function StatsChart(): React.ReactElement {
-  const getSymbol = useSymbolStore(state => state.getSymbol);
-  const symbol = getSymbol();
+  const getActiveConfig = useConfigsStore(state => state.getActiveConfig);
+  const { symbol } = getActiveConfig();
 
   const { data, loading } = useStats(symbol);
 
