@@ -1,4 +1,5 @@
 # This is same as created in kubernetes_secret (infrastructure/main.tf)
+namespace: hypertrade
 imagePullSecret: hypertrade-docker-config
 images:
   proxy: proxy

@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feat/migrate-container-registry
 env:
   APP_SECRETS: ${{ secrets.APP_SECRETS }}
   DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
