@@ -1,5 +1,5 @@
 # This is same as created in kubernetes_secret (infrastructure/main.tf)
-imagePullSecret: trader-docker-config
+imagePullSecret: hypertrade-docker-config
 images:
   proxy: proxy
   nats: nats

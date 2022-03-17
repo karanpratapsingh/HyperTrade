@@ -5,32 +5,32 @@ profiles:
   - name: production
     build:
       artifacts:
-        - image: registry.digitalocean.com/trader-registry/proxy
+        - image: ghcr.io/karanpratapsingh/hypertrade/proxy
           context: ./services/proxy
-        - image: registry.digitalocean.com/trader-registry/nats
+        - image: ghcr.io/karanpratapsingh/hypertrade/nats
           context: ./services/nats
-        - image: registry.digitalocean.com/trader-registry/web
+        - image: ghcr.io/karanpratapsingh/hypertrade/web
           context: ./services/web
           docker:
             target: production
-        - image: registry.digitalocean.com/trader-registry/exchange
+        - image: ghcr.io/karanpratapsingh/hypertrade/exchange
           context: ./services/exchange
           docker:
             target: production
-        - image: registry.digitalocean.com/trader-registry/notification
+        - image: ghcr.io/karanpratapsingh/hypertrade/notification
           context: ./services/notification
           docker:
             target: production
-        - image: registry.digitalocean.com/trader-registry/strategy
+        - image: ghcr.io/karanpratapsingh/hypertrade/strategy
           context: ./services/strategy
   - name: development
     build:
       artifacts:
-        - image: registry.digitalocean.com/trader-registry/proxy
+        - image: ghcr.io/karanpratapsingh/hypertrade/proxy
           context: ./services/proxy
-        - image: registry.digitalocean.com/trader-registry/nats
+        - image: ghcr.io/karanpratapsingh/hypertrade/nats
           context: ./services/nats
-        - image: registry.digitalocean.com/trader-registry/web
+        - image: ghcr.io/karanpratapsingh/hypertrade/web
           context: ./services/web
           docker:
             target: development
@@ -38,7 +38,7 @@ profiles:
             manual:
               - src: "src/**/*.ts*"
                 dest: .
-        - image: registry.digitalocean.com/trader-registry/exchange
+        - image: ghcr.io/karanpratapsingh/hypertrade/exchange
           context: ./services/exchange
           docker:
             target: development
@@ -46,7 +46,7 @@ profiles:
             manual:
               - src: "**/*.go"
                 dest: .
-        - image: registry.digitalocean.com/trader-registry/notification
+        - image: ghcr.io/karanpratapsingh/hypertrade/notification
           context: ./services/notification
           docker:
             target: development
@@ -54,7 +54,7 @@ profiles:
             manual:
               - src: "**/*.go"
                 dest: .
-        - image: registry.digitalocean.com/trader-registry/strategy
+        - image: ghcr.io/karanpratapsingh/hypertrade/strategy
           context: ./services/strategy
 deploy:
   helm:
@@ -65,12 +65,12 @@ deploy:
           - infrastructure/k8s/values.yaml
           - infrastructure/k8s/env.yaml
         artifactOverrides:
-          images.proxy: registry.digitalocean.com/trader-registry/proxy
-          images.nats: registry.digitalocean.com/trader-registry/nats
-          images.exchange: registry.digitalocean.com/trader-registry/exchange
-          images.notification: registry.digitalocean.com/trader-registry/notification
-          images.strategy: registry.digitalocean.com/trader-registry/strategy
-          images.web: registry.digitalocean.com/trader-registry/web
+          images.proxy: ghcr.io/karanpratapsingh/hypertrade/proxy
+          images.nats: ghcr.io/karanpratapsingh/hypertrade/nats
+          images.exchange: ghcr.io/karanpratapsingh/hypertrade/exchange
+          images.notification: ghcr.io/karanpratapsingh/hypertrade/notification
+          images.strategy: ghcr.io/karanpratapsingh/hypertrade/strategy
+          images.web: ghcr.io/karanpratapsingh/hypertrade/web
 portForward:
   - resourceName: proxy
     resourceType: service
