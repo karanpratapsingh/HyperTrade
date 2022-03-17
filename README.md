@@ -1,8 +1,8 @@
 <p align="center">
   <a href="TODO_WEBSITE">
-    <img width="100px" src="">
+    <img width="100px" src="TODO">
   </a>
-  <h1 align="center">TODO</h1>
+  <h1 align="center">HyperTrade</h1>
   <p align="center">Ready to deploy, distributed cryptocurrency trading bot.</p>
 </p>
 
@@ -131,7 +131,7 @@ I agree! Kubernetes can be bit overkill, especially for this project. But my goa
 
 ## 🚀 Deployment <a id="deployment" />
 
-Deployments are done automatically via `deploy.yml` Github actions to [Digital Ocean](https://www.digitalocean.com/) on merge with `main` branch. It supports manual deployment as well. But first, we will need to provision our infrastructure.
+Deployments are done automatically via `deploy.yml` Github actions to our [Digital Ocean](https://www.digitalocean.com/) Kubernetes cluster on merge with the `main` branch. It supports manual deployment as well. But first, we will need to provision our infrastructure.
 
 _Important: Infrastructure we're about to provision has its own cost!_
 
@@ -141,15 +141,19 @@ _Important: Infrastructure we're about to provision has its own cost!_
 
 **Steps**
 
-- Get an API token from DigitalOcean [dashboard](https://cloud.digitalocean.com/account/api/tokens).
+- Create and export a [GITHUB_TOKEN](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-to-the-container-registry) to access our Github container registry.
 
-- Export it temporarily for terraform.
+```
+$ export TF_VAR_GHCR_TOKEN=value-of-your-token
+```
+
+- Get an API token from DigitalOcean [dashboard](https://cloud.digitalocean.com/account/api/tokens) and export it temporarily for terraform.
 
 ```
 $ export DIGITALOCEAN_TOKEN=value-of-your-token
 ```
 
-- Apply terraform configuration.
+- Apply the Terraform configuration.
 
 ```
 $ cd infrastructure
@@ -157,7 +161,7 @@ $ terraform init
 $ terraform apply
 ```
 
-- Go to Github and add `DIGITALOCEAN_TOKEN` to your repository secrets for Github actions.
+- Go to Github and add `GHCR_TOKEN` and `DIGITALOCEAN_TOKEN` to your repository secrets for Github actions.
 - Generate `base64` string of your secrets, and add it as `APP_SECRETS` to your repository secrets for Github actions.
 
 ```
@@ -166,7 +170,9 @@ $ cat infrastructure/k8s/env.yaml | base64
 
 - Go to the actions tab and run the `Build and Deploy` action.
 
-_Note: If you want to change the name of the project, make sure to update all the associated Kubernetes manifest files, skaffold config, etc._
+- Once the deploy is complete, our application will be deployed in the `hypertrade` namespace on Kubernetes.
+
+_Note: If you want to change the name of the project, make sure to update all the associated Kubernetes manifest files, skaffold config, nginx config etc._
 
 ## 📚 Usage <a id="usage" />
 

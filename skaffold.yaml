@@ -60,6 +60,8 @@ deploy:
   helm:
     releases:
       - name: app
+        namespace: hypertrade
+        createNamespace: true
         chartPath: infrastructure/k8s
         valuesFiles:
           - infrastructure/k8s/values.yaml
@@ -74,9 +76,11 @@ deploy:
 portForward:
   - resourceName: proxy
     resourceType: service
+    namespace: hypertrade
     port: 8080
     localPort: 8080
   - resourceName: db
     resourceType: service
+    namespace: hypertrade
     port: 5432
     localPort: 5432
