@@ -9,7 +9,6 @@
 <p align="center">
 <a href="https://www.buymeacoffee.com/karanps" target="_blank"><img height="29px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" alt="Buy Me A Coffee" ></a>
 <!-- TODO: Change codacy and build badge paths -->
-<img src="https://img.shields.io/codacy/grade/a1a0da0231dc4759aad40b42cec607f5?style=for-the-badge" />
 <img src="https://img.shields.io/github/workflow/status/karanpratapsingh/fullstack-starterkit/CI?style=for-the-badge" />
 <img src="https://img.shields.io/badge/License-GPL-red.svg?style=for-the-badge" />
 <img alt="Twitter: karan_6864" src="https://img.shields.io/twitter/follow/karan_6864.svg?style=for-the-badge&logo=TWITTER&logoColor=FFFFFF&labelColor=00aced&logoWidth=20&color=00aced" target="_blank" />
@@ -18,7 +17,7 @@
 <br />
 
 <p align="center">
-  <b>USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHOR ASSUME NO LIABILITY FOR YOUR TRADING OUTCOMES.</b>
+  <b>USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHOR ASSUMES NO LIABILITY FOR YOUR TRADING OUTCOMES.</b>
 
 <br />
 
@@ -42,11 +41,11 @@
 
 ## 💡 Motivation <a id="motivation" />
 
-Few months ago I got into crypto market. It was all new and facinating to me. Idea of this project originally came from a script I used to automate buying and selling of fiat assets.
+A Few months ago I got into the crypto market. It was all new and fascinating to me. The idea of this project originally came from a script I used to automate buying and selling of fiat assets.
 
 I was curious and wanted to scale it into a real system which can execute trades for me. I had a lot of fun building this. I got to integrate lots of different technologies while growing my financial knowledge.
 
-Feel free to [reach out](https://karanpratapsingh.com?action=contact) to me if you have any additional questions. There is lot's of fixes and features to be done!
+Feel free to [reach out](https://karanpratapsingh.com?action=contact) to me if you have any additional questions. There are lots of fixes and features to be done!
 
 _Currently, only [binance](https://binance.com/) is supported. Contributions are welcome!_
 
@@ -60,11 +59,11 @@ This system has lots of features such as:
 
 - **Configurable**: Supports assets and strategies customization easily without touching any code!
 
-- **Portable**: Export your trades and real-time dataframe to CSV.
+- **Portable**: Export your trades and real-time data frame to CSV.
 
 - **Multiple Assets**: Trade multiple crypto assets simultaneously!
 
-- **Telegram Support**: On the move? Use [Telegram](#telegram) bot to recieve real-time notifications and much more.
+- **Telegram Support**: On the move? Use [Telegram](#telegram) bot to receive real-time notifications and much more.
 
 - **Ready to deploy**: Comes with [Infrastruce as Code](https://dev.to/karanpratapsingh/introduction-to-infrastructure-as-code-with-terraform-4f29) which is ready to deploy to [Digital Ocean](https://www.digitalocean.com/).
 
@@ -84,11 +83,11 @@ _Note: Kubernetes diagram was generated using [Lens - The Kubernetes IDE](https:
 
 **Why so many technologies?**
 
-This started as an all Go project, but then I decieded to add Python to the mix as it has really good ecosystem for technical indicators and mathematical usecases.
+This started as an all Go project, but then I decided to add Python to the mix as it has a really good ecosystem for technical indicators and mathematical use cases.
 
-For user interface I used React as it's easy and TypeScript provides some sanity to JavaScript projects!
+For the user interface, I used React as it's easy and TypeScript provides some sanity to JavaScript projects!
 
-Nginx and Postgres fit right in as the usecase grew. As always, use what's right for the project!
+Nginx and Postgres fit right in as the use case grew. As always, use what's right for the project!
 
 **Why event driven?**
 
@@ -96,7 +95,7 @@ Originally I made this using HTTP REST, but systems like this are event driven b
 
 **How do services communicate?**
 
-All the messaging infrastructure use cases are handled by [NATS](https://nats.io). Service communication are mainly via publish-subscribe and request-reply pattern. Essentially, NATS acts as our service mesh!
+All the messaging infrastructure use cases are handled by [NATS](https://nats.io). Inter service communications are mainly via publish-subscribe and request-reply pattern. Essentially, NATS acts as our service mesh!
 
 We also use [JetStream](https://docs.nats.io/nats-concepts/jetstream) to for real-time, persisted data streams.
 
@@ -132,9 +131,9 @@ I agree! Kubernetes can be bit overkill, especially for this project. But my goa
 
 ## 🚀 Deployment <a id="deployment" />
 
-Deployments are done automatically via `deploy.yml` github actions to [Digital Ocean](https://www.digitalocean.com/) on merge with `main` branch. It supports manual deployment as well. But first we will need to provision our infrastructure.
+Deployments are done automatically via `deploy.yml` Github actions to [Digital Ocean](https://www.digitalocean.com/) on merge with `main` branch. It supports manual deployment as well. But first, we will need to provision our infrastructure.
 
-_Important: Infrastructure we're about to provision has it's own cost!_
+_Important: Infrastructure we're about to provision has its own cost!_
 
 **Tools**
 
@@ -158,22 +157,22 @@ $ terraform init
 $ terraform apply
 ```
 
-- Go to Github and add `DIGITALOCEAN_TOKEN` to your repository secrets for github actions.
-- Generate `base64` string of your secrets, and add it as `APP_SECRETS` to your repository secrets for github actions.
+- Go to Github and add `DIGITALOCEAN_TOKEN` to your repository secrets for Github actions.
+- Generate `base64` string of your secrets, and add it as `APP_SECRETS` to your repository secrets for Github actions.
 
 ```
 $ cat infrastructure/k8s/env.yaml | base64
 ```
 
-- Go to the actions tab and run `Build and Deploy` action.
+- Go to the actions tab and run the `Build and Deploy` action.
 
-_Note: If you want to change name of the project, make sure to update all the associated kubernetes manifest files, skaffold config etc._
+_Note: If you want to change the name of the project, make sure to update all the associated Kubernetes manifest files, skaffold config, etc._
 
 ## 📚 Usage <a id="usage" />
 
 ### 💬 Telegram <a id="telegram" />
 
-Telegram bot helps us to interact with the system easily and recieve real-time notifications.
+Telegram bot helps us to interact with the system easily and receive real-time notifications.
 
 **Commands**
 
@@ -199,21 +198,21 @@ Since this application deals with sensitive financial data, it is **not recommen
 
 - Connect to the application via port-forwarding using `make connect` command.
 
-_Note: Make sure `doctl` is authenticated, and we're using correct k8s cluster name._
+_Note: Make sure `doctl` is authenticated, and we're using the correct k8s cluster name._
 
 - Open `localhost:8080` to see the web interface.
 
 - Once done, use the `make disconnect` command to remove the kubectl context from your machine.
 
-_Note: It is recommended to use the telegram bot over user interface on non-secure systems._
+_Note: It is recommended to use the telegram bot over the user interface on non-secure systems._
 
 ## 👏 Contribute <a id="contribute" />
 
-Contributions are welcome as always, before submitting a new PR please make sure to open a new issue so community members can discuss.
+Contributions are welcome as always, before submitting a new PR please make sure to open a new issue so community members can discuss it.
 
-Additionally you might find existing open issues which can helps with improvements.
+Additionally, you might find existing open issues which can help with improvements.
 
-This project follows standard [code of conduct](./CODE_OF_CONDUCT.md) so that you can understand what actions will and will not be tolerated.
+This project follows a standard [code of conduct](./CODE_OF_CONDUCT.md) so that you can understand what actions will and will not be tolerated.
 
 ## 📄 License <a id="license" />
 
