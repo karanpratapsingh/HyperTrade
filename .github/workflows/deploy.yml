@@ -7,6 +7,8 @@ on:
 env:
   APP_SECRETS: ${{ secrets.APP_SECRETS }}
   DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+  GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+  CLUSTER_NAME: hypertrade-cluster
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -28,11 +30,11 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
-      - name: Log in to DigitalOcean Container Registry
-        run: doctl registry login --expiry-seconds 720
+      - name: Log in to Github Container Registry
+        run: echo ${{ env.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Save DigitalOcean kubeconfig
-        run: doctl kubernetes cluster kubeconfig save trader-cluster
+        run: doctl kubernetes cluster kubeconfig save ${{ env.CLUSTER_NAME }}
 
       - name: Prepare environment
         run: scripts/prepare.sh production
