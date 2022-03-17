@@ -21,9 +21,9 @@ _**USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHORS AND ALL AFFILIATES ASSUME NO 
 <img src="https://img.shields.io/badge/License-GPL-red.svg?style=for-the-badge" />
 <img alt="Twitter: karan_6864" src="https://img.shields.io/twitter/follow/karan_6864.svg?style=for-the-badge&logo=TWITTER&logoColor=FFFFFF&labelColor=00aced&logoWidth=20&color=00aced" target="_blank" />
 
-<img width="50%" src="./docs/screenshots/dashboard/charts.png" alt="charts" /><img width="50%" src="./docs/screenshots/dashboard/dataframe.png" alt="dataframe" />
-<img width="50%" src="./docs/screenshots/dashboard/portfolio.png" alt="portfolio" /><img width="50%" src="./docs/screenshots/dashboard/config.png" alt="config" />
-<img width="34.5%" src="./docs/screenshots/dashboard/config-strategy.png" alt="config-strategy" /><img width="34.5%" src="./docs/screenshots/dashboard/charts-indicators.png" alt="charts-indicators" /><img width="31%" src="./docs/screenshots/bot/telegram.png" alt="telegram" />
+<img width="49.5%" src="./docs/screenshots/dashboard/charts.png" alt="charts" /> <img width="49.5%" src="./docs/screenshots/dashboard/dataframe.png" alt="dataframe" />
+<img width="49.5%" src="./docs/screenshots/dashboard/portfolio.png" alt="portfolio" /> <img width="49.5%" src="./docs/screenshots/dashboard/config.png" alt="config" />
+<img width="34%" src="./docs/screenshots/dashboard/config-strategy.png" alt="config-strategy" /> <img width="34%" src="./docs/screenshots/dashboard/charts-indicators.png" alt="charts-indicators" /> <img width="30.6%" src="./docs/screenshots/bot/telegram.png" alt="telegram" />
 
 ## 📖 Contents
 
@@ -73,7 +73,7 @@ This system has lots of features such as:
 
 It's a microservices based architecture with event driven approach for decoupling. It uses distributed streams and messaging which keeps the system simple yet robust to make sure it can grow in future.
 
-<img width="60%" src="./docs/diagrams/architecture.png" alt="architecture" /><img width="37.45%" src="./docs/diagrams/k8s.png" alt="k8s" />
+<img width="60%" src="./docs/diagrams/architecture.png" alt="architecture" /> <img width="37.45%" src="./docs/diagrams/k8s.png" alt="k8s" />
 
 _Note: Kubernetes diagram was generated using [Lens - The Kubernetes IDE](https://github.com/nevalla/lens-resource-map-extension/)_
 
@@ -95,7 +95,7 @@ All the messaging infrastructure use cases are handled by [NATS](https://nats.io
 
 We also use [JetStream](https://docs.nats.io/nats-concepts/jetstream) to for real-time, persisted data streams.
 
-<img width="55%" style="margin-right: 5px;" src="https://user-images.githubusercontent.com/29705703/156038663-61d9c242-de32-41da-9a59-a2452a0ead11.png" alt="publish-subscribe" /><img width="43.8%" src="https://user-images.githubusercontent.com/29705703/156039685-bb32987e-a11f-4246-a6fa-1d74f6388119.png" alt="request-reply" />
+<img width="55%" src="https://user-images.githubusercontent.com/29705703/156038663-61d9c242-de32-41da-9a59-a2452a0ead11.png" alt="publish-subscribe" /> <img width="43.8%" src="https://user-images.githubusercontent.com/29705703/156039685-bb32987e-a11f-4246-a6fa-1d74f6388119.png" alt="request-reply" />
 
 _Read more about [Distributed communication patterns with NATS](https://dev.to/karanpratapsingh/distributed-communication-patterns-with-nats-g17)_
 
