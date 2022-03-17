@@ -1,6 +1,6 @@
 <p align="center">
   <a href="TODO_WEBSITE">
-    <img width="100px" src="TODO_LOGO">
+    <img width="100px" src="">
   </a>
   <h1 align="center">TODO</h1>
   <p align="center">Ready to deploy, distributed cryptocurrency trading bot.</p>
@@ -8,7 +8,7 @@
 
 <p align="center">
 <a href="https://www.buymeacoffee.com/karanps" target="_blank"><img height="29px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" alt="Buy Me A Coffee" ></a>
-<!-- TODO: Change codacy and build badge paths -->
+<!-- TODO: Change build badge paths -->
 <img src="https://img.shields.io/github/workflow/status/karanpratapsingh/fullstack-starterkit/CI?style=for-the-badge" />
 <img src="https://img.shields.io/badge/License-GPL-red.svg?style=for-the-badge" />
 <img alt="Twitter: karan_6864" src="https://img.shields.io/twitter/follow/karan_6864.svg?style=for-the-badge&logo=TWITTER&logoColor=FFFFFF&labelColor=00aced&logoWidth=20&color=00aced" target="_blank" />
@@ -17,13 +17,13 @@
 <br />
 
 <p align="center">
-  <b>USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHOR ASSUMES NO LIABILITY FOR YOUR TRADING OUTCOMES.</b>
+<b>USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHOR ASSUMES NO LIABILITY FOR YOUR TRADING OUTCOMES.</b>
 
 <br />
 
-<img width="49.5%" src="./docs/screenshots/dashboard/charts.png" alt="charts" /> <img width="49.5%" src="./docs/screenshots/dashboard/dataframe.png" alt="dataframe" />
-<img width="49.5%" src="./docs/screenshots/dashboard/portfolio.png" alt="portfolio" /> <img width="49.5%" src="./docs/screenshots/dashboard/config.png" alt="config" />
-<img width="34%" src="./docs/screenshots/dashboard/config-strategy.png" alt="config-strategy" /> <img width="34%" src="./docs/screenshots/dashboard/charts-indicators.png" alt="charts-indicators" /> <img width="30.6%" src="./docs/screenshots/bot/telegram.png" alt="telegram" />
+<img width="49.5%" src="./assets/screenshots/dashboard/charts.png" alt="charts" /> <img width="49.5%" src="./assets/screenshots/dashboard/dataframe.png" alt="dataframe" />
+<img width="49.5%" src="./assets/screenshots/dashboard/portfolio.png" alt="portfolio" /> <img width="49.5%" src="./assets/screenshots/dashboard/config.png" alt="config" />
+<img width="34%" src="./assets/screenshots/dashboard/config-strategy.png" alt="config-strategy" /> <img width="34%" src="./assets/screenshots/dashboard/charts-indicators.png" alt="charts-indicators" /> <img width="30.6%" src="./assets/screenshots/bot/telegram.png" alt="telegram" />
 
 ## 📖 Contents
 
@@ -71,13 +71,13 @@ This system has lots of features such as:
 
 ## ⚡️ Technologies <a id="technologies" />
 
-<img width="98%" src="./docs/diagrams/stack.png" alt="stack" />
+<img width="98%" src="./assets/diagrams/stack.png" alt="stack" />
 
 ## 🏭 Architecture <a id="architecture" />
 
 It's a microservices based architecture with event driven approach for decoupling. It uses distributed streams and messaging which keeps the system simple yet robust to make sure it can grow in future.
 
-<img width="60%" src="./docs/diagrams/architecture.png" alt="architecture" /> <img width="37.45%" src="./docs/diagrams/k8s.png" alt="k8s" />
+<img width="60%" src="./assets/diagrams/architecture.png" alt="architecture" /> <img width="37.45%" src="./assets/diagrams/k8s.png" alt="k8s" />
 
 _Note: Kubernetes diagram was generated using [Lens - The Kubernetes IDE](https://github.com/nevalla/lens-resource-map-extension/)_
 
@@ -178,7 +178,7 @@ Telegram bot helps us to interact with the system easily and receive real-time n
 
 The telegram bot supports the following commands:
 
-<img src="./docs/screenshots/bot/telegram-commands.png" alt="telegram-commands" />
+<img src="./assets/screenshots/bot/telegram-commands.png" alt="telegram-commands" />
 
 - **`/configs`**: Get asset configurations.
 - **`/balance`**: Get current account balance.
