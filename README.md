@@ -1,24 +1,26 @@
-## Trader (yet to be named properly!)
+<p align="center">
+  <a href="TODO_WEBSITE">
+    <img width="100px" src="TODO_LOGO">
+  </a>
+  <h1 align="center">TODO</h1>
+  <p align="center">Ready to deploy, distributed cryptocurrency trading bot.</p>
+</p>
 
-<br />
-
-<!--
-TODO:
-- Name?
-- Badge
-  - Build status
-  - Code Quality
--->
-
-_**USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHORS AND ALL AFFILIATES ASSUME NO LIABILITY FOR YOUR TRADING OUTCOMES.**_
+<p align="center">
+<a href="https://www.buymeacoffee.com/karanps" target="_blank"><img height="29px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" alt="Buy Me A Coffee" ></a>
+<!-- TODO: Change codacy and build badge paths -->
+<img src="https://img.shields.io/codacy/grade/a1a0da0231dc4759aad40b42cec607f5?style=for-the-badge" />
+<img src="https://img.shields.io/github/workflow/status/karanpratapsingh/fullstack-starterkit/CI?style=for-the-badge" />
+<img src="https://img.shields.io/badge/License-GPL-red.svg?style=for-the-badge" />
+<img alt="Twitter: karan_6864" src="https://img.shields.io/twitter/follow/karan_6864.svg?style=for-the-badge&logo=TWITTER&logoColor=FFFFFF&labelColor=00aced&logoWidth=20&color=00aced" target="_blank" />
+<img height="29px" src="https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%203.svg" alt="DigitalOcean Referral Badge" />
 
 <br />
 
 <p align="center">
-<a href="https://www.buymeacoffee.com/karanps" target="_blank"><img width="106px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" alt="Buy Me A Coffee" ></a>
-<img src="https://img.shields.io/github/workflow/status/karanpratapsingh/trader/TODO?style=for-the-badge" />
-<img src="https://img.shields.io/badge/License-GPL-red.svg?style=for-the-badge" />
-<img alt="Twitter: karan_6864" src="https://img.shields.io/twitter/follow/karan_6864.svg?style=for-the-badge&logo=TWITTER&logoColor=FFFFFF&labelColor=00aced&logoWidth=20&color=00aced" target="_blank" />
+  <b>USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHOR ASSUME NO LIABILITY FOR YOUR TRADING OUTCOMES.</b>
+
+<br />
 
 <img width="49.5%" src="./docs/screenshots/dashboard/charts.png" alt="charts" /> <img width="49.5%" src="./docs/screenshots/dashboard/dataframe.png" alt="dataframe" />
 <img width="49.5%" src="./docs/screenshots/dashboard/portfolio.png" alt="portfolio" /> <img width="49.5%" src="./docs/screenshots/dashboard/config.png" alt="config" />
@@ -46,6 +48,8 @@ I was curious and wanted to scale it into a real system which can execute trades
 
 Feel free to [reach out](https://karanpratapsingh.com?action=contact) to me if you have any additional questions. There is lot's of fixes and features to be done!
 
+_Currently, only [binance](https://binance.com/) is supported. Contributions are welcome!_
+
 **Please leave a ⭐ as motivation or support by [donating](https://www.buymeacoffee.com/karanps) if you liked the idea 😄**
 
 ## ✨ Features <a id="features" />
@@ -62,9 +66,9 @@ This system has lots of features such as:
 
 - **Telegram Support**: On the move? Use [Telegram](#telegram) bot to recieve real-time notifications and much more.
 
-- **Easy to upgrade**: Modify the system easily to your needs.
+- **Ready to deploy**: Comes with [Infrastruce as Code](https://dev.to/karanpratapsingh/introduction-to-infrastructure-as-code-with-terraform-4f29) which is ready to deploy to [Digital Ocean](https://www.digitalocean.com/).
 
-_Note: Currently, only [binance](https://binance.com/) is supported._
+- **Easy to upgrade**: Modify the system easily to your needs.
 
 ## ⚡️ Technologies <a id="technologies" />
 
@@ -177,13 +181,13 @@ The telegram bot supports the following commands:
 
 <img src="./docs/screenshots/bot/telegram-commands.png" alt="telegram-commands" />
 
-- **/configs**: Get asset configurations.
-- **/balance**: Get current account balance.
-- **/positions**: Get actively held positions.
-- **/stats**: Get portfolio statistics.
-- **/enable**: Enable trading for a symbol.
-- **/disable**: Disable trading for a symbol.
-- **/dump**: Dump all the positions for a symbol.
+- **`/configs`**: Get asset configurations.
+- **`/balance`**: Get current account balance.
+- **`/positions`**: Get actively held positions.
+- **`/stats`**: Get portfolio statistics.
+- **`/enable`**: Enable trading for a symbol.
+- **`/disable`**: Disable trading for a symbol.
+- **`/dump`**: Dump all the positions for a symbol.
 
 _Note: `enable`, `disable` and `dump` commands are symbol specific, and are executed as `/cmd symbol`. Example, `/enable ETHUSDT`_
 
