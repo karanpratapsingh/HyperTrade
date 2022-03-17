@@ -38,7 +38,8 @@ resource "kubernetes_secret" "secret" {
   type = "kubernetes.io/dockerconfigjson"
 
   metadata {
-    name = "${local.name}-docker-config"
+    name      = "${local.name}-docker-config"
+    namespace = local.name
   }
 
   data = {
