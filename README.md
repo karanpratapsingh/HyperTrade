@@ -8,7 +8,6 @@ TODO:
 - Badge
   - Build status
   - Code Quality
-- Article
 -->
 
 _**USE THIS SOFTWARE AT YOUR OWN RISK. THE AUTHORS AND ALL AFFILIATES ASSUME NO LIABILITY FOR YOUR TRADING OUTCOMES.**_
@@ -65,6 +64,8 @@ This system has lots of features such as:
 
 - **Easy to upgrade**: Modify the system easily to your needs.
 
+_Note: Currently, only [binance](https://binance.com/) is supported._
+
 ## ⚡️ Technologies <a id="technologies" />
 
 <img width="98%" src="./docs/diagrams/stack.png" alt="stack" />
@@ -95,7 +96,7 @@ All the messaging infrastructure use cases are handled by [NATS](https://nats.io
 
 We also use [JetStream](https://docs.nats.io/nats-concepts/jetstream) to for real-time, persisted data streams.
 
-<img width="55%" src="https://user-images.githubusercontent.com/29705703/156038663-61d9c242-de32-41da-9a59-a2452a0ead11.png" alt="publish-subscribe" /> <img width="43.8%" src="https://user-images.githubusercontent.com/29705703/156039685-bb32987e-a11f-4246-a6fa-1d74f6388119.png" alt="request-reply" />
+<img width="55%" src="https://user-images.githubusercontent.com/29705703/156038663-61d9c242-de32-41da-9a59-a2452a0ead11.png" alt="publish-subscribe" /> <img width="43.85%" src="https://user-images.githubusercontent.com/29705703/156039685-bb32987e-a11f-4246-a6fa-1d74f6388119.png" alt="request-reply" />
 
 _Read more about [Distributed communication patterns with NATS](https://dev.to/karanpratapsingh/distributed-communication-patterns-with-nats-g17)_
 
@@ -168,13 +169,27 @@ _Note: If you want to change name of the project, make sure to update all the as
 
 ### 💬 Telegram <a id="telegram" />
 
+Telegram bot helps us to interact with the system easily and recieve real-time notifications.
+
 **Commands**
+
+The telegram bot supports the following commands:
 
 <img src="./docs/screenshots/bot/telegram-commands.png" alt="telegram-commands" />
 
+- **/configs**: Get asset configurations.
+- **/balance**: Get current account balance.
+- **/positions**: Get actively held positions.
+- **/stats**: Get portfolio statistics.
+- **/enable**: Enable trading for a symbol.
+- **/disable**: Disable trading for a symbol.
+- **/dump**: Dump all the positions for a symbol.
+
+_Note: `enable`, `disable` and `dump` commands are symbol specific, and are executed as `/cmd symbol`. Example, `/enable ETHUSDT`_
+
 ### 💻 Web <a id="web" />
 
-Since this application deals with sensitive personal financial data, it is **not recommended** to expose it via ingress unless we have proper authorization in place. Hence, it is recommended to connect to it via port-forwarding on your local machine.
+Since this application deals with sensitive financial data, it is **not recommended** to expose it via ingress unless we have proper RBAC authorization in place. Hence, it is recommended to connect to it via port-forwarding on your local machine.
 
 **Steps**
 
