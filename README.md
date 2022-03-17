@@ -79,7 +79,7 @@ _Note: Kubernetes diagram was generated using [Lens - The Kubernetes IDE](https:
 
 **Why so many technologies?**
 
-This started as an all Go project, but then I decieded to add Python to the mix as it has really good ecosystem for technical indicators and mathematical usecases. 
+This started as an all Go project, but then I decieded to add Python to the mix as it has really good ecosystem for technical indicators and mathematical usecases.
 
 For user interface I used React as it's easy and TypeScript provides some sanity to JavaScript projects!
 
@@ -95,7 +95,7 @@ All the messaging infrastructure use cases are handled by [NATS](https://nats.io
 
 We also use [JetStream](https://docs.nats.io/nats-concepts/jetstream) to for real-time, persisted data streams.
 
-<img width="55%" src="https://res.cloudinary.com/practicaldev/image/fetch/s--R4us2uq1--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://user-images.githubusercontent.com/29705703/156038663-61d9c242-de32-41da-9a59-a2452a0ead11.png" alt="publish-subscribe" /><img width="43.8%" src="https://res.cloudinary.com/practicaldev/image/fetch/s--UiNxYPFj--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://user-images.githubusercontent.com/29705703/156039685-bb32987e-a11f-4246-a6fa-1d74f6388119.png" alt="request-reply" />
+<img width="55%" style="margin-right: 5px;" src="https://user-images.githubusercontent.com/29705703/156038663-61d9c242-de32-41da-9a59-a2452a0ead11.png" alt="publish-subscribe" /><img width="43.8%" src="https://user-images.githubusercontent.com/29705703/156039685-bb32987e-a11f-4246-a6fa-1d74f6388119.png" alt="request-reply" />
 
 _Read more about [Distributed communication patterns with NATS](https://dev.to/karanpratapsingh/distributed-communication-patterns-with-nats-g17)_
 
@@ -107,15 +107,15 @@ I agree! Kubernetes can be bit overkill, especially for this project. But my goa
 
 **Tools**
 
--  [Minikube](https://minikube.sigs.k8s.io/docs/start/)
--  [Skaffold](https://skaffold.dev/docs/install/)
--  [Helm](https://helm.sh/docs/intro/install/)
--  [Go >= 1.17](https://go.dev/doc/install)
--  [Node >= 16.13](https://nodejs.org/en/download/)
--  [Python >= 3.8](https://www.python.org/downloads/)
--  [yq](https://github.com/mikefarah/yq)
--  [volta](https://volta.sh/)
--  [doctl](https://github.com/digitalocean/doctl)
+- [Minikube](https://minikube.sigs.k8s.io/docs/start/)
+- [Skaffold](https://skaffold.dev/docs/install/)
+- [Helm](https://helm.sh/docs/intro/install/)
+- [Go >= 1.17](https://go.dev/doc/install)
+- [Node >= 16.13](https://nodejs.org/en/download/)
+- [Python >= 3.8](https://www.python.org/downloads/)
+- [yq](https://github.com/mikefarah/yq)
+- [volta](https://volta.sh/)
+- [doctl](https://github.com/digitalocean/doctl)
 
 **Steps**
 
@@ -154,7 +154,7 @@ $ terraform apply
 ```
 
 - Go to Github and add `DIGITALOCEAN_TOKEN` to your repository secrets for github actions.
-- Generate `base64` string of your secrets, and add it as `APP_SECRETS` to your repository secrets for github actions. 
+- Generate `base64` string of your secrets, and add it as `APP_SECRETS` to your repository secrets for github actions.
 
 ```
 $ cat infrastructure/k8s/env.yaml | base64
