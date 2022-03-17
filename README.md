@@ -1,6 +1,7 @@
 <p align="center">
-  <a href="TODO_WEBSITE">
-    <img width="100px" src="TODO">
+<!-- TODO: LANDING_PAGE -->
+  <a href="#todo">
+    <img width="100px" src="./assets/logo.png">
   </a>
   <h1 align="center">HyperTrade</h1>
   <p align="center">Ready to deploy, distributed cryptocurrency trading bot.</p>
