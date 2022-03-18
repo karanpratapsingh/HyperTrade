@@ -1,7 +1,5 @@
 import { Empty } from 'antd';
 import dateFormat from 'dateformat';
-import concat from 'lodash/concat';
-import map from 'lodash/map';
 import React from 'react';
 import {
   CartesianGrid,
@@ -12,9 +10,11 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import uniqolor from 'uniqolor';
 import { GetTradesResponse } from '../../api/trades';
 import { ApiQueryResult } from '../../api/types';
-import { Colors, LineColors } from '../../theme/colors';
+import { Colors } from '../../theme/colors';
+import { getTradeLinesData, TradeLinesData } from '../../utils/charts';
 import * as animated from '../ui/animated';
 import { Header } from '../ui/header';
 import { Loader } from '../ui/loader';
@@ -40,9 +40,7 @@ export function TradesChart(props: TradesChartProps): React.ReactElement {
     stroke: Colors.lightGray,
   };
 
-  const all = concat(map(data.trades, 'entry'), map(data.trades, 'exit'));
-
-  const domain = [Math.min(...all) - 5, Math.max(...all) + 5];
+  const domain = [-100, 100];
 
   function timeFormatter(date: string): string {
     if ([0, 'auto'].includes(date)) {
@@ -50,6 +48,27 @@ export function TradesChart(props: TradesChartProps): React.ReactElement {
     }
 
     return dateFormat(date, 'HH:MM:ss');
+  }
+
+  function percentFormatter(value: string): string {
+    return `${value}%`;
+  }
+
+  function renderLine([symbol, data]: TradeLinesData) {
+    const { color } = uniqolor(symbol, {
+      lightness: 40,
+      saturation: 80,
+    });
+
+    return (
+      <Line
+        type='monotone'
+        data={data}
+        dataKey={symbol}
+        stroke={color}
+        {...dotsConfig}
+      />
+    );
   }
 
   const margin = {
@@ -71,8 +90,10 @@ export function TradesChart(props: TradesChartProps): React.ReactElement {
   const { trades } = data;
 
   if (trades.length) {
+    const data = getTradeLinesData(trades);
+
     content = (
-      <LineChart margin={margin} data={trades} height={540} width={940}>
+      <LineChart margin={margin} height={540} width={940}>
         <Legend />
         <CartesianGrid style={cartesianStyle} strokeDasharray='3' />
         <XAxis
@@ -82,20 +103,14 @@ export function TradesChart(props: TradesChartProps): React.ReactElement {
           tick={tickStyle}
           tickFormatter={timeFormatter}
         />
-        <YAxis domain={domain} axisLine={false} tick={tickStyle} />
+        <YAxis
+          domain={domain}
+          axisLine={false}
+          tick={tickStyle}
+          tickFormatter={percentFormatter}
+        />
         <Tooltip labelFormatter={timeFormatter} />
-        <Line
-          type='monotone'
-          dataKey='entry'
-          stroke={LineColors.entry}
-          {...dotsConfig}
-        />
-        <Line
-          type='monotone'
-          dataKey='exit'
-          stroke={LineColors.exit}
-          {...dotsConfig}
-        />
+        {React.Children.toArray(data.map(renderLine))}
       </LineChart>
     );
   }
