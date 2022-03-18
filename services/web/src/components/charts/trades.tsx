@@ -101,7 +101,7 @@ export function TradesChart(props: TradesChartProps): React.ReactElement {
   }
 
   return (
-    <animated.Div className='flex flex-1 flex-col'>
+    <animated.Div className='flex flex-col' style={{ flex: 3 }}>
       <Header title='Chart' subtitle='Trades line chart' />
       {content}
     </animated.Div>
