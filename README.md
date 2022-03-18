@@ -86,7 +86,7 @@ _Note: Kubernetes diagram was generated using [Lens - The Kubernetes IDE](https:
 
 This started as an all Go project, but then I decided to add Python to the mix as it has a really good ecosystem for technical indicators and mathematical use cases.
 
-For the user interface, I used React as it's easy and TypeScript provides some sanity to JavaScript projects!
+For web, I used React as it's easy and TypeScript provides some sanity to JavaScript projects!
 
 Nginx and Postgres fit right in as the use case grew. As always, use what's right for the project!
 
@@ -106,7 +106,7 @@ _Read more about [Distributed communication patterns with NATS](https://dev.to/k
 
 **Why Kubernetes? Isn't it overkill?**
 
-I agree! Kubernetes can be bit overkill, especially for this project. But my goal here was to keep it cloud agnostic, even though it was very tempting to just spin up AWS lamdas with event bridge.
+I agree! Kubernetes can be bit overkill, especially for this project. But my goal here was to keep it cloud agnostic, even though it was very tempting to just spin up AWS lambdas with event bridge.
 
 ## 🍕 Getting Started <a id="getting-started" />
 

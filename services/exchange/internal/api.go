@@ -125,23 +125,11 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 
 	pubsub.Subscribe(GetStatsEvent, func(m *nats.Msg) {
 		var response GetStatsResponse
-		var stats Stats
 
 		trades := DB.GetTrades()
 
 		if len(trades) != 0 {
-			for _, trade := range trades {
-				percentage := ((trade.Exit - trade.Entry) / trade.Entry) * 100
-				amount := (percentage * trade.Quantity) / 100
-
-				if amount > 0 {
-					stats.Profit += amount
-				} else {
-					stats.Loss += -1 * amount
-				}
-			}
-
-			stats.Total = stats.Profit + stats.Loss
+			stats := CalculateStats(trades)
 			response = GetStatsResponse{&stats}
 		}
 
@@ -251,4 +239,21 @@ func ListenTrade(DB db.DB, pubsub PubSub, exchange Binance, kline Kline, signal 
 		log.Trace().Float64("price", closePrice).Float64("quantity", quantity).Msg("Trade.Sell.Complete")
 	default:
 	}
+}
+
+func CalculateStats(trades []db.Trades) (stats Stats) {
+	for _, trade := range trades {
+		percentage := ((trade.Exit - trade.Entry) / trade.Entry) * 100
+		price := trade.Quantity * trade.Exit
+		amount := (percentage * price) / 100
+
+		if amount > 0 {
+			stats.Profit += amount
+		} else {
+			stats.Loss += -1 * amount
+		}
+	}
+
+	stats.Total = stats.Profit + stats.Loss
+	return
 }
