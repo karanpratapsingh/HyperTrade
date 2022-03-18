@@ -6,7 +6,7 @@ import { Loader } from '../../components/ui/loader';
 import { useConfigsStore } from '../../store/configs';
 import { getCryptoIcon } from '../../theme/icons';
 
-export function ConfigDropown(): React.ReactElement {
+export function ConfigDropdown(): React.ReactElement {
   const [getActiveConfig, setActiveConfig] = useConfigsStore(state => [
     state.getActiveConfig,
     state.setActiveConfig,
@@ -51,9 +51,9 @@ export function ConfigDropown(): React.ReactElement {
 
   return (
     <Dropdown
-      className='mb-3 cursor-pointer'
-      placement='bottomCenter'
       arrow
+      className='cursor-pointer'
+      placement='bottom'
       overlay={menu}>
       <Avatar size='small' src={getCryptoIcon(base)} />
     </Dropdown>
