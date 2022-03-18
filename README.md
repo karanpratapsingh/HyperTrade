@@ -106,7 +106,7 @@ _Read more about [Distributed communication patterns with NATS](https://dev.to/k
 
 **Why Kubernetes? Isn't it overkill?**
 
-I agree! Kubernetes can be bit overkill, especially for this project. But my goal here was to keep it cloud agnostic, even though it was very tempting to just spin up AWS lamdas with event bridge.
+I agree! Kubernetes can be bit overkill, especially for this project. But my goal here was to keep it cloud agnostic, even though it was very tempting to just spin up AWS lambdas with event bridge.
 
 ## 🍕 Getting Started <a id="getting-started" />
 
