@@ -86,7 +86,7 @@ _Note: Kubernetes diagram was generated using [Lens - The Kubernetes IDE](https:
 
 This started as an all Go project, but then I decided to add Python to the mix as it has a really good ecosystem for technical indicators and mathematical use cases.
 
-For the user interface, I used React as it's easy and TypeScript provides some sanity to JavaScript projects!
+For web, I used React as it's easy and TypeScript provides some sanity to JavaScript projects!
 
 Nginx and Postgres fit right in as the use case grew. As always, use what's right for the project!
 
