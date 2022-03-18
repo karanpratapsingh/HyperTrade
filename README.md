@@ -116,7 +116,7 @@ I agree! Kubernetes can be bit overkill, especially for this project. But my goa
 - [Skaffold](https://skaffold.dev/docs/install/)
 - [Helm](https://helm.sh/docs/intro/install/)
 - [Go >= 1.18](https://go.dev/doc/install)
-- [Node >= 16.14.2](https://nodejs.org/en/download/)
+- [Node >= 16.14](https://nodejs.org/en/download/)
 - [Python >= 3.10](https://www.python.org/downloads/)
 - [yq](https://github.com/mikefarah/yq)
 - [volta](https://volta.sh/)
