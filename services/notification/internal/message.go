@@ -181,5 +181,5 @@ func (t Telegram) FormatUpdateTradingMessage(symbol string, enable bool) string 
 
 func (t Telegram) FormatSymbolErrorMessage(command string) string {
 
-	return fmt.Sprintf("<b>Error</b>\n\n<pre>Invalid symbol, please try again\nUsage: /%s symbol</pre>", command)
+	return fmt.Sprintf("<b>Error</b>\n\n<pre>Invalid symbol, please try again.\n\nUsage: /%s symbol</pre>", command)
 }
