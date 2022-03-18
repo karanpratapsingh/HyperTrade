@@ -16,6 +16,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . ./
+RUN go test ./...
 RUN go build -o app
 
 FROM gcr.io/distroless/static AS production
