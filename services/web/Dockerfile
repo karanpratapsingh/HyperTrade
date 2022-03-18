@@ -1,4 +1,4 @@
-FROM node:16.13.2-alpine AS development
+FROM node:16.14-alpine AS development
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
@@ -6,7 +6,7 @@ COPY . ./
 EXPOSE 8080
 CMD npm run dev
 
-FROM node:16.13.2-alpine AS builder
+FROM node:16.14-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
