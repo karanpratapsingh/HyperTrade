@@ -39,5 +39,5 @@ jobs:
       - name: Prepare environment
         run: scripts/prepare.sh production
 
-      - name: Deploy to cluster with Skaffold
+      - name: Build and Deploy to cluster with Skaffold
         run: skaffold run --profile production
