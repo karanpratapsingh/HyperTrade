@@ -1,12 +1,8 @@
-services/web/index.html linguist-detectable=false
-services/web/vite.config.ts linguist-detectable=false
-services/web/config/* linguist-detectable=false
+*.index.html linguist-detectable=false
 *.js linguist-detectable=false
 *.json linguist-detectable=false
 *.tsx linguist-detectable=false
 
-services/exchange/go.sum linguist-language=go
-services/exchange/go.mod linguist-language=go
+*go.sum linguist-language=go
+*go.mod linguist-language=go
 
-services/notification/go.sum linguist-language=go
-services/notification/go.mod linguist-language=go
