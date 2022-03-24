@@ -1,2 +1,2 @@
 services/web/index.html linguist-detectable=false
-*.hcl linguist-detectable=false
+*.tf linguist-detectable=false
