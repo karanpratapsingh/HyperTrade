@@ -2,6 +2,8 @@ services/web/index.html linguist-detectable=false
 services/web/vite.config.ts linguist-detectable=false
 services/web/config/* linguist-detectable=false
 *.js linguist-detectable=false
+*.json linguist-detectable=false
+*.tsx linguist-detectable=false
 
 services/exchange/go.sum linguist-language=go
 services/exchange/go.mod linguist-language=go
