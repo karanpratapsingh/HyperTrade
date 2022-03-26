@@ -1,5 +1,4 @@
 <p align="center">
-<!-- TODO: LANDING_PAGE -->
   <a href="#todo">
     <img width="100px" src="./assets/logo.png">
   </a>
@@ -31,12 +30,12 @@
 - [Features](#features)
 - [Technologies](#technologies)
 - [Architecture](#architecture)
-- [Strategy Customization](#strategy) TODO
 - [Getting Started](#getting-started)
-- [Deployment](#deployment)
+- [Customization](#customization)
 - [Usage](#usage)
   - [Telegram](#telegram)
   - [Web](#web)
+- [Deployment](#deployment)
 - [Contribute](#contribute)
 - [License](#license)
 
@@ -48,7 +47,7 @@ I was curious and wanted to scale it into a real system which can execute trades
 
 Feel free to [reach out](https://karanpratapsingh.com?action=contact) to me if you have any additional questions. There are lots of fixes and features to be done!
 
-_Currently, only [binance](https://binance.com/) is supported. Contributions are welcome!_
+_It is important to note that this project is under active development and was developed as an experiment. Currently, only [binance](https://binance.com/) is supported but contributions are welcome!_
 
 **Please leave a ⭐ as motivation or support by [donating](https://www.buymeacoffee.com/karanps) if you liked the idea 😄**
 
@@ -110,6 +109,8 @@ I agree! Kubernetes can be bit overkill, especially for this project. But my goa
 
 ## 🍕 Getting Started <a id="getting-started" />
 
+Here we will setup our development environment. But first we will need to install the following tools.
+
 **Tools**
 
 - [Minikube](https://minikube.sigs.k8s.io/docs/start/)
@@ -125,10 +126,56 @@ I agree! Kubernetes can be bit overkill, especially for this project. But my goa
 **Steps**
 
 - Once all the tools are installed, execute `make prepare` to prepare the local environment.
-- Create a `infrastructure/k8s/env.yaml` file and add your secrets as shown in `infrastructure/k8s/env.example.yaml`.
+- Create a `infrastructure/k8s/env.yaml` to similar structure as `infrastructure/k8s/env.example.yaml` and [follow this guide](./docs/secrets-setup.md).
 - Review the configuration in `services/exchange/config.json`
 - Start development with `make dev` command.
 - Use `make stop` to stop the local minikube cluster.
+
+## 🛠 Customization <a id="customization" />
+
+We can customize trading strategies either via web app or `services/exchange/config.json` directly.
+
+Currently, only few trading strategies like RSI and MACD are supported and I plan to add more soon. 
+
+<img width="49.5%" src="./assets/screenshots/dashboard/config-strategy.png" alt="config-strategy" /> <img width="49.5%" src="./assets/screenshots/dashboard/charts-indicators.png" alt="charts-indicators" />
+
+## 📚 Usage <a id="usage" />
+
+### 💬 Telegram <a id="telegram" />
+
+Telegram bot helps us to interact with the system easily and receive real-time notifications.
+
+**Commands**
+
+The telegram bot supports the following commands:
+
+<img src="./assets/screenshots/bot/telegram-commands.png" alt="telegram-commands" />
+
+- **`/configs`**: Get asset configurations.
+- **`/balance`**: Get current account balance.
+- **`/positions`**: Get actively held positions.
+- **`/stats`**: Get portfolio statistics.
+- **`/enable`**: Enable trading for a symbol.
+- **`/disable`**: Disable trading for a symbol.
+- **`/dump`**: Dump all the positions for a symbol.
+
+_Note: `enable`, `disable` and `dump` commands are symbol specific, and are executed as `/cmd symbol`. Example, `/enable ETHUSDT`_
+
+### 💻 Web <a id="web" />
+
+Since this application deals with sensitive financial data, it is **not recommended** to expose it via ingress unless we have proper RBAC authorization in place. Hence, it is recommended to connect to it via port-forwarding on your local machine.
+
+**Steps**
+
+- Connect to the application via port-forwarding using `make connect` command.
+
+_Note: Make sure `doctl` is authenticated, and we're using the correct k8s cluster name._
+
+- Open `localhost:8080` to see the web interface.
+
+- Once done, use the `make disconnect` command to remove the kubectl context from your machine.
+
+_Note: It is recommended to use the telegram bot over the user interface on non-secure systems._
 
 ## 🚀 Deployment <a id="deployment" />
 
@@ -174,44 +221,6 @@ $ cat infrastructure/k8s/env.yaml | base64
 - Once the deploy is complete, our application will be deployed in the `hypertrade` namespace on Kubernetes.
 
 _Note: If you want to change the name of the project, make sure to update all the associated Kubernetes manifest files, skaffold config, nginx config etc._
-
-## 📚 Usage <a id="usage" />
-
-### 💬 Telegram <a id="telegram" />
-
-Telegram bot helps us to interact with the system easily and receive real-time notifications.
-
-**Commands**
-
-The telegram bot supports the following commands:
-
-<img src="./assets/screenshots/bot/telegram-commands.png" alt="telegram-commands" />
-
-- **`/configs`**: Get asset configurations.
-- **`/balance`**: Get current account balance.
-- **`/positions`**: Get actively held positions.
-- **`/stats`**: Get portfolio statistics.
-- **`/enable`**: Enable trading for a symbol.
-- **`/disable`**: Disable trading for a symbol.
-- **`/dump`**: Dump all the positions for a symbol.
-
-_Note: `enable`, `disable` and `dump` commands are symbol specific, and are executed as `/cmd symbol`. Example, `/enable ETHUSDT`_
-
-### 💻 Web <a id="web" />
-
-Since this application deals with sensitive financial data, it is **not recommended** to expose it via ingress unless we have proper RBAC authorization in place. Hence, it is recommended to connect to it via port-forwarding on your local machine.
-
-**Steps**
-
-- Connect to the application via port-forwarding using `make connect` command.
-
-_Note: Make sure `doctl` is authenticated, and we're using the correct k8s cluster name._
-
-- Open `localhost:8080` to see the web interface.
-
-- Once done, use the `make disconnect` command to remove the kubectl context from your machine.
-
-_Note: It is recommended to use the telegram bot over the user interface on non-secure systems._
 
 ## 👏 Contribute <a id="contribute" />
 
