@@ -9,6 +9,7 @@ stop:
 
 prod:
 	scripts/prepare.sh production
+	skaffold run --profile production
 
 connect:
 	doctl kubernetes cluster kubeconfig save $(NAMESPACE)-cluster

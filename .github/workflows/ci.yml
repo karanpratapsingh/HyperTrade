@@ -36,8 +36,5 @@ jobs:
       - name: Save DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save ${{ env.CLUSTER_NAME }}
 
-      - name: Prepare environment
-        run: scripts/prepare.sh production
-
-      - name: Build and Deploy to cluster with Skaffold
-        run: skaffold run --profile production
+      - name: Prepare, Build and Deploy to K8s cluster
+        run: make prod
