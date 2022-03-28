@@ -137,7 +137,7 @@ We can customize trading strategies either via web app or `services/exchange/con
 
 Currently, only few trading strategies like RSI and MACD are supported and I plan to add more soon. 
 
-<img width="49.5%" src="./assets/screenshots/dashboard/config-strategy.png" alt="config-strategy" /> <img width="49.5%" src="./assets/screenshots/dashboard/charts-indicators.png" alt="charts-indicators" />
+<img width="60%" src="./assets/screenshots/dashboard/config-strategy.png" alt="config-strategy" />
 
 ## 📚 Usage <a id="usage" />
 
