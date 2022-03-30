@@ -27,8 +27,6 @@ jobs:
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
       - name: Build
         run: make build
