@@ -249,7 +249,7 @@ export function StrategyModal(props: StrategyModalProps): React.ReactElement {
     <Header
       className='!mb-0'
       title='Strategy'
-      subtitle={`Configure strategy for ${symbol}`}
+      subtitle={`Customize strategy for ${symbol}`}
     />
   );
 
