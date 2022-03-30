@@ -48,7 +48,7 @@ Here's a short overview of the project.
 
 A few months ago I got into the crypto market. It was all new and fascinating to me. The idea of this project originally came from a script I used to automate buying and selling of fiat assets.
 
-I was curious and wanted to scale it into a real system which can execute trades for me. I had a lot of fun building this. I got to play with lots of different technologies while growing my financial knowledge.
+I was curious and wanted to scale it into a real system that can execute trades for me. I had a lot of fun building this. I got to play with lots of different technologies while growing my financial knowledge.
 
 Feel free to [reach out](https://karanpratapsingh.com?action=contact) to me if you have any additional questions. There are lots of fixes and features to be done!
 
@@ -60,7 +60,7 @@ _It is important to note that this project is under active development and was d
 
 This system has lots of features such as:
 
-- **Web UI**: Real-time access for charts, technical indicators, and portfolio.
+- **Web UI**: Real-time access to charts, technical indicators, and portfolio.
 
 - **Configurable**: Supports assets and strategies customization easily without touching any code!
 
@@ -80,7 +80,7 @@ This system has lots of features such as:
 
 ## 🏭 Architecture <a id="architecture" />
 
-It's a microservices based architecture with event driven approach for decoupling. It uses distributed streams and messaging which keeps the system simple yet robust to make sure it can grow in future.
+It's a microservices based architecture with event driven approach for decoupling. It uses distributed streams and messaging which keeps the system simple yet robust to make sure it can grow in the future.
 
 <img width="60%" src="./assets/diagrams/architecture.png" alt="architecture" /> <img width="37.45%" src="./assets/diagrams/k8s.png" alt="k8s" />
 
@@ -90,7 +90,7 @@ _Note: Kubernetes diagram was generated using [Lens - The Kubernetes IDE](https:
 
 This started as an all Go project, but then I decided to add Python to the mix as it has a really good ecosystem for technical indicators and mathematical use cases.
 
-For web, I used React as it's easy and TypeScript provides some sanity to JavaScript projects!
+For the web, I used React as it's easy and TypeScript provides some sanity to JavaScript projects!
 
 Nginx and Postgres fit right in as the use case grew. As always, use what's right for the project!
 
@@ -100,7 +100,7 @@ Originally I made this using HTTP REST, but systems like this are event driven b
 
 **How do services communicate?**
 
-All the messaging infrastructure use cases are handled by [NATS](https://nats.io). Inter service communications are mainly via publish-subscribe and request-reply pattern. Essentially, NATS acts as our service mesh!
+All the messaging infrastructure use cases are handled by [NATS](https://nats.io). Inter-service communications are mainly via publish-subscribe and request-reply patterns. Essentially, NATS acts as our service mesh!
 
 We also use [JetStream](https://docs.nats.io/nats-concepts/jetstream) for real-time, persisted data streams.
 
@@ -114,7 +114,7 @@ I agree! Kubernetes can be bit overkill, especially for this project. But my goa
 
 ## 🍕 Getting Started <a id="getting-started" />
 
-Here we will setup our development environment. But first we will need to install the following tools.
+Here we will setup our development environment. But first, we will need to install the following tools.
 
 **Tools**
 
@@ -184,7 +184,7 @@ _Note: It is recommended to use the telegram bot over the user interface on non-
 
 ## 🚀 Deployment <a id="deployment" />
 
-Deployments are done automatically via `deploy.yml` Github actions to our [Digital Ocean](https://www.digitalocean.com/) Kubernetes cluster on merge with the `main` branch. It supports manual deployment as well. But first, we will need to provision our infrastructure.
+Deployments can be done via `deploy.yml` Github actions to our [Digital Ocean](https://www.digitalocean.com/) Kubernetes cluster. But first, we will need to provision our infrastructure.
 
 _Important: Infrastructure we're about to provision has its own cost!_
 
