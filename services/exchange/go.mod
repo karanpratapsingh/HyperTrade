@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/adshao/go-binance/v2 v2.3.5
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/nats-io/nats.go v1.13.1-0.20211122170419-d7c1d78a50fc
+	github.com/nats-io/nats.go v1.13.1-0.20220308171302-2f2f6968e98d
 	github.com/rs/zerolog v1.26.1
 	github.com/stretchr/testify v1.7.1
 	gorm.io/driver/postgres v1.3.1
@@ -29,7 +29,7 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/klauspost/compress v1.15.1 // indirect
 	github.com/lib/pq v1.10.4 // indirect
-	github.com/nats-io/nats-server/v2 v2.7.0 // indirect
+	github.com/nats-io/nats-server/v2 v2.7.4 // indirect
 	github.com/nats-io/nkeys v0.3.0 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
