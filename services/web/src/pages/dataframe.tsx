@@ -7,8 +7,8 @@ import * as animated from '../components/ui/animated';
 import { Header } from '../components/ui/header';
 import { Loader } from '../components/ui/loader';
 import { Kline, Signal } from '../events/types';
-import { useDataFrameStore } from '../store/dataframe';
 import { useConfigsStore } from '../store/configs';
+import { useDataFrameStore } from '../store/dataframe';
 import { FinalTagColors, SignalTagColors } from '../theme/colors';
 import { paginationProps } from '../utils/pagination';
 
@@ -17,11 +17,7 @@ const { Column, ColumnGroup } = Table;
 
 export function DataFrame(): React.ReactElement {
   const getActiveConfig = useConfigsStore(state => state.getActiveConfig);
-  const [dataframe, get, loading] = useDataFrameStore(state => [
-    state.data,
-    state.get,
-    state.loading,
-  ]);
+  const [get, loading] = useDataFrameStore(state => [state.get, state.loading]);
 
   function renderTime(time: Kline['time']): React.ReactNode {
     return dateFormat(time, 'mmm dS hh:MM:ss tt');
@@ -42,6 +38,10 @@ export function DataFrame(): React.ReactElement {
   }
 
   let content: React.ReactNode = <Loader />;
+
+  let extra: React.ReactNode[] = React.Children.toArray([
+    <Loader size='small' />,
+  ]);
 
   if (!loading) {
     const { symbol } = getActiveConfig();
@@ -116,11 +116,11 @@ export function DataFrame(): React.ReactElement {
         </Table>
       </animated.Div>
     );
-  }
 
-  const extra: React.ReactNode[] = React.Children.toArray([
-    <ExportButton type='dataframe' data={dataframe} />,
-  ]);
+    extra = React.Children.toArray([
+      <ExportButton type='dataframe' data={dataSource} />,
+    ]);
+  }
 
   return (
     <Content className='p-6 bg-white flex flex-col'>

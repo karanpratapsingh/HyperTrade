@@ -7,6 +7,12 @@ export type LineValue = Record<string, string | number | Date>;
 
 export type TradeLinesData = [string, LineValue[]];
 
+/**
+ * TODO: fix trade line algorithm
+ *
+ * ALl Symbols should be present for a given time period
+ * { SYMBOL1, SYMBOL2, TIME }
+ */
 export function getTradeLinesData(trades: Trade[]): TradeLinesData[] {
   const symbols = new Set(map(trades, 'symbol'));
 

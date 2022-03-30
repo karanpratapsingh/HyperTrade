@@ -1,15 +1,12 @@
 <p align="center">
-<!-- TODO: LANDING_PAGE -->
-  <a href="#todo">
-    <img width="100px" src="./assets/logo.png">
-  </a>
+  <img width="100px" src="./assets/logo.png">
   <h1 align="center">HyperTrade</h1>
   <p align="center">Ready to deploy, distributed cryptocurrency trading bot.</p>
 </p>
 
 <p align="center">
 <a href="https://www.buymeacoffee.com/karanps" target="_blank"><img height="30px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" alt="Buy Me A Coffee" ></a>
-<img src="https://img.shields.io/github/workflow/status/karanpratapsingh/HyperTrade/Build%20and%20Deploy?style=for-the-badge" />
+<img src="https://img.shields.io/github/workflow/status/karanpratapsingh/HyperTrade/Build?style=for-the-badge" />
 <img src="https://img.shields.io/badge/License-GPL-red.svg?style=for-the-badge" />
 <img alt="Twitter: karan_6864" src="https://img.shields.io/twitter/follow/karan_6864.svg?style=for-the-badge&logo=TWITTER&logoColor=FFFFFF&labelColor=00aced&logoWidth=20&color=00aced" target="_blank" />
 <img height="29px" src="https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%203.svg" alt="DigitalOcean Referral Badge" />
@@ -27,28 +24,35 @@
 
 ## 📖 Contents
 
+- [Overview](#overview)
 - [Motivation](#motivation)
 - [Features](#features)
 - [Technologies](#technologies)
 - [Architecture](#architecture)
-- [Strategy Customization](#strategy) TODO
 - [Getting Started](#getting-started)
-- [Deployment](#deployment)
+- [Customization](#customization)
 - [Usage](#usage)
   - [Telegram](#telegram)
   - [Web](#web)
+- [Deployment](#deployment)
 - [Contribute](#contribute)
 - [License](#license)
 
+## 🔍 Overview <a id="overview" />
+
+Here's a short overview of the project.
+
+[![overview](https://user-images.githubusercontent.com/29705703/160863938-a8350ddd-5bf7-442e-beb9-fe590b28a725.png)](https://youtu.be/jHBlUlIY4AQ)
+
 ## 💡 Motivation <a id="motivation" />
 
-A Few months ago I got into the crypto market. It was all new and fascinating to me. The idea of this project originally came from a script I used to automate buying and selling of fiat assets.
+A few months ago I got into the crypto market. It was all new and fascinating to me. The idea of this project originally came from a script I used to automate buying and selling of fiat assets.
 
 I was curious and wanted to scale it into a real system which can execute trades for me. I had a lot of fun building this. I got to play with lots of different technologies while growing my financial knowledge.
 
 Feel free to [reach out](https://karanpratapsingh.com?action=contact) to me if you have any additional questions. There are lots of fixes and features to be done!
 
-_Currently, only [binance](https://binance.com/) is supported. Contributions are welcome!_
+_It is important to note that this project is under active development and was developed as an experiment. Currently, only [Binance](https://binance.com/) is supported but contributions are welcome!_
 
 **Please leave a ⭐ as motivation or support by [donating](https://www.buymeacoffee.com/karanps) if you liked the idea 😄**
 
@@ -66,7 +70,7 @@ This system has lots of features such as:
 
 - **Telegram Support**: On the move? Use [Telegram](#telegram) bot to receive real-time notifications and much more.
 
-- **Ready to deploy**: Comes with [Infrastruce as Code](https://dev.to/karanpratapsingh/introduction-to-infrastructure-as-code-with-terraform-4f29) which is ready to deploy to [Digital Ocean](https://www.digitalocean.com/).
+- **Ready to deploy**: Comes with [Infrastructure as Code](https://dev.to/karanpratapsingh/introduction-to-infrastructure-as-code-with-terraform-4f29) which is ready to deploy to [Digital Ocean](https://www.digitalocean.com/).
 
 - **Easy to upgrade**: Modify the system easily to your needs.
 
@@ -98,7 +102,7 @@ Originally I made this using HTTP REST, but systems like this are event driven b
 
 All the messaging infrastructure use cases are handled by [NATS](https://nats.io). Inter service communications are mainly via publish-subscribe and request-reply pattern. Essentially, NATS acts as our service mesh!
 
-We also use [JetStream](https://docs.nats.io/nats-concepts/jetstream) to for real-time, persisted data streams.
+We also use [JetStream](https://docs.nats.io/nats-concepts/jetstream) for real-time, persisted data streams.
 
 <img width="55%" src="https://user-images.githubusercontent.com/29705703/156038663-61d9c242-de32-41da-9a59-a2452a0ead11.png" alt="publish-subscribe" /> <img width="43.85%" src="https://user-images.githubusercontent.com/29705703/156039685-bb32987e-a11f-4246-a6fa-1d74f6388119.png" alt="request-reply" />
 
@@ -109,6 +113,8 @@ _Read more about [Distributed communication patterns with NATS](https://dev.to/k
 I agree! Kubernetes can be bit overkill, especially for this project. But my goal here was to keep it cloud agnostic, even though it was very tempting to just spin up AWS lambdas with event bridge.
 
 ## 🍕 Getting Started <a id="getting-started" />
+
+Here we will setup our development environment. But first we will need to install the following tools.
 
 **Tools**
 
@@ -125,10 +131,56 @@ I agree! Kubernetes can be bit overkill, especially for this project. But my goa
 **Steps**
 
 - Once all the tools are installed, execute `make prepare` to prepare the local environment.
-- Create a `infrastructure/k8s/env.yaml` file and add your secrets as shown in `infrastructure/k8s/env.example.yaml`.
+- Create a `infrastructure/k8s/env.yaml` to similar structure as `infrastructure/k8s/env.example.yaml` and [follow this guide](./docs/secrets-setup.md).
 - Review the configuration in `services/exchange/config.json`
 - Start development with `make dev` command.
 - Use `make stop` to stop the local minikube cluster.
+
+## 🛠 Customization <a id="customization" />
+
+We can customize trading strategies either via web app or `services/exchange/config.json` directly.
+
+Currently, only few trading strategies like RSI and MACD are supported and I plan to add more soon. 
+
+<img width="60%" src="./assets/screenshots/dashboard/config-strategy.png" alt="config-strategy" />
+
+## 📚 Usage <a id="usage" />
+
+### 💬 Telegram <a id="telegram" />
+
+Telegram bot helps us to interact with the system easily and receive real-time notifications.
+
+**Commands**
+
+The telegram bot supports the following commands:
+
+<img src="./assets/screenshots/bot/telegram-commands.png" alt="telegram-commands" />
+
+- **`/configs`**: Get asset configurations.
+- **`/balance`**: Get current account balance.
+- **`/positions`**: Get actively held positions.
+- **`/stats`**: Get portfolio statistics.
+- **`/enable`**: Enable trading for a symbol.
+- **`/disable`**: Disable trading for a symbol.
+- **`/dump`**: Dump all the positions for a symbol.
+
+_Note: `enable`, `disable` and `dump` commands are symbol specific, and are executed as `/cmd symbol`. Example, `/enable ETHUSDT`_
+
+### 💻 Web <a id="web" />
+
+Since this application deals with sensitive financial data, it is **not recommended** to expose it via ingress unless we have proper RBAC authorization in place. Hence, it is recommended to connect to it via port-forwarding on your local machine.
+
+**Steps**
+
+- Connect to the application via port-forwarding using `make connect` command.
+
+_Note: Make sure `doctl` is authenticated, and we're using the correct k8s cluster name._
+
+- Open `localhost:8080` to see the web interface.
+
+- Once done, use the `make disconnect` command to remove the kubectl context from your machine.
+
+_Note: It is recommended to use the telegram bot over the user interface on non-secure systems._
 
 ## 🚀 Deployment <a id="deployment" />
 
@@ -174,44 +226,6 @@ $ cat infrastructure/k8s/env.yaml | base64
 - Once the deploy is complete, our application will be deployed in the `hypertrade` namespace on Kubernetes.
 
 _Note: If you want to change the name of the project, make sure to update all the associated Kubernetes manifest files, skaffold config, nginx config etc._
-
-## 📚 Usage <a id="usage" />
-
-### 💬 Telegram <a id="telegram" />
-
-Telegram bot helps us to interact with the system easily and receive real-time notifications.
-
-**Commands**
-
-The telegram bot supports the following commands:
-
-<img src="./assets/screenshots/bot/telegram-commands.png" alt="telegram-commands" />
-
-- **`/configs`**: Get asset configurations.
-- **`/balance`**: Get current account balance.
-- **`/positions`**: Get actively held positions.
-- **`/stats`**: Get portfolio statistics.
-- **`/enable`**: Enable trading for a symbol.
-- **`/disable`**: Disable trading for a symbol.
-- **`/dump`**: Dump all the positions for a symbol.
-
-_Note: `enable`, `disable` and `dump` commands are symbol specific, and are executed as `/cmd symbol`. Example, `/enable ETHUSDT`_
-
-### 💻 Web <a id="web" />
-
-Since this application deals with sensitive financial data, it is **not recommended** to expose it via ingress unless we have proper RBAC authorization in place. Hence, it is recommended to connect to it via port-forwarding on your local machine.
-
-**Steps**
-
-- Connect to the application via port-forwarding using `make connect` command.
-
-_Note: Make sure `doctl` is authenticated, and we're using the correct k8s cluster name._
-
-- Open `localhost:8080` to see the web interface.
-
-- Once done, use the `make disconnect` command to remove the kubectl context from your machine.
-
-_Note: It is recommended to use the telegram bot over the user interface on non-secure systems._
 
 ## 👏 Contribute <a id="contribute" />
 

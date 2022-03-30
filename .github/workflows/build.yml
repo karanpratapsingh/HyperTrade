@@ -1,4 +1,4 @@
-name: Deploy
+name: Build
 on:
   workflow_dispatch:
   push:
@@ -30,11 +30,5 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
-      - name: Log in to Github Container Registry
-        run: echo ${{ env.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Save DigitalOcean kubeconfig
-        run: doctl kubernetes cluster kubeconfig save ${{ env.CLUSTER_NAME }}
-
-      - name: Prepare, Build and Deploy to K8s cluster
-        run: make prod
+      - name: Build
+        run: make build
