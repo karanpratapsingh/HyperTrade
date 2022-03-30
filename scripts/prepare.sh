@@ -39,11 +39,11 @@ if ! [ -x "$(command -v helm)" ]; then
   error "helm" "https://helm.sh/docs/intro/install"
 fi
 
-if ! [ -x "$(command -v doctl)" ]; then
-  error "doctl" "https://github.com/digitalocean/doctl"
-fi
-
 if [[ "$ENVIRONMENT" == "development" ]]; then
+  if ! [ -x "$(command -v doctl)" ]; then
+    error "doctl" "https://github.com/digitalocean/doctl"
+  fi
+
   if ! [ -x "$(command -v volta)" ]; then
     error "volta" "https://volta.sh"
   fi
