@@ -1,7 +1,5 @@
 <p align="center">
-  <a href="#todo">
-    <img width="100px" src="./assets/logo.png">
-  </a>
+  <img width="100px" src="./assets/logo.png">
   <h1 align="center">HyperTrade</h1>
   <p align="center">Ready to deploy, distributed cryptocurrency trading bot.</p>
 </p>
@@ -40,7 +38,7 @@
 - [Contribute](#contribute)
 - [License](#license)
 
-## Overview <a id="overview" />
+## 🔍 Overview <a id="overview" />
 
 Here's a short overview of the project.
 
@@ -48,13 +46,13 @@ Here's a short overview of the project.
 
 ## 💡 Motivation <a id="motivation" />
 
-A Few months ago I got into the crypto market. It was all new and fascinating to me. The idea of this project originally came from a script I used to automate buying and selling of fiat assets.
+A few months ago I got into the crypto market. It was all new and fascinating to me. The idea of this project originally came from a script I used to automate buying and selling of fiat assets.
 
 I was curious and wanted to scale it into a real system which can execute trades for me. I had a lot of fun building this. I got to play with lots of different technologies while growing my financial knowledge.
 
 Feel free to [reach out](https://karanpratapsingh.com?action=contact) to me if you have any additional questions. There are lots of fixes and features to be done!
 
-_It is important to note that this project is under active development and was developed as an experiment. Currently, only [binance](https://binance.com/) is supported but contributions are welcome!_
+_It is important to note that this project is under active development and was developed as an experiment. Currently, only [Binance](https://binance.com/) is supported but contributions are welcome!_
 
 **Please leave a ⭐ as motivation or support by [donating](https://www.buymeacoffee.com/karanps) if you liked the idea 😄**
 
@@ -72,7 +70,7 @@ This system has lots of features such as:
 
 - **Telegram Support**: On the move? Use [Telegram](#telegram) bot to receive real-time notifications and much more.
 
-- **Ready to deploy**: Comes with [Infrastruce as Code](https://dev.to/karanpratapsingh/introduction-to-infrastructure-as-code-with-terraform-4f29) which is ready to deploy to [Digital Ocean](https://www.digitalocean.com/).
+- **Ready to deploy**: Comes with [Infrastructure as Code](https://dev.to/karanpratapsingh/introduction-to-infrastructure-as-code-with-terraform-4f29) which is ready to deploy to [Digital Ocean](https://www.digitalocean.com/).
 
 - **Easy to upgrade**: Modify the system easily to your needs.
 
@@ -104,7 +102,7 @@ Originally I made this using HTTP REST, but systems like this are event driven b
 
 All the messaging infrastructure use cases are handled by [NATS](https://nats.io). Inter service communications are mainly via publish-subscribe and request-reply pattern. Essentially, NATS acts as our service mesh!
 
-We also use [JetStream](https://docs.nats.io/nats-concepts/jetstream) to for real-time, persisted data streams.
+We also use [JetStream](https://docs.nats.io/nats-concepts/jetstream) for real-time, persisted data streams.
 
 <img width="55%" src="https://user-images.githubusercontent.com/29705703/156038663-61d9c242-de32-41da-9a59-a2452a0ead11.png" alt="publish-subscribe" /> <img width="43.85%" src="https://user-images.githubusercontent.com/29705703/156039685-bb32987e-a11f-4246-a6fa-1d74f6388119.png" alt="request-reply" />
 
