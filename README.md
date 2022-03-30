@@ -26,6 +26,7 @@
 
 ## 📖 Contents
 
+- [Overview](#overview)
 - [Motivation](#motivation)
 - [Features](#features)
 - [Technologies](#technologies)
@@ -38,6 +39,12 @@
 - [Deployment](#deployment)
 - [Contribute](#contribute)
 - [License](#license)
+
+## Overview <a id="overview" />
+
+Here's a short overview of the project.
+
+[![overview](https://user-images.githubusercontent.com/29705703/160863938-a8350ddd-5bf7-442e-beb9-fe590b28a725.png)](https://youtu.be/jHBlUlIY4AQ)
 
 ## 💡 Motivation <a id="motivation" />
 
