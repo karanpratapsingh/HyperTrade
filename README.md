@@ -8,7 +8,7 @@
 
 <p align="center">
 <a href="https://www.buymeacoffee.com/karanps" target="_blank"><img height="30px" src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" alt="Buy Me A Coffee" ></a>
-<img src="https://img.shields.io/github/workflow/status/karanpratapsingh/HyperTrade/Build?style=for-the-badge" />
+<img src="https://img.shields.io/github/workflow/status/karanpratapsingh/fullstack-starterkit/CI?style=for-the-badge" />
 <img src="https://img.shields.io/badge/License-GPL-red.svg?style=for-the-badge" />
 <img alt="Twitter: karan_6864" src="https://img.shields.io/twitter/follow/karan_6864.svg?style=for-the-badge&logo=TWITTER&logoColor=FFFFFF&labelColor=00aced&logoWidth=20&color=00aced" target="_blank" />
 <img height="29px" src="https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%203.svg" alt="DigitalOcean Referral Badge" />
