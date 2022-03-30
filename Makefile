@@ -8,11 +8,9 @@ stop:
 	minikube stop
 
 build:
-	scripts/prepare.sh production
 	skaffold build --profile production
 
 prod:
-	scripts/prepare.sh production
 	skaffold run --profile production
 
 connect:
