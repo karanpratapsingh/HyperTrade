@@ -43,7 +43,9 @@ if [[ "$ENVIRONMENT" == "development" ]]; then
   if ! [ -x "$(command -v doctl)" ]; then
     error "doctl" "https://github.com/digitalocean/doctl"
   fi
+fi
 
+if [[ "$ENVIRONMENT" == "development" ]]; then
   if ! [ -x "$(command -v volta)" ]; then
     error "volta" "https://volta.sh"
   fi
