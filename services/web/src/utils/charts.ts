@@ -9,7 +9,7 @@ export type TradeLinesData = [string, LineValue[]];
 
 /**
  * TODO: fix trade line algorithm
- * 
+ *
  * ALl Symbols should be present for a given time period
  * { SYMBOL1, SYMBOL2, TIME }
  */
