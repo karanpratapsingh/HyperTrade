@@ -1,14 +1,13 @@
 name: Deploy
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+
 env:
   APP_SECRETS: ${{ secrets.APP_SECRETS }}
   DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
   GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
   CLUSTER_NAME: hypertrade-cluster
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
