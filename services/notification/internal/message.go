@@ -158,7 +158,7 @@ func (t Telegram) FormatErrorMessage(p CriticalErrorEventPayload) string {
 func (t Telegram) FormatUpdateTradingMessage(symbol string, enable bool) string {
 	var message string
 
-	var payload interface{}
+	var payload any
 	req := UpdateTradingEnabledRequest{symbol, enable}
 	err := t.pubsub.Request(UpdateTradingEnabledEvent, req, &payload)
 
