@@ -28,6 +28,7 @@
 - [Motivation](#motivation)
 - [Features](#features)
 - [Technologies](#technologies)
+- [Working](#working)
 - [Architecture](#architecture)
 - [Getting Started](#getting-started)
 - [Customization](#customization)
@@ -77,6 +78,18 @@ This system has lots of features such as:
 ## ⚡️ Technologies <a id="technologies" />
 
 <img width="98%" src="./assets/diagrams/stack.png" alt="stack" />
+
+## ❓ Working <a id="working" />
+
+Here's a simple diagram illustrating how streams and events are published/subscribed in the system. We use NATS for messaging and streams, more about that in the [architecture](#architecture) section.
+
+Basically, The Exchange service publishes Kline/Candlestick data based on our configuration. Strategy service then subscribes to it and publishes a stream of dataframe which contains the indicators, buy/sell signals, and other metadata. The buy/sell signals are determined using the configuration as well, where we can customize our strategies given that they are supported.
+
+Now, The Exchange service subscribes to the dataframe stream and executes trades on the signal using the Binance API. Any event such as order, trade, error, etc is published and then the Notification service can send a message to the user using the Telegram API.
+
+*_Note: This only represents core events, there are lots more events for the Web and DB services._*
+
+<img src="./assets/working.png" alt="working" />
 
 ## 🏭 Architecture <a id="architecture" />
 
