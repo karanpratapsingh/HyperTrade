@@ -89,7 +89,7 @@ Now, The Exchange service subscribes to the dataframe stream and executes trades
 
 *_Note: This only represents core events, there are lots more events for the Web and DB services._*
 
-<img src="./assets/working.png" alt="working" />
+<img src="./assets/diagrams/working.png" alt="working" />
 
 ## 🏭 Architecture <a id="architecture" />
 
