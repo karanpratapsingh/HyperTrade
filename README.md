@@ -87,7 +87,7 @@ Basically, The Exchange service publishes Kline/Candlestick data based on our co
 
 Now, The Exchange service subscribes to the dataframe stream and executes trades on the signal using the Binance API. Any event such as order, trade, error, etc is published and then the Notification service can send a message to the user using the Telegram API.
 
-*_Note: This only represents core events, there are lots more events for the Web and DB services._*
+*_Note: This only represents core events, there are more events for the Web and DB services._*
 
 <img src="./assets/diagrams/working.png" alt="working" />
 
