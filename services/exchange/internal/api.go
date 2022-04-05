@@ -31,7 +31,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 		DB.UpdateStrategy(request.Strategy)
 
 		log.Trace().Msg("Internal.Strategy.Update")
-		var payload any
+		var payload interface{}
 		pubsub.Publish(m.Reply, payload)
 	})
 
@@ -79,7 +79,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 		DB.UpdateConfigTradingEnabled(request.Symbol, request.Enabled)
 
 		log.Trace().Str("symbol", request.Symbol).Bool("enabled", request.Enabled).Msg("Internal.Config.TradingEnabled")
-		var payload any
+		var payload interface{}
 		pubsub.Publish(m.Reply, payload)
 	})
 
@@ -90,7 +90,7 @@ func RunAsyncApi(DB db.DB, exchange Binance, pubsub PubSub) {
 		DB.UpdateConfigAllowedAmount(request.Symbol, request.Amount)
 
 		log.Trace().Str("symbol", request.Symbol).Float64("amount", request.Amount).Msg("Internal.Config.AllowedAmount")
-		var payload any
+		var payload interface{}
 		pubsub.Publish(m.Reply, payload)
 	})
 

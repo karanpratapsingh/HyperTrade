@@ -9,7 +9,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func Unmarshal(data []byte, ptr any) error {
+func Unmarshal(data []byte, ptr interface{}) error {
 	err := json.Unmarshal(data, ptr)
 
 	if err != nil {

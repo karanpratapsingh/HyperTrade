@@ -16,7 +16,7 @@ type seedConfig struct {
 
 type seed struct {
 	Name string
-	Type any
+	Type interface{}
 	Fn   func() error
 }
 

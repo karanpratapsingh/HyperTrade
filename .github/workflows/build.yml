@@ -11,7 +11,7 @@ env:
   GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

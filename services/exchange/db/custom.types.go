@@ -20,7 +20,7 @@ func (Rsi) GormDataType() string {
 	return "JSONB"
 }
 
-func (r *Rsi) Scan(value any) error {
+func (r *Rsi) Scan(value interface{}) error {
 	return json.Unmarshal(value.([]byte), &r)
 }
 
@@ -39,7 +39,7 @@ func (Macd) GormDataType() string {
 	return "JSONB"
 }
 
-func (r *Macd) Scan(value any) error {
+func (r *Macd) Scan(value interface{}) error {
 	return json.Unmarshal(value.([]byte), &r)
 }
 

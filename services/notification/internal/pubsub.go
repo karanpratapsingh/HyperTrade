@@ -27,7 +27,7 @@ func NewPubSub(addr, user, password string) PubSub {
 	return PubSub{enc}
 }
 
-func (p *PubSub) Subscribe(event string, handler any) *nats.Subscription {
+func (p *PubSub) Subscribe(event string, handler interface{}) *nats.Subscription {
 	sub, err := p.conn.Subscribe(event, handler)
 
 	if err != nil {
@@ -37,7 +37,7 @@ func (p *PubSub) Subscribe(event string, handler any) *nats.Subscription {
 	return sub
 }
 
-func (p *PubSub) Publish(event string, payload any) {
+func (p *PubSub) Publish(event string, payload interface{}) {
 	err := p.conn.Publish(event, payload)
 
 	if err != nil {
@@ -45,7 +45,7 @@ func (p *PubSub) Publish(event string, payload any) {
 	}
 }
 
-func (p PubSub) Request(event string, payload any, response any) error {
+func (p PubSub) Request(event string, payload interface{}, response interface{}) error {
 	err := p.conn.Request(event, payload, response, 5*time.Second)
 
 	if err != nil {
